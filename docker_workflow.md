@@ -1,4 +1,5 @@
 # Daily Developer Workflow
+
 **Project:** SparseData-AI-Precipitation-Forecasting
 
 This guide explains how to start the environment after a restart, how to develop, and how to sync database changes between your Laptop (Development) and Desktop (Training).
@@ -6,11 +7,13 @@ This guide explains how to start the environment after a restart, how to develop
 ---
 
 ## 🟢 1. START OF DAY (Boot Sequence)
-*Perform these steps every time you restart your laptop.*
+
+_Perform these steps every time you restart your laptop._
 
 ### Step A: Connect the Cloud Drive
+
 Your database backups live in Google Drive. You must mount the drive before starting Docker.
-*(Skip this if you added it to Startup Applications).*
+_(Skip this if you added it to Startup Applications)._
 
 ```bash
 rclone mount gdrive: ~/GoogleDrive --daemon
@@ -27,6 +30,7 @@ docker compose up -d
 ```
 
 ## 💻 2. DEVELOPMENT LOOP
+
 Running Python Scripts
 
 Do not run python src/script.py directly. You must run it inside the container.
@@ -51,7 +55,7 @@ If you need a new package (e.g., scikit-learn):
 
 - Add the library name to requirements.txt.
 - Rebuild the container:
-  
+
 ```bash
 docker compose up -d --build
 ```
@@ -102,7 +106,6 @@ bash scripts/pull_db.sh
 
 Start Training: Now your Desktop has the exact same code and exact same data as your Laptop.
 
-
 ## ⚠️ Troubleshooting
 
 Error: docker: Error response from daemon: ... source path does not exist
@@ -116,3 +119,12 @@ Error: psql: FATAL: database "weather_db" does not exist
 - Cause: Docker isn't running.
 
 - Fix: Run docker compose up -d.
+
+## Mounting google drive on desktop to pull changes
+
+```bash
+sudo mount -t drvfs G: /mnt/g
+ls -l "/mnt/g/My Drive"
+cd ~
+ln -s "/mnt/g/My Drive" ~/GoogleDrive
+```

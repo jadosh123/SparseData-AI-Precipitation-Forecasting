@@ -22,6 +22,9 @@ then
     exit 1
 fi
 
+echo "⏳ Wiping old database..."
+docker exec weather_db psql -U myuser -d weather_db -c "DROP SCHEMA public CASCADE; CREATE SCHEMA public;"
+
 # 3. Restore the database
 # We use 'docker exec -i' (Interactive) to accept the piped file
 echo "⏳ Restoring database..."
