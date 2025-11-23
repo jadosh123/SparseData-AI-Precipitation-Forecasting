@@ -14,10 +14,10 @@ TABLE_NAME = "raw_station_data"
 
 # Station names and ID
 STATION_MAP = {
-    16: "Afula_Nir_HaEmek", 
-    13: "Tavor_Kadoorie", 
-    186: "Newe_Yaar", 
-    500: "Nazareth"
+    "Afula_Nir_HaEmek": 16, 
+    "Tavor_Kadoorie": 13, 
+    "Newe_Yaar": 186, 
+    "Nazareth": 500,      # Matches Nazareth.xlsx
 }
 
 def insert_on_conflict_nothing(table, conn, keys, data_iter):
@@ -113,10 +113,11 @@ def ingest_data():
                 elif 'timestamp' in df.columns:
                     # Logic for API CSVs (Already has timestamp column)
                     # Force conversion to ensure it's Datetime, not String
-                    df['timestamp'] = pd.to_datetime(df['timestamp'], errors='coerce')
+                    df['timestamp'] = pd.to_datetime(df['timestamp'], utc=True, errors='coerce')
                     
                     # Drop rows where conversion failed
                     df = df.dropna(subset=['timestamp'])
+                    df = df.drop(columns=['time'], errors='ignore')
 
                 # LOGIC FOR DEALING WITH STATION ID
                 # Priority 1: Check if 'station_id' already exists in the file (API CSVs)
@@ -125,10 +126,12 @@ def ingest_data():
                     # Ensure it is numeric, just in case
                     df['station_id'] = pd.to_numeric(df['station_id'], errors='coerce')
 
-                # Priority 2: Look up via Filename Map (Legacy/Excel files)
-                elif station_name in STATION_MAP:
-                    print(f"   ℹ️ mapped filename '{station_name}' to ID {STATION_MAP[station_name]}")
-                    df['station_id'] = STATION_MAP[station_name]
+                # We check if the filename STARTS with a known key to handle "Name_2020-2025"
+                elif any(station_name.startswith(k) for k in STATION_MAP):
+                    # Find the matching key
+                    match = next(k for k in STATION_MAP if station_name.startswith(k))
+                    print(f"   ℹ️ Mapped filename '{station_name}' to ID {STATION_MAP[match]}")
+                    df['station_id'] = STATION_MAP[match]
                 
                 # Priority 3: Failure
                 else:
@@ -157,7 +160,8 @@ def ingest_data():
                     if_exists='append',
                     index=False,
                     dtype=dtype_mapping,
-                    method=insert_on_conflict_nothing  # This is the key line
+                    method=insert_on_conflict_nothing,  # This is the key line
+                    chunksize=2000
                 )
                 print(f"✅ Success: {station_name}")
 
