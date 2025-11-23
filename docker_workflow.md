@@ -25,7 +25,7 @@ Step B: Start the Virtual Lab (Docker)
 Start your Database and Python environment.
 
 ```bash
-cd ~/Projects/SparseData-AI-Precipitation-Forecasting
+cd ~/repo/SparseData-AI-Precipitation-Forecasting
 docker compose up -d
 ```
 

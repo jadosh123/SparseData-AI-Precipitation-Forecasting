@@ -30,6 +30,7 @@ services:
 
   app:
     build: .
+    command: tail -f /dev/null
     volumes:
       - .:/app
       - ~/GoogleDrive/weather_data:/app/cloud_data

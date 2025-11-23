@@ -1,5 +1,6 @@
 import pandas as pd
 from sqlalchemy import create_engine, inspect, types
+from sqlalchemy.dialects.postgresql import insert
 import time
 import os
 import glob
@@ -10,6 +11,25 @@ DB_CONN_STR = "postgresql+psycopg2://myuser:mypassword@db:5432/weather_db"
 # Path to the data directory
 DATA_DIR = "/app/cloud_data/"
 TABLE_NAME = "raw_station_data"
+
+def insert_on_conflict_nothing(table, conn, keys, data_iter):
+    """
+    SQLAlchemy custom method for pandas to_sql that ignores duplicates.
+    """
+    # "data_iter" is a generator of rows. We need a list of dicts for SQLAlchemy.
+    data = [dict(zip(keys, row)) for row in data_iter]
+    
+    # Build the standard INSERT statement
+    stmt = insert(table.table).values(data)
+    
+    # Add the "ON CONFLICT DO NOTHING" clause
+    # IMPORTANT: 'index_elements' must match your UNIQUE constraint columns!
+    stmt = stmt.on_conflict_do_nothing(
+        index_elements=['station_name', 'timestamp']
+    )
+    
+    # Execute
+    conn.execute(stmt)
 
 def ingest_data():
     """
@@ -24,43 +44,68 @@ def ingest_data():
         engine = create_engine(DB_CONN_STR)
         print("Database engine created.")
 
-        excel_files = glob.glob(os.path.join(DATA_DIR, '*.xlsx'))
-        if not excel_files:
-            print(f"No Excel files found in {DATA_DIR}")
+        files = glob.glob(os.path.join(DATA_DIR, '*.xlsx')) + glob.glob(os.path.join(DATA_DIR, '*.csv'))
+        
+        if not files:
+            print(f"❌ No Excel or CSV files found in {DATA_DIR}")
             return
 
-        print(f"Found {len(excel_files)} Excel files to process.")
+        print(f"📂 Found {len(files)} files to process.")
 
-        for file_path in excel_files:
+        for file_path in files:
             try:
                 station_name = os.path.basename(file_path).split('.')[0]
-                print(f"Processing file: {file_path} for station: {station_name}")
+                print(f"🚀 Processing: {station_name}")
 
-                # 1. Read Excel with specific parameters
-                df = pd.read_excel(
-                    file_path,
-                    header=2,  # Column names are on the 3rd row (0-indexed)
-                    na_values=["NoData", "-", ""] # Handle custom null values
-                )
+                # CHANGE 2: Conditional Reading logic
+                if file_path.endswith('.xlsx'):
+                    # IMS Excel Format (Has 3 rows of metadata/headers)
+                    df = pd.read_excel(
+                        file_path, 
+                        header=2, 
+                        na_values=["NoData", "-", ""]
+                    )
+                else:
+                    # CSV Logic
+                    # NOTE: If your generated CSVs are clean (start with header), use header=0.
+                    # If they look like IMS files (metadata at top), change to header=2.
+                    try:
+                        # Try UTF-8 first
+                        df = pd.read_csv(file_path, header=0, na_values=["NoData", "-", ""])
+                    except UnicodeDecodeError:
+                        # Fallback for Hebrew/IMS encoding
+                        df = pd.read_csv(file_path, header=0, na_values=["NoData", "-", ""], encoding='ISO-8859-8')
 
-                # 2. Drop the units row (which is now the first row of the DataFrame)
-                df = df.iloc[1:].reset_index(drop=True)
+                # Smart Unit Dropping (Your existing logic - Keep this!)
+                try:
+                    first_row_values = df.iloc[0].astype(str).values.tolist()
+                    unit_keywords = ['mm', 'deg', 'm/sec', 'degc', 'hpa']
+                    if any(keyword in str(val).lower() for val in first_row_values for keyword in unit_keywords):
+                        print(f"   Note: Detected units row. Dropping it.")
+                        df = df.iloc[1:].reset_index(drop=True)
+                except:
+                    pass
 
-                # 3. Clean column names
+                # Standard Cleaning
                 df.columns = df.columns.str.strip().str.lower().str.replace(r'[\s\(\)]+', '_', regex=True).str.strip('_')
 
-                # 4. Create timestamp column
+                # Timestamp Logic
                 if 'date' in df.columns and 'time' in df.columns:
-                    df['timestamp'] = pd.to_datetime(df['date'].astype(str) + ' ' + df['time'].astype(str), format='%d/%m/%Y %H:%M', errors='coerce')
+                    # Added 'dayfirst=True' because IMS uses DD/MM/YYYY
+                    df['timestamp'] = pd.to_datetime(df['date'].astype(str) + ' ' + df['time'].astype(str), dayfirst=True, errors='coerce')
                     df = df.drop(columns=['date', 'time'])
-                else:
-                    print(f"Warning: 'date' or 'time' column not found in {file_path}. Skipping timestamp creation.")
-                    continue
-                
-                # 5. Add station name
+                    
+                    # Fix for NULL timestamp entries
+                    initial_count = len(df)
+                    df = df.dropna(subset=['timestamp'])
+                    dropped_count = initial_count - len(df)
+                    if dropped_count > 0:
+                        print(f"   ⚠️ Dropped {dropped_count} rows due to invalid timestamps.")
+
+                # Add station name
                 df['station_name'] = str(station_name)
 
-                # 6. Force numeric types for all columns except timestamp and station_name
+                # Force numeric types
                 dtype_mapping = {
                     'timestamp': types.DateTime(),
                     'station_name': types.String()
@@ -71,26 +116,26 @@ def ingest_data():
                     df[col] = pd.to_numeric(df[col], errors='coerce')
                     dtype_mapping[col] = types.Float
 
-                # Reorder columns to have timestamp and station_name first
+                # Reorder
                 cols = ['timestamp', 'station_name'] + [col for col in df.columns if col not in ['timestamp', 'station_name']]
                 df = df[cols]
 
-                # 7. Upload to database
+                # Upload with Conflict Handling
                 df.to_sql(
                     TABLE_NAME,
                     engine,
                     if_exists='append',
                     index=False,
-                    dtype=dtype_mapping
+                    dtype=dtype_mapping,
+                    method=insert_on_conflict_nothing  # This is the key line
                 )
-
-                print(f"Successfully ingested data from {file_path} into {TABLE_NAME}")
+                print(f"✅ Success: {station_name}")
 
             except Exception as e:
-                print(f"An error occurred while processing {file_path}: {e}")
+                print(f"⚠️ Error on {file_path}: {e}")
 
     except Exception as e:
-        print(f"A general error occurred: {e}")
+        print(f"🔥 Critical Error: {e}")
 
 if __name__ == "__main__":
     ingest_data()
