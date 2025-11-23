@@ -12,6 +12,14 @@ DB_CONN_STR = "postgresql+psycopg2://myuser:mypassword@db:5432/weather_db"
 DATA_DIR = "/app/cloud_data/"
 TABLE_NAME = "raw_station_data"
 
+# Station names and ID
+STATION_MAP = {
+    16: "Afula_Nir_HaEmek", 
+    13: "Tavor_Kadoorie", 
+    186: "Newe_Yaar", 
+    500: "Nazareth"
+}
+
 def insert_on_conflict_nothing(table, conn, keys, data_iter):
     """
     SQLAlchemy custom method for pandas to_sql that ignores duplicates.
@@ -25,7 +33,7 @@ def insert_on_conflict_nothing(table, conn, keys, data_iter):
     # Add the "ON CONFLICT DO NOTHING" clause
     # IMPORTANT: 'index_elements' must match your UNIQUE constraint columns!
     stmt = stmt.on_conflict_do_nothing(
-        index_elements=['station_name', 'timestamp']
+        index_elements=['station_id', 'timestamp']
     )
     
     # Execute
@@ -94,7 +102,7 @@ def ingest_data():
                     # Added 'dayfirst=True' because IMS uses DD/MM/YYYY
                     df['timestamp'] = pd.to_datetime(df['date'].astype(str) + ' ' + df['time'].astype(str), dayfirst=True, errors='coerce')
                     df = df.drop(columns=['date', 'time'])
-                    
+
                     # Fix for NULL timestamp entries
                     initial_count = len(df)
                     df = df.dropna(subset=['timestamp'])
@@ -102,22 +110,44 @@ def ingest_data():
                     if dropped_count > 0:
                         print(f"   ⚠️ Dropped {dropped_count} rows due to invalid timestamps.")
 
-                # Add station name
-                df['station_name'] = str(station_name)
+                elif 'timestamp' in df.columns:
+                    # Logic for API CSVs (Already has timestamp column)
+                    # Force conversion to ensure it's Datetime, not String
+                    df['timestamp'] = pd.to_datetime(df['timestamp'], errors='coerce')
+                    
+                    # Drop rows where conversion failed
+                    df = df.dropna(subset=['timestamp'])
+
+                # LOGIC FOR DEALING WITH STATION ID
+                # Priority 1: Check if 'station_id' already exists in the file (API CSVs)
+                if 'station_id' in df.columns:
+                    print(f"   ℹ️ Using 'station_id' found inside the file.")
+                    # Ensure it is numeric, just in case
+                    df['station_id'] = pd.to_numeric(df['station_id'], errors='coerce')
+
+                # Priority 2: Look up via Filename Map (Legacy/Excel files)
+                elif station_name in STATION_MAP:
+                    print(f"   ℹ️ mapped filename '{station_name}' to ID {STATION_MAP[station_name]}")
+                    df['station_id'] = STATION_MAP[station_name]
+                
+                # Priority 3: Failure
+                else:
+                    print(f"❌ Error: No 'station_id' column in file AND filename '{station_name}' not in map. Skipping.")
+                    continue
 
                 # Force numeric types
                 dtype_mapping = {
                     'timestamp': types.DateTime(),
-                    'station_name': types.String()
+                    'station_id': types.Integer()
                 }
                 
-                numeric_cols = [col for col in df.columns if col not in ['timestamp', 'station_name']]
+                numeric_cols = [col for col in df.columns if col not in ['timestamp', 'station_id']]
                 for col in numeric_cols:
                     df[col] = pd.to_numeric(df[col], errors='coerce')
                     dtype_mapping[col] = types.Float
 
                 # Reorder
-                cols = ['timestamp', 'station_name'] + [col for col in df.columns if col not in ['timestamp', 'station_name']]
+                cols = ['timestamp', 'station_id'] + numeric_cols
                 df = df[cols]
 
                 # Upload with Conflict Handling
