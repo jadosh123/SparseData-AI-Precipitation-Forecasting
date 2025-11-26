@@ -4,15 +4,25 @@ from sqlalchemy.dialects.postgresql import insert
 import time
 import os
 import glob
+from pathlib import Path
+from dotenv import load_dotenv
 
-DB_CONN_STR = "postgresql+psycopg2://myuser:mypassword@db:5432/weather_db"
+base_dir = Path(__file__).resolve().parent.parent
+env_file = base_dir / '.env'
+load_dotenv(env_file)
+db_user = os.getenv("DB_USER")
+db_pass = os.getenv("DB_PASS")
+db_host = os.getenv("DB_HOST")
+db_name = os.getenv("DB_NAME")
+
+DB_CONN_STR = f"postgresql+psycopg2://{db_user}:{db_pass}@{db_host}:5432/{db_name}"
 DATA_DIR = "/app/cloud_data/"
 TABLE_NAME = "raw_station_data"
 
 STATION_MAP = {
     "Afula_Nir_HaEmek": 16, 
-    "Tavor_Kadoorie": 13, 
-    "Newe_Yaar": 186, 
+    "Tavor_Kadoorie": 13,
+    "Newe_Yaar": 186,
     "Nazareth": 500,
 }
 
