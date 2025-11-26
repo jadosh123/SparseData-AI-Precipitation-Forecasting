@@ -11,14 +11,15 @@ base_dir = Path(__file__).resolve().parent.parent
 env_file = base_dir / '.env'
 load_dotenv(env_file)
 
-API_KEY = os.getenv("IMS_API_KEY")
+API_KEY = os.getenv("API_KEY")
 BASE_URL = "https://api.ims.gov.il/v1/envista/stations"
 
 STATIONS = {
-    16: "Afula_Nir_HaEmek", 
-    13: "Tavor_Kadoorie", 
-    186: "Newe_Yaar", 
-    500: "Nazareth_City"
+    # 16: "Afula_Nir_HaEmek", 
+    # 13: "Tavor_Kadoorie", 
+    # 186: "Newe_Yaar", 
+    # 500: "Nazareth_City",
+    43: "Haifa_Technion"
 }
 
 START_YEAR = 2020
@@ -26,20 +27,45 @@ END_YEAR = 2025
 OUTPUT_DIR = "/app/cloud_data"
 
 CSV_HEADERS = [
-    'timestamp', 'station_id', 'rain', 'wsmax', 'wdmax', 'ws', 'wd',
-    'stdwd', 'td', 'rh', 'tdmax', 'tdmin', 'ws1mm', 'ws10mm',
-    'time', 'vbatt', 'id', 'stab', 'heatstresscalc', 'dewpointcalc',
-    'coldstresscalc', 'bp'
+    'timestamp', 
+    'station_id', 
+    'rain', 
+    'wsmax', 
+    'wdmax', 
+    'ws', 
+    'wd',
+    'stdwd', 
+    'td', 
+    'rh', 
+    'tdmax', 
+    'tdmin', 
+    'ws1mm', 
+    'ws10mm',
+    # 'bp'
 ]
 
 CHANNEL_MAP = {
-    'rain': 'rain', 'wsmax': 'wsmax', 'wdmax': 'wdmax', 'ws': 'ws',
-    'wd': 'wd', 'stdwd': 'stdwd', 'td': 'td', 'rh': 'rh',
-    'tdmax': 'tdmax', 'tdmin': 'tdmin', 'ws1mm': 'ws1mm',
-    'ws10mm': 'ws10mm', 'time': 'time', 'vbatt': 'vbatt',
-    'id': 'id', 'stab': 'stab', 'heatstresscalc': 'heatstresscalc',
-    'dewpointcalc': 'dewpointcalc', 'coldstresscalc': 'coldstresscalc',
-    'bp': 'bp'
+    'rain': 'rain',
+    'wsmax': 'wsmax',
+    'wdmax': 'wdmax',
+    'ws': 'ws',
+    'wd': 'wd',
+    'stdwd': 'stdwd',
+    'td': 'td',
+    'rh': 'rh',
+    'tdmax': 'tdmax',
+    'tdmin': 'tdmin',
+    'ws1mm': 'ws1mm',
+    'ws10mm': 'ws10mm',
+    
+    # 'bp': 'bp'
+    # 'time': 'time',
+    # 'vbatt': 'vbatt',
+    # 'id': 'id',
+    # 'stab': 'stab',
+    # 'heatstresscalc': 'heatstresscalc',
+    # 'dewpointcalc': 'dewpointcalc',
+    # 'coldstresscalc': 'coldstresscalc',
 }
 
 def fetch_yearly_data(station_id, year):

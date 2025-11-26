@@ -20,10 +20,11 @@ DATA_DIR = "/app/cloud_data/"
 TABLE_NAME = "raw_station_data"
 
 STATION_MAP = {
-    "Afula_Nir_HaEmek": 16, 
-    "Tavor_Kadoorie": 13,
-    "Newe_Yaar": 186,
-    "Nazareth": 500,
+    # "Afula_Nir_HaEmek": 16, 
+    # "Tavor_Kadoorie": 13,
+    # "Newe_Yaar": 186,
+    # "Nazareth": 500,
+    "Hafia_Technion": 43
 }
 
 def insert_on_conflict_nothing(table, conn, keys, data_iter):
@@ -43,7 +44,8 @@ def ingest_data():
         engine = create_engine(DB_CONN_STR)
         print("Database engine connected.")
 
-        files = glob.glob(os.path.join(DATA_DIR, '*.xlsx')) + glob.glob(os.path.join(DATA_DIR, '*.csv'))
+        # files = glob.glob(os.path.join(DATA_DIR, '*.xlsx')) + glob.glob(os.path.join(DATA_DIR, '*.csv'))
+        files = glob.glob(os.path.join(DATA_DIR, '*Haifa_Technion*.csv'))
         
         if not files:
             print(f"No Excel or CSV files found in {DATA_DIR}")
@@ -94,7 +96,12 @@ def ingest_data():
                     # API CSV Format (Single column)
                     df['timestamp'] = pd.to_datetime(df['timestamp'], utc=True, errors='coerce')
                     df = df.dropna(subset=['timestamp'])
-                    df = df.drop(columns=['time'], errors='ignore') # Drop redundant time columns if present
+                    # Drop garbage columns if they exist in the file (SafeGuard)
+                    garbage_cols = [
+                        'time', 'time.1', 'vbatt', 'id', 'stab', 
+                        'heatstresscalc', 'dewpointcalc', 'coldstresscalc', 'bp'
+                    ]
+                    df = df.drop(columns=garbage_cols, errors='ignore')
 
                 # 5. Station ID Logic
                 if 'station_id' in df.columns:
