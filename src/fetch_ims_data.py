@@ -19,7 +19,8 @@ STATIONS = {
     # 13: "Tavor_Kadoorie", 
     # 186: "Newe_Yaar", 
     # 500: "Nazareth_City",
-    43: "Haifa_Technion"
+    # 43: "Haifa_Technion",
+    178: "TelAviv_Coast"
 }
 
 START_YEAR = 2020

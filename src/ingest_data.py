@@ -45,7 +45,7 @@ def ingest_data():
         print("Database engine connected.")
 
         # files = glob.glob(os.path.join(DATA_DIR, '*.xlsx')) + glob.glob(os.path.join(DATA_DIR, '*.csv'))
-        files = glob.glob(os.path.join(DATA_DIR, '*Haifa_Technion*.csv'))
+        files = glob.glob(os.path.join(DATA_DIR, '*TelAviv_Coast*.csv'))
         
         if not files:
             print(f"No Excel or CSV files found in {DATA_DIR}")
