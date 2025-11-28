@@ -20,10 +20,10 @@ DATA_DIR = "/app/cloud_data/"
 TABLE_NAME = "raw_station_data"
 
 STATION_MAP = {
-    # "Afula_Nir_HaEmek": 16, 
-    # "Tavor_Kadoorie": 13,
-    # "Newe_Yaar": 186,
-    # "Nazareth": 500,
+    "Afula_Nir_HaEmek": 16, 
+    "Tavor_Kadoorie": 13,
+    "Newe_Yaar": 186,
+    "Nazareth": 500,
     "Hafia_Technion": 43
 }
 
@@ -44,8 +44,9 @@ def ingest_data():
         engine = create_engine(DB_CONN_STR)
         print("Database engine connected.")
 
-        # files = glob.glob(os.path.join(DATA_DIR, '*.xlsx')) + glob.glob(os.path.join(DATA_DIR, '*.csv'))
-        files = glob.glob(os.path.join(DATA_DIR, '*TelAviv_Coast*.csv'))
+        files = glob.glob(os.path.join(DATA_DIR, '*.xlsx')) + glob.glob(os.path.join(DATA_DIR, '*.csv'))
+        # files = glob.glob(os.path.join(DATA_DIR, '*Nazareth*.csv'))
+        # files = glob.glob(os.path.join(DATA_DIR, '*.xlsx'))
         
         if not files:
             print(f"No Excel or CSV files found in {DATA_DIR}")
@@ -58,7 +59,7 @@ def ingest_data():
                 station_name = os.path.basename(file_path).split('.')[0]
                 print(f"Processing: {station_name}")
 
-                # 1. Read File
+                # Read File
                 if file_path.endswith('.xlsx'):
                     df = pd.read_excel(file_path, header=2, na_values=["NoData", "-", ""])
                 else:
@@ -68,7 +69,7 @@ def ingest_data():
                     except UnicodeDecodeError:
                         df = pd.read_csv(file_path, header=0, na_values=["NoData", "-", ""], encoding='ISO-8859-8')
 
-                # 2. Smart Unit Dropping (Detects if first row contains units like 'mm')
+                # Smart Unit Dropping (Detects if first row contains units like 'mm')
                 try:
                     first_row_values = df.iloc[0].astype(str).values.tolist()
                     unit_keywords = ['mm', 'deg', 'm/sec', 'degc', 'hpa']
@@ -78,14 +79,22 @@ def ingest_data():
                 except:
                     pass
 
-                # 3. Clean column names
+                # Clean column names
                 df.columns = df.columns.str.strip().str.lower().str.replace(r'[\s\(\)]+', '_', regex=True).str.strip('_')
 
-                # 4. Timestamp Handling
+                # Timestamp Handling
                 if 'date' in df.columns and 'time' in df.columns:
                     # Legacy Excel Format (Split columns)
                     df['timestamp'] = pd.to_datetime(df['date'].astype(str) + ' ' + df['time'].astype(str), dayfirst=True, errors='coerce')
                     df = df.drop(columns=['date', 'time'])
+                    # Force it to be Israel Standard Time (UTC+2) -> Then convert to UTC
+                    df['timestamp'] = df['timestamp'].dt.tz_localize('Etc/GMT-2').dt.tz_convert('UTC')
+                    
+                    # garbage_cols = [
+                    #     'time', 'time.1', 'vbatt', 'id', 'stab', 
+                    #     'heatstresscalc', 'dewpointcalc', 'coldstresscalc', 'bp'
+                    # ]
+                    # df = df.drop(columns=garbage_cols, errors='ignore')
                     
                     initial_count = len(df)
                     df = df.dropna(subset=['timestamp'])
@@ -97,13 +106,21 @@ def ingest_data():
                     df['timestamp'] = pd.to_datetime(df['timestamp'], utc=True, errors='coerce')
                     df = df.dropna(subset=['timestamp'])
                     # Drop garbage columns if they exist in the file (SafeGuard)
-                    garbage_cols = [
+                    # Removed time.1 to process the excel for now
+                    # garbage_cols = [
+                    #     'time', 'time.1', 'vbatt', 'id', 'stab', 
+                    #     'heatstresscalc', 'dewpointcalc', 'coldstresscalc', 'bp'
+                    # ]
+                    # df = df.drop(columns=garbage_cols, errors='ignore')
+                
+                
+                garbage_cols = [
                         'time', 'time.1', 'vbatt', 'id', 'stab', 
                         'heatstresscalc', 'dewpointcalc', 'coldstresscalc', 'bp'
-                    ]
-                    df = df.drop(columns=garbage_cols, errors='ignore')
+                ]
+                df = df.drop(columns=garbage_cols, errors='ignore')
 
-                # 5. Station ID Logic
+                # Station ID Logic
                 if 'station_id' in df.columns:
                     # Priority 1: Use ID from file
                     df['station_id'] = pd.to_numeric(df['station_id'], errors='coerce')
@@ -118,7 +135,7 @@ def ingest_data():
                     print(f"Error: Could not determine Station ID for '{station_name}'. Skipping.")
                     continue
 
-                # 6. Type Enforcement
+                # Type Enforcement
                 dtype_mapping = {
                     'timestamp': types.DateTime(),
                     'station_id': types.Integer()
@@ -133,13 +150,13 @@ def ingest_data():
                 cols = ['timestamp', 'station_id'] + numeric_cols
                 df = df[cols]
 
-                # 7. Upload with Chunking (Prevent memory crash)
+                # Upload with Chunking (Prevent memory crash)
                 df.to_sql(
                     TABLE_NAME,
                     engine,
                     if_exists='append',
                     index=False,
-                    dtype=dtype_mapping,
+                    dtype=dtype_mapping, # type: ignore
                     method=insert_on_conflict_nothing,
                     chunksize=2000
                 )
