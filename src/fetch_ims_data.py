@@ -15,11 +15,11 @@ API_KEY = os.getenv("API_KEY")
 BASE_URL = "https://api.ims.gov.il/v1/envista/stations"
 
 STATIONS = {
-    # 16: "Afula_Nir_HaEmek", 
-    # 13: "Tavor_Kadoorie", 
-    # 186: "Newe_Yaar", 
-    # 500: "Nazareth_City",
-    # 43: "Haifa_Technion",
+    16: "Afula_Nir_HaEmek", 
+    13: "Tavor_Kadoorie", 
+    186: "Newe_Yaar", 
+    500: "Nazareth_City",
+    43: "Haifa_Technion",
     178: "TelAviv_Coast"
 }
 

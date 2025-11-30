@@ -1,5 +1,11 @@
 #!/bin/bash
 
+if [ ! -d "$HOME/GoogleDrive/weather_data" ]; then
+    echo "Error: Google Drive is NOT mounted."
+    echo "Run: rclone mount gdrive: ~/GoogleDrive --daemon"
+    exit 1
+fi
+
 # Create the backup directory if it doesn't exist
 BACKUP_DIR="$HOME/GoogleDrive/weather_data/db_backups/"
 mkdir -p "$BACKUP_DIR"
