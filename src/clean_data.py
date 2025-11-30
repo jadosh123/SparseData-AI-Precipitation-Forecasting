@@ -17,6 +17,15 @@ DB_CONN_STR = f"postgresql+psycopg2://{db_user}:{db_pass}@{db_host}:5432/{db_nam
 SOURCE_TABLE = "raw_station_data"
 TARGET_TABLE = "clean_station_data"
 
+STATION_COORDS = {
+    13: {'lat': 32.7053, 'lon': 35.4069},
+    16: {'lat': 32.5960, 'lon': 35.2769},
+    43: {'lat': 32.7736, 'lon': 35.0223},
+    178: {'lat': 32.0580, 'lon': 34.7588},
+    186: {'lat': 32.7078, 'lon': 35.1784},
+    500: {'lat': 32.7104, 'lon': 35.3034}
+}
+
 def get_wind_components(ws, wd):
     """
     Converts Wind Speed (m/s) and Direction (deg) into U and V vectors.
@@ -61,6 +70,9 @@ def clean_station_data():
         hourly = group.resample('1h').agg(valid_agg) # type: ignore
         hourly = hourly.interpolate(method='linear', limit=2)
         hourly['station_id'] = station_id
+        station_id_int = int(station_id) # type: ignore
+        hourly['latitude'] = STATION_COORDS[station_id_int]['lat']
+        hourly['longitude'] = STATION_COORDS[station_id_int]['lon']
         clean_dfs.append(hourly)
 
     print("Merging cleaned data.")
