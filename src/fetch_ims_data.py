@@ -29,7 +29,9 @@ OUTPUT_DIR = "/app/cloud_data"
 
 CSV_HEADERS = [
     'timestamp', 
-    'station_id', 
+    'station_id',
+    'latitude',
+    'longitude', 
     'rain', 
     'wsmax', 
     'wdmax', 
@@ -70,7 +72,7 @@ CHANNEL_MAP = {
 }
 
 def fetch_yearly_data(station_id, year):
-    """Fetches data with retries and User-Agent spoofing."""
+    """Fetches weather station data with retries and User-Agent spoofing."""
     from_date = f"{year}/01/01"
     to_date = f"{year + 1}/01/01"
     url = f"{BASE_URL}/{station_id}/data?from={from_date}&to={to_date}"
@@ -110,11 +112,45 @@ def fetch_yearly_data(station_id, year):
     print(f"\nFailed after 3 attempts.")
     return None
 
-def process_observation(obs, station_id):
+def fetch_location_data():
+    """Fetches latitude and longitude data with retries and User-Agent spoofing."""
+
+    headers = {
+        "Authorization": f"ApiToken {API_KEY}",
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36"
+    }
+    
+    print(f"Fetching location map...", end="\r")
+    
+    try:
+        # We hit the base /stations endpoint to get the full list
+        response = requests.get(BASE_URL, headers=headers, timeout=60)
+        response.raise_for_status()
+        data = response.json()
+        
+        # Convert list to a fast lookup dictionary
+        meta_map = {}
+        for s in data:
+            sid = s.get('stationId')
+            loc = s.get('location', {})
+            meta_map[sid] = {
+                'lat': loc.get('latitude'),
+                'lon': loc.get('longitude')
+            }
+        print("Metadata map built successfully.      ")
+        return meta_map
+
+    except Exception as e:
+        print(f"\nError fetching metadata: {e}")
+        return {}
+
+def process_observation(obs, station_id, lat, lon):
     """Flattens a single JSON observation into a CSV row dict."""
     row = {h: None for h in CSV_HEADERS}
     row['timestamp'] = obs.get('datetime')
     row['station_id'] = station_id
+    row['latitude'] = lat
+    row['longitude'] = lon
     
     for channel in obs.get('channels', []):
         if channel.get('valid'):
@@ -127,12 +163,21 @@ def main():
     if not os.path.exists(OUTPUT_DIR):
         print(f"Creating output directory: {OUTPUT_DIR}")
         os.makedirs(OUTPUT_DIR, exist_ok=True)
+        
+    location_map = fetch_location_data()
 
     print(f"Starting Data Fetch for {len(STATIONS)} stations...")
 
     for station_id, station_name in STATIONS.items():
         filename = f"{station_name}_{START_YEAR}-{END_YEAR}.csv"
         filepath = os.path.join(OUTPUT_DIR, filename)
+        
+        station_loc = location_map.get(station_id, {})
+        lat = station_loc.get('lat')
+        lon = station_loc.get('lon')
+        
+        if not lat or not lon:
+            print(f"Warning: No coordinates found for Station {station_id}. CSV will have empty Lat/Lon.")
         
         print(f"\nStation: {station_name} (ID: {station_id})")
         print(f"Saving to: {filepath}")
@@ -148,7 +193,7 @@ def main():
                 if data and 'data' in data:
                     rows = []
                     for obs in data['data']:
-                        rows.append(process_observation(obs, station_id))
+                        rows.append(process_observation(obs, station_id, lat, lon))
                     
                     if rows:
                         writer.writerows(rows)
