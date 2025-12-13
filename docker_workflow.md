@@ -128,3 +128,10 @@ ls -l "/mnt/g/My Drive"
 cd ~
 ln -s "/mnt/g/My Drive" ~/GoogleDrive
 ```
+
+## Shutting down docker
+
+```bash
+docker compose down  # Deletes containers but not data
+docker compose down -v # Deletes containers and data
+```
