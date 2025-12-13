@@ -1,0 +1,4 @@
+# AI-Enhanced Rain Forecasting Model for Data-Sparse Regions
+
+## The Problem and Motivation:
+Accurate and localized rain prediction is crucial for various sectors, including agriculture, urban planning, and disaster preparedness. Many developing countries and hard-to-reach areas worldwide lack the resources to implement radar systems for granular and precise weather forecasts. A basic Doppler radar system can cost between $300,000 and $500,000, with more advanced models costing $1 million or more (excluding maintenance and operational costs). In contrast, a basic commercial weather system costs between $2,000 and $5,000+ for advanced models. Therefore, this project aims to develop and explore a much cheaper and more accessible solution by leveraging artificial intelligence, spatial interpolation, and data from commercial weather systems, addressing a critical need for many countries and data-sparse regions around the world.
