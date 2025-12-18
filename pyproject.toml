@@ -1,0 +1,49 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "weather_engine"
+version = "0.1.0"
+description = "Physics-Informed Precipitation Forecasting System"
+requires-python = ">=3.11"
+authors = [{name = "Your Name", email = "your.email@example.com"}]
+readme = "README.md"
+
+# -----------------------------------------------------------
+# CORE DEPENDENCIES
+# -----------------------------------------------------------
+dependencies = [
+    "numpy==2.3.5",
+    "pandas==2.3.3",
+    "requests==2.32.5",
+    "python-dotenv==1.2.1",
+    "psycopg2-binary==2.9.11",
+    "SQLAlchemy==2.0.44",
+    "openpyxl==3.1.5",
+    "beautifulsoup4==4.14.2",
+    "xgboost",
+]
+
+# -----------------------------------------------------------
+# DEV DEPENDENCIES
+# Install these using: pip install -e .[dev]
+# -----------------------------------------------------------
+[project.optional-dependencies]
+dev = [
+    "pytest",
+    "jupyterlab==4.5.0",
+    "notebook==7.5.0",
+    "ipykernel==7.1.0",
+    "matplotlib",
+]
+
+# -----------------------------------------------------------
+# CONFIGURATION
+# -----------------------------------------------------------
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]  # Helps pytest find your code

@@ -1,1 +1,13 @@
 .env
+.venv
+.vscode
+
+# Python distribution metadata
+*.egg-info
+build/
+dist/
+
+# Byte-compiled
+__pycache__/
+*.py[cod]
+*$py.class
