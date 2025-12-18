@@ -44,7 +44,6 @@ CSV_HEADERS = [
     'tdmin', 
     'ws1mm', 
     'ws10mm',
-    # 'bp'
 ]
 
 CHANNEL_MAP = {
@@ -60,15 +59,6 @@ CHANNEL_MAP = {
     'tdmin': 'tdmin',
     'ws1mm': 'ws1mm',
     'ws10mm': 'ws10mm',
-    
-    # 'bp': 'bp'
-    # 'time': 'time',
-    # 'vbatt': 'vbatt',
-    # 'id': 'id',
-    # 'stab': 'stab',
-    # 'heatstresscalc': 'heatstresscalc',
-    # 'dewpointcalc': 'dewpointcalc',
-    # 'coldstresscalc': 'coldstresscalc',
 }
 
 def fetch_yearly_data(station_id, year):
