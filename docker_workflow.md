@@ -26,7 +26,7 @@ Start your Database and Python environment.
 
 ```bash
 cd ~/repo/SparseData-AI-Precipitation-Forecasting
-docker compose up -d
+docker compose up -d --build
 ```
 
 ## 💻 2. DEVELOPMENT LOOP
@@ -45,8 +45,7 @@ checking the Database
 To run SQL queries or check your data:
 
 ```bash
-# Syntax: docker compose exec db psql -U myuser -d weather_db -c "[QUERY]"
-docker compose exec db psql -U myuser -d weather_db -c "SELECT count(*) FROM raw_station_data;"
+docker compose exec db psql -U some_username -d some_db_name -c "SELECT count(*) FROM some_table_name;"
 ```
 
 Adding New Python Libraries

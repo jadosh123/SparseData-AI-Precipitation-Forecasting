@@ -8,10 +8,10 @@ from sqlalchemy import create_engine, types
 base_dir = Path(__file__).resolve().parent.parent
 env_file = base_dir / '.env'
 load_dotenv(env_file)
-db_user = os.getenv("DB_USER")
-db_pass = os.getenv("DB_PASS")
+db_user = os.getenv("POSTGRES_USER")
+db_pass = os.getenv("POSTGRES_PASSWORD")
 db_host = os.getenv("DB_HOST")
-db_name = os.getenv("DB_NAME")
+db_name = os.getenv("POSTGRES_DB")
 
 DB_CONN_STR = f"postgresql+psycopg2://{db_user}:{db_pass}@{db_host}:5432/{db_name}"
 SOURCE_TABLE = "raw_station_data"
