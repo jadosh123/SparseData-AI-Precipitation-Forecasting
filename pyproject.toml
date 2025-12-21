@@ -46,4 +46,19 @@ where = ["src"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
-pythonpath = ["src"]  # Helps pytest find your code
+pythonpath = ["src"]
+
+# FOR PYLANCE CRASHING
+[tool.pyright]
+include = ["src", "tests"]
+
+exclude = [
+    "**/postgres_data",
+    "**/cloud_data",
+    "**/data",
+    "**/.venv",
+    "**/__pycache__"
+]
+
+venvPath = "."
+venv = ".venv"
