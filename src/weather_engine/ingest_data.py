@@ -87,7 +87,7 @@ def ingest_data():
                     # Legacy Excel Format (Split columns)
                     df['timestamp'] = pd.to_datetime(df['date'].astype(str) + ' ' + df['time'].astype(str), dayfirst=True, errors='coerce')
                     df = df.drop(columns=['date', 'time'])
-                    # Force it to be Israel Standard Time (UTC+2) -> Then convert to UTC
+                    # Force it to be Israel Standard Time then convert to URC
                     df['timestamp'] = df['timestamp'].dt.tz_localize('Etc/GMT-2').dt.tz_convert('UTC')
                     
                     # garbage_cols = [
@@ -106,7 +106,7 @@ def ingest_data():
                     df['timestamp'] = pd.to_datetime(df['timestamp'], utc=True, errors='coerce')
                     df = df.dropna(subset=['timestamp'])
                     # Drop garbage columns if they exist in the file (SafeGuard)
-                    # Removed time.1 to process the excel for now
+                    
                     # garbage_cols = [
                     #     'time', 'time.1', 'vbatt', 'id', 'stab', 
                     #     'heatstresscalc', 'dewpointcalc', 'coldstresscalc', 'bp'
