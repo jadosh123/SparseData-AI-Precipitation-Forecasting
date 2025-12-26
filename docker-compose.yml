@@ -1,4 +1,4 @@
-# version: '3.8'
+version: '3.8'
 
 services:
   db:
@@ -11,19 +11,13 @@ services:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       POSTGRES_DB: ${POSTGRES_DB}
     volumes:
-      # 1. The LIVE data (Fast, Local, NOT Synced)
-      # This lives inside your laptop's internal storage for speed.
       - postgres_data:/var/lib/postgresql/data
-      
-      # 2. The BRIDGE to Google Drive
-      # This maps your cloud folder to "/app/cloud_data" inside the container.
-      # We will use this to read your Excel file and write backups.
       - ~/GoogleDrive/weather_data:/app/cloud_data
     ports:
       - "5432:5432"
     restart: unless-stopped
 
-    # (Optional) Installs a health check to verify DB is ready
+    # Installs a health check to verify DB is ready
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
       interval: 10s
