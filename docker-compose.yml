@@ -1,4 +1,4 @@
-version: '3.8'
+# version: '3.8'
 
 services:
   db:
@@ -12,7 +12,7 @@ services:
       POSTGRES_DB: ${POSTGRES_DB}
     volumes:
       - postgres_data:/var/lib/postgresql/data
-      - ~/GoogleDrive/weather_data:/app/cloud_data
+      - ./database/init.sql:/docker-entrypoint-initdb.d/init.sql
     ports:
       - "5432:5432"
     restart: unless-stopped
@@ -27,9 +27,13 @@ services:
   app:
     build: .
     command: tail -f /dev/null
+    env_file:
+      - ./.env
     volumes:
       - .:/app
       - ~/GoogleDrive/weather_data:/app/cloud_data
+    environment:
+      - DB_HOST=db
     depends_on:
       db:
         condition: service_healthy

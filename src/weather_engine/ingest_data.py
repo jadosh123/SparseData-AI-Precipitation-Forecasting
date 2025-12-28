@@ -10,10 +10,10 @@ from dotenv import load_dotenv
 base_dir = Path(__file__).resolve().parent.parent
 env_file = base_dir / '.env'
 load_dotenv(env_file)
-db_user = os.getenv("DB_USER")
-db_pass = os.getenv("DB_PASS")
+db_user = os.getenv("POSTGRES_USER")
+db_pass = os.getenv("POSTGRES_PASSWORD")
 db_host = os.getenv("DB_HOST")
-db_name = os.getenv("DB_NAME")
+db_name = os.getenv("POSTGRES_DB")
 
 DB_CONN_STR = f"postgresql+psycopg2://{db_user}:{db_pass}@{db_host}:5432/{db_name}"
 DATA_DIR = "/app/cloud_data/"
@@ -23,8 +23,8 @@ STATION_MAP = {
     "Afula_Nir_HaEmek": 16, 
     "Tavor_Kadoorie": 13,
     "Newe_Yaar": 186,
-    "Nazareth": 500,
-    "Hafia_Technion": 43
+    "Nazareth_City": 500,
+    "Haifa_Technion": 43
 }
 
 def insert_on_conflict_nothing(table, conn, keys, data_iter):
@@ -84,17 +84,21 @@ def ingest_data():
 
                 # Timestamp Handling
                 if 'date' in df.columns and 'time' in df.columns:
+                    # Handle 24:00 format in excel
+                    mask_24 = df['time'].astype(str).str.contains('24:00')
+                    df.loc[mask_24, 'time'] = '00:00'
+
                     # Legacy Excel Format (Split columns)
                     df['timestamp'] = pd.to_datetime(df['date'].astype(str) + ' ' + df['time'].astype(str), dayfirst=True, errors='coerce')
-                    df = df.drop(columns=['date', 'time'])
-                    # Force it to be Israel Standard Time then convert to URC
-                    df['timestamp'] = df['timestamp'].dt.tz_localize('Etc/GMT-2').dt.tz_convert('UTC')
                     
-                    # garbage_cols = [
-                    #     'time', 'time.1', 'vbatt', 'id', 'stab', 
-                    #     'heatstresscalc', 'dewpointcalc', 'coldstresscalc', 'bp'
-                    # ]
-                    # df = df.drop(columns=garbage_cols, errors='ignore')
+                    # Add one day to match 00:00 as start of next day not prior day
+                    if mask_24.any():
+                        df.loc[mask_24, 'timestamp'] += pd.Timedelta(days=1)
+                    
+                    df = df.drop(columns=['date', 'time'])
+
+                    # Force it to be Israel Standard Time then convert to UTC
+                    df['timestamp'] = df['timestamp'].dt.tz_localize('Etc/GMT-2').dt.tz_convert('UTC')
                     
                     initial_count = len(df)
                     df = df.dropna(subset=['timestamp'])
@@ -105,14 +109,6 @@ def ingest_data():
                     # API CSV Format (Single column)
                     df['timestamp'] = pd.to_datetime(df['timestamp'], utc=True, errors='coerce')
                     df = df.dropna(subset=['timestamp'])
-                    # Drop garbage columns if they exist in the file (SafeGuard)
-                    
-                    # garbage_cols = [
-                    #     'time', 'time.1', 'vbatt', 'id', 'stab', 
-                    #     'heatstresscalc', 'dewpointcalc', 'coldstresscalc', 'bp'
-                    # ]
-                    # df = df.drop(columns=garbage_cols, errors='ignore')
-                
                 
                 garbage_cols = [
                         'time', 'time.1', 'vbatt', 'id', 'stab', 
@@ -122,11 +118,9 @@ def ingest_data():
 
                 # Station ID Logic
                 if 'station_id' in df.columns:
-                    # Priority 1: Use ID from file
                     df['station_id'] = pd.to_numeric(df['station_id'], errors='coerce')
                 
                 elif any(station_name.startswith(k) for k in STATION_MAP):
-                    # Priority 2: Use Filename Map
                     match = next(k for k in STATION_MAP if station_name.startswith(k))
                     print(f"   Mapped '{station_name}' to ID {STATION_MAP[match]}")
                     df['station_id'] = STATION_MAP[match]

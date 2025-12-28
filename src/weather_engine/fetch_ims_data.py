@@ -72,32 +72,32 @@ def fetch_yearly_data(station_id, year):
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36"
     }
     
-    print(f"Fetching {year}...", end="\r")
+    print(f"Fetching {year}...")
     
     for attempt in range(3):
         try:
             response = requests.get(url, headers=headers, timeout=60)
             
             if response.status_code == 200:
+                time.sleep(15)
                 return response.json()
             
-            elif response.status_code >= 500:
-                print(f"Server error {response.status_code}. Retrying ({attempt+1}/3)...")
-                time.sleep(5)
+            elif response.status_code in [429, 500, 502, 503, 504]:
+                print(f"Status {response.status_code}. Retrying in {attempt * 5}s...")
+                time.sleep(attempt * 5) # Exponential backoff (5s, 10s, 15s)
                 continue
             
+            elif response.status_code == 204:
+                print("No Content (204). Station might be inactive this year.")
+                return None
             else:
                 print(f"\nClient Error {response.status_code}: {response.text[:100]}")
                 return None
 
-        except requests.exceptions.JSONDecodeError:
-            # Common error when API returns empty/HTML response for missing data years
-            print(f"\nFailed to decode JSON. Server likely returned empty response for {year}.")
-            return None
-            
-        except Exception as e:
-            print(f"\nNetwork error: {e}. Retrying...")
-            time.sleep(5)
+        except requests.exceptions.RequestException as e:
+            # Network level errors (Connection Refused, Timeout)
+            print(f"Network Error ({e}). Retrying in {attempt * 5}s...")
+            time.sleep(attempt * 5)
 
     print(f"\nFailed after 3 attempts.")
     return None
@@ -127,7 +127,7 @@ def fetch_location_data():
                 'lat': loc.get('latitude'),
                 'lon': loc.get('longitude')
             }
-        print("Metadata map built successfully.      ")
+        print("Metadata map built successfully.")
         return meta_map
 
     except Exception as e:
@@ -189,7 +189,7 @@ def main():
                         writer.writerows(rows)
                         total_rows += len(rows)
                 
-                time.sleep(1)
+                time.sleep(10)
             
             print(f"\nFinished {station_name}: {total_rows} rows saved.")
 

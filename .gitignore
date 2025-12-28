@@ -2,6 +2,7 @@
 .venv
 .vscode
 .pytest_cache
+cloud_data
 
 # Python distribution metadata
 *.egg-info
