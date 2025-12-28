@@ -8,7 +8,7 @@ from dotenv import load_dotenv
 load_dotenv()
 DB_USER = os.getenv("POSTGRES_USER")
 DB_PASS = os.getenv("POSTGRES_PASSWORD")
-DB_HOST = os.getenv("POSTGRES_HOST")
+DB_HOST = os.getenv("DB_HOST")
 DB_NAME = os.getenv("POSTGRES_DB")
 DB_CONN_STR = f"postgresql+psycopg2://{DB_USER}:{DB_PASS}@{DB_HOST}:5432/{DB_NAME}"
 

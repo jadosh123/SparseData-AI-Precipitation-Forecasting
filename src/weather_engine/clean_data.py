@@ -5,6 +5,7 @@ import numpy as np
 import os
 from sqlalchemy import create_engine, types
 
+
 base_dir = Path(__file__).resolve().parent.parent
 env_file = base_dir / '.env'
 load_dotenv(env_file)
@@ -28,7 +29,7 @@ def get_wind_components(ws, wd):
 
 def clean_station_data():
     engine = create_engine(DB_CONN_STR)
-    df = pd.read_sql_table("raw_station_data", engine)
+    df = pd.read_sql_table(SOURCE_TABLE, engine)
     
     df['timestamp'] = pd.to_datetime(df["timestamp"], utc=True)
     df = df.sort_values(['station_id', 'timestamp'])
@@ -63,6 +64,7 @@ def clean_station_data():
         except IndexError:
             print(f"Warning: No Lat/Lon found for Station {station_id}. Using 0.0.")
             lat, lon = 0.0, 0.0
+
         
         # Filter to only use cols present in the data
         valid_agg = {k: v for k, v in agg_rules.items() if k in group.columns}

@@ -37,11 +37,12 @@ echo "Backing up database '$POSTGRES_DB' as user '$POSTGRES_USER'..."
 
 # Note: We do NOT need to pipe password here if .env is loaded and pg_dump finds it,
 # but usually for docker exec we rely on the container's environment or trust.
-docker exec weather_db pg_dump -U "$POSTGRES_USER" "$POSTGRES_DB" > "$BACKUP_PATH"
+docker exec weather_db pg_dump -U "$POSTGRES_USER" -O -x "$POSTGRES_DB" > "$BACKUP_PATH"
 
 # 5. Check result
 if [ $? -eq 0 ]; then
   echo "Backup successful: $FILENAME"
 else
   echo "Backup failed"
+  rm -f "$BACKUP_PATH" # Delete empty file if failed
 fi
