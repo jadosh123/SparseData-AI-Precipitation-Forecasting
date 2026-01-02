@@ -8,8 +8,6 @@ This document tracks the engineering challenges, architectural decisions, and so
 
 I am currently studying Meteorology Today: An Introduction to Weather, Climate, and the Environment to bridge the gap between data science and physical atmospheric dynamics. I am mapping metrics provided by the Israeli Meteorological Service (IMS) (e.g., Temperature, Rain, Wind Direction) to theoretical concepts needed for feature engineering (e.g., Wind Convergence, Orographic Lift).
 
-I am also studying A Tour of C++ by Bjarne Stroustrup to implement my regression kriging engine, transitioning from a O(N x M x F) where N is number of grid cells, M is the number of stations and F is length of the feature vector per station in slow python loops to optimized C++ code, I will then expose the engine to my python environment via pybind11 utilizing the fact that passing numpy arrays to C++ is a no copy operation O(1).
-
 ## System Architecture
 
 To ensure scalability and industry-standard data flow, I adopted the Medallion Architecture:
@@ -46,3 +44,49 @@ To ensure scalability and industry-standard data flow, I adopted the Medallion A
 
 4. **Workflow Synchronization**
     - Created a custom bash-based synchronization workflow using Google Drive to sync binary database dumps between my Desktop (WSL) and Laptop (Ubuntu), allowing frictionless switching between development machines.
+
+## Current Ongoing Challenges:
+
+### Date: January 2, 2026
+
+Subject: Transition from Regression Kriging to Unified RFSI/XGBoost Architecture
+
+1) **Initial Assessment: The Limits of Regression Kriging (RK)**
+
+    **Hypothesis:** The initial proposal involved a two-step pipeline: using Regression Kriging (RK) to generate a spatial grid of current precipitation, followed by a Machine Learning model (XGBoost) to forecast future states.
+
+    **Technical Critique:** Upon review, RK was deemed unsuitable for this specific hydrometeorological context due to:
+    - **Linearity Assumption:** RK assumes linear correlations between covariates (elevation) and residuals. Precipitation dynamics in complex terrain are inherently non-linear (e.g., threshold-based convective instability).
+    - **Stationarity:** RK assumes spatial variance is uniform (stationarity), which is violated by the distinct micro-climates of the North District.
+    - **Error Propagation:** A two-step process (Interpolate → Forecast) compounds errors; uncertainties in the Kriging step would inevitably degrade the forecasting model's accuracy.
+
+2) **Strategic Pivot: Unified RFSI/XGBoost Model**
+
+    **Decision:** We have adopted a Random Forest Spatial Interpolation (RFSI) methodology implemented via a single XGBoost engine.
+
+    **Methodology:** Instead of separating "Spatial Interpolation" and "Temporal Forecasting," we treat them as a single supervised learning problem.
+    - **Input (Xt​):** The spatial configuration of neighbors and meteorological conditions at time t.
+    - **Target (Yt+1​):** The observed precipitation at time t+1.
+
+    **Benefit:** The model simultaneously learns the Spatial Decay (interpolation logic) and Temporal Advection (forecasting logic). This streamlines the pipeline and allows non-linear interactions between terrain (Static features) and neighbor influence (Spatial features).
+
+3) **Addressing Data Sparsity: The "Blind Neighbor" Training Strategy**
+
+    **Challenge:** We are operating with a sparse local cluster (3 stations: Afula, Newe Yaar, Tavor Kadoorie). Training a model on a station usually implies a "Distance to Nearest Neighbor" of 0, which creates a singularity (overfitting) when applied to grid cells where distance is always > 0.
+
+    **Solution: Leave-One-Station-Out (LOSO) Training.**
+    - During training, the target station is masked (hidden) from the feature set.
+    - The model must predict the target's value using only the other available stations.
+    - **Constraint:** This forces a K=2 Neighbor limit. The model learns to interpolate based on the 2 nearest proxies, ensuring the training context matches the inference (grid) context.
+
+4) **Final Architecture: The Hybrid Physical-Statistical Approach**
+
+    To incorporate distant upstream data (Tel Aviv, Haifa) without corrupting the local spatial interpolation, we established a Hybrid Feature Vector:
+    1. **Local Layer (The "Where"):**
+        - Uses RFSI Features (K=2) derived strictly from the local cluster.
+        - Function: Determines local intensity based on proximity and elevation.
+    2. **Upstream Forcing Layer (The "When"):**
+        - Uses Broadcasted Features (Wind Vectors, Rain Lags) from Tel Aviv/Haifa.
+        - Function: These are treated as "Global/Static" inputs for every grid cell to capture storm advection (movement from the coast) and system severity.
+
+**Conclusion:** This architecture maximizes the utility of sparse data by separating spatial interpolation (Local RFSI) from temporal forecasting (Upstream Lags), all within a single, scalable XGBoost framework.
