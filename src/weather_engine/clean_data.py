@@ -22,6 +22,11 @@ def get_wind_components(ws, wd):
     """
     Converts Wind Speed (m/s) and Direction (deg) into U and V vectors.
     """
+    # Northerly winds 0 deg -> South (Negative)
+    # Easterly winds 90 deg -> West (Negative)
+    # Southerly winds 180 deg -> North (Positive)
+    # Westerly winds 270 deg -> East (Positive)
+
     wd_rad = np.deg2rad(wd)
     u = -ws * np.sin(wd_rad) # X axis
     v = -ws * np.cos(wd_rad) # Y axis
