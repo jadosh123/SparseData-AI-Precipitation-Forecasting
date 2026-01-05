@@ -100,3 +100,37 @@ Furthermore, our Precision of 0.49 is consistent with the industry-standard trad
 To address the identified data sparsity in upstream reference stations (specifically Haifa’s ~11% wind outages and Jan–June gaps), I will implement a Master Time Index architecture for the deployment pipeline. This strategy decouples the prediction timeline from individual sensor health by initializing a continuous, gap-free "Backbone" index for the target grid and performing Left Joins with all feeder station data. This ensures dimensional consistency across the spatial mesh, preventing pipeline failures during partial sensor outages. By preserving temporal rows even when specific feature columns are NaN, this architecture enables the XGBoost model to leverage its native sparsity-aware inference—dynamically shifting weight to active local sensors (e.g., Afula, Tavor) when distant feeders like Haifa go offline—thereby guaranteeing high availability and robust spatial interpolation for the grid.
 
 To further mitigate the operational risks of sensor outages, I will implement a Dynamic Confidence Scoring layer on top of the prediction output. Since the model's certainty degrades when high-value features (e.g., Haifa Wind) are null, the system will output a prediction interval (lower/upper bound) alongside the point forecast. This allows us to flag forecasts as "Low Confidence" during critical data gaps. Additionally, the API response will include specific Sensor Health Metadata, explicitly informing the user if a prediction is based on a degraded sensor set (e.g., "Warning: Haifa Station Offline - Prediction relies on Local Cluster only"). This transparency ensures users can distinguish between a high-certainty "All-Clear" and a low-certainty interpolation.
+
+### Date: January 5, 2026
+
+Subject: Comparing XGBoost model performance before and after the addition of physical features.
+
+As we can see in the below test outcomes, the model with Tel Aviv and Haifa as upstream feeders saw a clear performance boost from the physical features (RMSE dropping from 2.15 to 2.14).
+
+After inspecting the Haifa Technion station I observed Signal Quality issues. I observed continuous blocks of missing wind speed and direction data along with other sensors telling us that the Haifa Technion station has blocks of missing sensor data due to outages or faulty sensors.
+
+Our mission to circumvent this is to check Haifa Karmel and Haifa Port stations to see if we can find a station with more uptime than the Technion one.
+
+**Features used for physics run:** [u_convergence, v_convergence, moisture_flux]
+
+**XGBoost model setup:** []
+
+### Table 1: Performance Without Physical Features
+
+| Model Type | Global t+1 RMSE (mm) | Storm-Only t+1 RMSE (mm) |
+| :--- | :--- | :--- |
+| **Baseline Persistence** | 0.5996 | 2.7222 |
+| **Baseline XGBoost** | 0.4884 | 2.3056 |
+| **XGBoost upstream Tel Aviv** | 0.4769 | 2.2326 |
+| **XGBoost upstream Tel Aviv + Haifa** | **0.4592** | **2.1563** |
+
+---
+
+### Table 2: Performance With Physical Features (Convergence & Flux)
+
+| Model Type | Global t+1 RMSE (mm) | Storm-Only t+1 RMSE (mm) |
+| :--- | :--- | :--- |
+| **Baseline Persistence** | 0.5996 | 2.7222 |
+| **Baseline XGBoost** | 0.4884 | 2.3056 |
+| **XGBoost upstream Tel Aviv** | 0.4779 | 2.2516 |
+| **XGBoost upstream Tel Aviv + Haifa** | **0.4588** | **2.1494** |
