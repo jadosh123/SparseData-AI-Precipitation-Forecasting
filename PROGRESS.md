@@ -148,7 +148,20 @@ I ran the training/prediction process again but using the tweedie regression cos
 | **XGBoost upstream Tel Aviv + Haifa (Tweedie cost function)** | 0.4671 | 2.1177 | -0.70 | 125.4% |
 | **Total Improvement per metric** | +3.3% | +1.47% | +0.02mm | -1.8% |
 
-As we can see the model improved across the board which proves using this new cost function didn't just result in a better performance by luck
+As we can see the model improved across the board which proves using this new cost function didn't just result in a better performance by luck.
 
 We also spoke about building a front-end interface for the system to display the model's forecasts since that is part of the general project goal, I'm thinking of currently of using FastAPI for the backend because its the industry standard, its lightweight and it natively supports JSON which the front-end needs.
 For the front-end I will use Streamlit as to not break away from python and my project and waste too much time relearning Javascript and React.
+
+### Current Goals to try to complete before publishing the Alpha Report
+
+- [ ] A python script for live inference, fetches last 24 hours of recordings and outputs a forecast.
+- [ ] A backend with FastAPI that exposes a /predict endpoint accessed with a GET request that returns a JSON format output for forecasts/station id (and maybe current wind vectors to display storm movement to user).
+- [ ] A frontend dashboard with a map displaying the stations used and the current forecast for our area of interest (Currently Afula) using Streamlit.
+- [ ] Update docker-compose.yml to support the FastAPI backend and the Streamlit frontend.
+
+### Goals for project improvement
+
+- [ ] Investigate the data of Haifa karmel and Haifa Port if they have more continuous rich data compared to Haifa Technion (its missing some blocks of wind vector data).
+- [ ] Investigate the stations above Afula and Nazareth like the one near Sakhnin and Deir Hana to allow a proper interpolation environment for the RFSI or XGBoost with RFSI features.
+- [ ] Investigate all coastal station data for continuity to add them later to the system (guarantees that no storm passes between haifa and telaviv and surprises our model).
