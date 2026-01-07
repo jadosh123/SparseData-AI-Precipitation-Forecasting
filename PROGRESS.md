@@ -132,5 +132,23 @@ Our mission to circumvent this is to check Haifa Karmel and Haifa Port stations 
 | :--- | :--- | :--- |
 | **Baseline Persistence** | 0.5996 | 2.7222 |
 | **Baseline XGBoost** | 0.4884 | 2.3056 |
-| **XGBoost upstream Tel Aviv** | 0.4779 | 2.2516 |
-| **XGBoost upstream Tel Aviv + Haifa** | **0.4588** | **2.1494** |
+| **XGBoost upstream Tel Aviv** | **0.4825** | 2.1711 |
+| **XGBoost upstream Tel Aviv + Haifa** | 0.4830 | **2.1484** |
+
+### Date: January 7, 2026
+
+Subject: Meeting with PM Dr.Zur, discussed cost function impact on model performance and front-end interface.
+
+We discussed the cost function usage and I agree the reg:squarederror is a bad choice especially in such imbalanced data since this function basically tells the model that over-prediction and under-prediction are equally as bad. In hydrometeorological forecasting, under-predicting a 10-mm storm (a safety risk) is objectively worse than over-predicting by 10mm (a false alarm).
+I ran the training/prediction process again but using the tweedie regression cost function since this function is the industrial standard for meteorology and is geared towards data that is zero inflated (like ours) and it improved the best model's performance:
+
+| Model Type | Global t+1 RMSE (mm) | Storm-Only t+1 RMSE (mm) | Storm Intensity Bias (mm) | Storm Scatter Index (%) |
+| :--- | :--- | :--- | :--- | :--- |
+| **XGBoost upstream Tel Aviv + Haifa (Squared Error cost function)** | 0.4830 | 2.1484 | −0.72 | 127.2% |
+| **XGBoost upstream Tel Aviv + Haifa (Tweedie cost function)** | 0.4671 | 2.1177 | -0.70 | 125.4% |
+| **Total Improvement per metric** | +3.3% | +1.47% | +0.02mm | -1.8% |
+
+As we can see the model improved across the board which proves using this new cost function didn't just result in a better performance by luck
+
+We also spoke about building a front-end interface for the system to display the model's forecasts since that is part of the general project goal, I'm thinking of currently of using FastAPI for the backend because its the industry standard, its lightweight and it natively supports JSON which the front-end needs.
+For the front-end I will use Streamlit as to not break away from python and my project and waste too much time relearning Javascript and React.
