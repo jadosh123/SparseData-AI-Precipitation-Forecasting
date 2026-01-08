@@ -1,43 +1,17 @@
-# version: '3.8'
-
 services:
-  db:
-    image: postgres:15
-    container_name: weather_db
-    env_file:
-      - ./.env
-    environment:
-      POSTGRES_USER: ${POSTGRES_USER}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-      POSTGRES_DB: ${POSTGRES_DB}
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-      - ./database/init.sql:/docker-entrypoint-initdb.d/init.sql
-    ports:
-      - "5432:5432"
-    restart: unless-stopped
-
-    # Installs a health check to verify DB is ready
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-
-  app:
+  backend:
     build: .
+    container_name: rain_backend
     command: tail -f /dev/null
     env_file:
       - ./.env
     volumes:
       - .:/app
       - ~/GoogleDrive/weather_data:/app/cloud_data
+      - ./data:/data
     environment:
-      - DB_HOST=db
-    depends_on:
-      db:
-        condition: service_healthy
-    restart: on-failure
-
-volumes:
-  postgres_data:
+      - DATABASE_URL=sqlite:////data/weather.db
+      - PYTHONPATH=/app/src
+    ports:
+      - "8000:8000"
+    restart: "no"
