@@ -2,6 +2,8 @@
 .venv
 .vscode
 .pytest_cache
+*.db
+/data
 cloud_data
 
 # Python distribution metadata
