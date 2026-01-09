@@ -2,19 +2,14 @@ from pathlib import Path
 from dotenv import load_dotenv
 import pandas as pd
 import numpy as np
-import os
-from sqlalchemy import create_engine, types
-
+from sqlalchemy import types
+from weather_engine.database import engine
 
 base_dir = Path(__file__).resolve().parent.parent
 env_file = base_dir / '.env'
 load_dotenv(env_file)
-db_user = os.getenv("POSTGRES_USER")
-db_pass = os.getenv("POSTGRES_PASSWORD")
-db_host = os.getenv("DB_HOST")
-db_name = os.getenv("POSTGRES_DB")
 
-DB_CONN_STR = f"postgresql+psycopg2://{db_user}:{db_pass}@{db_host}:5432/{db_name}"
+# DB_CONN_STR = os.getenv("DB_CONN_STR")
 SOURCE_TABLE = "raw_station_data"
 TARGET_TABLE = "clean_station_data"
 
@@ -33,8 +28,13 @@ def get_wind_components(ws, wd):
     return u, v
 
 def clean_station_data():
-    engine = create_engine(DB_CONN_STR)
-    df = pd.read_sql_table(SOURCE_TABLE, engine)
+    print(f"Reading from {SOURCE_TABLE}...")
+    try:
+        # pd.read_sql_table automatically grabs a connection from the engine pool
+        df = pd.read_sql_table(SOURCE_TABLE, engine)
+    except ValueError:
+        print(f"Error: Table {SOURCE_TABLE} not found or empty.")
+        return
     
     df['timestamp'] = pd.to_datetime(df["timestamp"], utc=True)
     df = df.sort_values(['station_id', 'timestamp'])
