@@ -1,0 +1,11 @@
+# .dockerignore
+__pycache__
+*.pyc
+.git
+.env
+.venv
+venv/
+data/
+cloud_data/
+backend/
+frontend/

@@ -4,18 +4,14 @@ import numpy as np
 import os
 from sqlalchemy import create_engine, inspect, types
 from dotenv import load_dotenv
+from pathlib import Path
+
+from weather_engine.database import engine
 
 load_dotenv()
-DB_USER = os.getenv("POSTGRES_USER")
-DB_PASS = os.getenv("POSTGRES_PASSWORD")
-DB_HOST = os.getenv("DB_HOST")
-DB_NAME = os.getenv("POSTGRES_DB")
-DB_CONN_STR = f"postgresql+psycopg2://{DB_USER}:{DB_PASS}@{DB_HOST}:5432/{DB_NAME}"
 
-if not DB_HOST:
-    pytest.fail("Environment variables failed to load! Check your .env file.")
+DATABASE_URL = os.getenv("DATABASE_URL")
 
-engine = create_engine(DB_CONN_STR)
 
 def get_wind_components(ws, wd):
     wd_rad = np.deg2rad(wd)
