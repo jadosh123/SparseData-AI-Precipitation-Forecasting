@@ -1,21 +1,11 @@
 import pandas as pd
-from sqlalchemy import create_engine, inspect, types
-from sqlalchemy.dialects.postgresql import insert
+from sqlalchemy import create_engine, types
+from sqlalchemy.dialects.sqlite import insert
 import time
 import os
 import glob
-from pathlib import Path
-from dotenv import load_dotenv
+from weather_engine.database import engine
 
-base_dir = Path(__file__).resolve().parent.parent
-env_file = base_dir / '.env'
-load_dotenv(env_file)
-db_user = os.getenv("POSTGRES_USER")
-db_pass = os.getenv("POSTGRES_PASSWORD")
-db_host = os.getenv("DB_HOST")
-db_name = os.getenv("POSTGRES_DB")
-
-DB_CONN_STR = f"postgresql+psycopg2://{db_user}:{db_pass}@{db_host}:5432/{db_name}"
 DATA_DIR = "/app/cloud_data/"
 TABLE_NAME = "raw_station_data"
 
@@ -37,13 +27,10 @@ def insert_on_conflict_nothing(table, conn, keys, data_iter):
     conn.execute(stmt)
 
 def ingest_data():
-    print("Waiting for database...")
-    time.sleep(10)
+    print("Initializing ingestion...")
+    time.sleep(1)
 
     try:
-        engine = create_engine(DB_CONN_STR)
-        print("Database engine connected.")
-
         files = glob.glob(os.path.join(DATA_DIR, '*.xlsx')) + glob.glob(os.path.join(DATA_DIR, '*.csv'))
         # files = glob.glob(os.path.join(DATA_DIR, '*Nazareth*.csv'))
         # files = glob.glob(os.path.join(DATA_DIR, '*.xlsx'))
@@ -98,7 +85,7 @@ def ingest_data():
                     df = df.drop(columns=['date', 'time'])
 
                     # Force it to be Israel Standard Time then convert to UTC
-                    df['timestamp'] = df['timestamp'].dt.tz_localize('Etc/GMT-2').dt.tz_convert('UTC')
+                    df['timestamp'] = df['timestamp'].dt.tz_localize('Etc/GMT-2').dt.tz_convert('UTC').dt.tz_localize(None)
                     
                     initial_count = len(df)
                     df = df.dropna(subset=['timestamp'])
@@ -108,6 +95,7 @@ def ingest_data():
                 elif 'timestamp' in df.columns:
                     # API CSV Format (Single column)
                     df['timestamp'] = pd.to_datetime(df['timestamp'], utc=True, errors='coerce')
+                    df['timestamp'] = df['timestamp'].dt.tz_localize(None)  # type: ignore
                     df = df.dropna(subset=['timestamp'])
                 
                 garbage_cols = [
@@ -119,12 +107,10 @@ def ingest_data():
                 # Station ID Logic
                 if 'station_id' in df.columns:
                     df['station_id'] = pd.to_numeric(df['station_id'], errors='coerce')
-                
                 elif any(station_name.startswith(k) for k in STATION_MAP):
                     match = next(k for k in STATION_MAP if station_name.startswith(k))
                     print(f"   Mapped '{station_name}' to ID {STATION_MAP[match]}")
                     df['station_id'] = STATION_MAP[match]
-                
                 else:
                     print(f"Error: Could not determine Station ID for '{station_name}'. Skipping.")
                     continue
@@ -152,7 +138,7 @@ def ingest_data():
                     index=False,
                     dtype=dtype_mapping, # type: ignore
                     method=insert_on_conflict_nothing,
-                    chunksize=2000
+                    chunksize=5000
                 )
                 print(f"Success: {station_name}")
 
