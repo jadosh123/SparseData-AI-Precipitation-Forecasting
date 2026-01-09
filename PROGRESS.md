@@ -135,6 +135,8 @@ Our mission to circumvent this is to check Haifa Karmel and Haifa Port stations 
 | **XGBoost upstream Tel Aviv** | **0.4825** | 2.1711 |
 | **XGBoost upstream Tel Aviv + Haifa** | 0.4830 | **2.1484** |
 
+![alt text](imgs/feature_importance.png)
+
 ### Date: January 7, 2026
 
 Subject: Meeting with PM Dr.Zur, discussed cost function impact on model performance and front-end interface.
