@@ -1,17 +1,7 @@
 import pytest
 import pandas as pd
 import numpy as np
-import os
-from sqlalchemy import create_engine, inspect, types
-from dotenv import load_dotenv
-from pathlib import Path
-
 from weather_engine.database import engine
-
-load_dotenv()
-
-DATABASE_URL = os.getenv("DATABASE_URL")
-
 
 def get_wind_components(ws, wd):
     wd_rad = np.deg2rad(wd)
@@ -42,15 +32,15 @@ def sample_bronze_data():
     except Exception as e:
         pytest.fail(f"Database connection failed. Ensure Docker is running.\nError: {e}")
 
-@pytest.fixture(scope="session")
-def sample_silver_data():
-    """
-    Returns all silver layer data in a pandas dataframe
-    """
-    try:
-        return pd.read_sql("clean_station_data", engine)
-    except Exception as e:
-        pytest.fail(f"Database connection failed. Ensure Docker is running.\nError: {e}")
+# @pytest.fixture(scope="session")
+# def sample_silver_data():
+#     """
+#     Returns all silver layer data in a pandas dataframe
+#     """
+#     try:
+#         return pd.read_sql("clean_station_data", engine)
+#     except Exception as e:
+#         pytest.fail(f"Database connection failed. Ensure Docker is running.\nError: {e}")
 
 def test_no_negative_rain(sample_bronze_data):
     """
