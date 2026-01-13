@@ -5,6 +5,7 @@
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
 # The root is one level up from the scripts folder
 PROJECT_ROOT="$SCRIPT_DIR/.."
+DEST_DB="$PROJECT_ROOT/data/weather.db"
 ENV_FILE="$PROJECT_ROOT/.env"
 
 if [ -f "$ENV_FILE" ]; then
@@ -28,7 +29,7 @@ fi
 BACKUP_DIR="$BASE_DIR/db_backups"
 
 # Find the LATEST backup file
-LATEST_BACKUP=$(ls -t "$BACKUP_DIR"/*.sql 2>/dev/null | head -n 1)
+LATEST_BACKUP=$(ls -t "$BACKUP_DIR"/*.db 2>/dev/null | head -n 1)
 
 if [ -z "$LATEST_BACKUP" ]; then
     echo "No backup files found in $BACKUP_DIR"
@@ -44,19 +45,27 @@ if [[ ! $REPLY =~ ^[Yy]$ ]]; then
     exit 1
 fi
 
-# Kill active connections if app is running
-echo "Terminating active connections..."
-docker exec weather_db psql -U "$POSTGRES_USER" -d postgres -c "SELECT pg_terminate_backend(pid) FROM pg_stat_activity WHERE datname = '$POSTGRES_DB' AND pid <> pg_backend_pid();" > /dev/null 2>&1
+# Execute Restore (File Copy)
+echo "Overwriting local database at $DEST_DB..."
 
-# Execute Restore
-echo "Wiping old database..."
-docker exec weather_db psql -U "$POSTGRES_USER" -d "$POSTGRES_DB" -c "DROP SCHEMA public CASCADE; CREATE SCHEMA public;"
+if [ -f "$DEST_DB" ]; then
+    # Optional: Safety backup of the current state before overwriting
+    cp "$DEST_DB" "${DEST_DB}.pre_restore"
+    
+    # Clean up old WAL/SHM files to prevent corruption warnings upon restart
+    rm -f "$DEST_DB-wal" "$DEST_DB-shm"
+fi
 
-echo "Restoring database..."
-cat "$LATEST_BACKUP" | docker exec -i weather_db psql -U "$POSTGRES_USER" "$POSTGRES_DB"
+# The actual restore
+cp "$LATEST_BACKUP" "$DEST_DB"
 
+# Check result of the copy command
 if [ $? -eq 0 ]; then
-    echo "Restore successful!"
+    echo "Restore successful! (Previous state saved as .pre_restore)"
+    
+    # Touch the file to ensure Docker picks up the change timestamp
+    touch "$DEST_DB"
 else
     echo "Restore failed."
+    exit 1
 fi
