@@ -12,7 +12,6 @@ else
 fi
 
 # 2. Define Backup Directory (Smart Detection)
-# If running on Host (Linux/WSL), use Home. If inside Docker, use /app/cloud_data
 if [ -d "/app/cloud_data" ]; then
     BASE_DIR="/app/cloud_data"
 else
@@ -29,15 +28,27 @@ BACKUP_DIR="$BASE_DIR/db_backups/"
 mkdir -p "$BACKUP_DIR"
 
 # 3. Define filename
-FILENAME="backup_$(date +%Y-%m-%d_%H%M).sql"
+FILENAME="backup_$(date +%Y-%m-%d_%H%M).db"
 BACKUP_PATH="$BACKUP_DIR$FILENAME"
 
-# 4. Run pg_dump using variables from .env
-echo "Backing up database '$POSTGRES_DB' as user '$POSTGRES_USER'..."
+SOURCE_DB="$SCRIPT_DIR/../data/weather.db"
 
-# Note: We do NOT need to pipe password here if .env is loaded and pg_dump finds it,
-# but usually for docker exec we rely on the container's environment or trust.
-docker exec weather_db pg_dump -U "$POSTGRES_USER" -O -x "$POSTGRES_DB" > "$BACKUP_PATH"
+echo "Backing up SQLite database from '$SOURCE_DB'..."
+
+if [ -f "$SOURCE_DB" ]; then
+    # copy the database file to the destination
+    cp "$SOURCE_DB" "$BACKUP_PATH"
+    
+    # SAFETY: If WAL mode is active, also copy the .wal and .shm files if they exist
+    # (These contain uncommitted transactions)
+    if [ -f "$SOURCE_DB-wal" ]; then
+        cp "$SOURCE_DB-wal" "$BACKUP_PATH-wal"
+        cp "$SOURCE_DB-shm" "$BACKUP_PATH-shm"
+    fi
+else
+    echo "CRITICAL ERROR: Source database not found at $SOURCE_DB"
+    exit 1
+fi
 
 # 5. Check result
 if [ $? -eq 0 ]; then
