@@ -36,15 +36,8 @@ SOURCE_DB="$SCRIPT_DIR/../data/weather.db"
 echo "Backing up SQLite database from '$SOURCE_DB'..."
 
 if [ -f "$SOURCE_DB" ]; then
-    # copy the database file to the destination
-    cp "$SOURCE_DB" "$BACKUP_PATH"
-    
-    # SAFETY: If WAL mode is active, also copy the .wal and .shm files if they exist
-    # (These contain uncommitted transactions)
-    if [ -f "$SOURCE_DB-wal" ]; then
-        cp "$SOURCE_DB-wal" "$BACKUP_PATH-wal"
-        cp "$SOURCE_DB-shm" "$BACKUP_PATH-shm"
-    fi
+    # Create a single safe backup file (merges WAL automatically)
+    sqlite3 "$SOURCE_DB" ".backup '$BACKUP_PATH'"
 else
     echo "CRITICAL ERROR: Source database not found at $SOURCE_DB"
     exit 1
