@@ -37,7 +37,7 @@ if [ -z "$LATEST_BACKUP" ]; then
 fi
 
 echo "Found latest backup: $LATEST_BACKUP"
-echo "WARNING: This will WIPE the database '$POSTGRES_DB' and replace it with this backup."
+echo "WARNING: This will WIPE the database and replace it with this backup."
 read -p "Are you sure? (y/n) " -n 1 -r
 echo
 if [[ ! $REPLY =~ ^[Yy]$ ]]; then
