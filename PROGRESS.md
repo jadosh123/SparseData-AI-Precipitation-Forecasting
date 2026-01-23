@@ -155,12 +155,50 @@ As we can see the model improved across the board which proves using this new co
 We also spoke about building a front-end interface for the system to display the model's forecasts since that is part of the general project goal, I'm thinking of currently of using FastAPI for the backend because its the industry standard, its lightweight and it natively supports JSON which the front-end needs.
 For the front-end I will use Streamlit as to not break away from python and my project and waste too much time relearning Javascript and React.
 
-### Current Goals to try to complete before publishing the Alpha Report
+### Date: January 23, 2026
 
-- [ ] A python script for live inference, fetches last 24 hours of recordings and outputs a forecast.
-- [ ] A backend with FastAPI that exposes a /predict endpoint accessed with a GET request that returns a JSON format output for forecasts/station id (and maybe current wind vectors to display storm movement to user).
-- [ ] A frontend dashboard with a map displaying the stations used and the current forecast for our area of interest (Currently Afula) using Streamlit.
-- [ ] Update docker-compose.yml to support the FastAPI backend and the Streamlit frontend.
+Currently I'm trying to tune the model to get as much performance as possible with the current data setup, the first GridSearchCV run I did involved these parameters:
+
+    param_grid = {
+        'learning_rate': [0.01, 0.05, 0.1],
+        'max_depth': [3, 5, 7],
+        'min_child_weight': [1, 3, 5],
+        'subsample': [0.7, 0.8, 0.9],
+        'colsample_bytree': [0.7, 0.8, 0.9],
+        'tweedie_variance_power': [1.2, 1.5, 1.8]
+    }
+
+At first I ran the search with this model setup:
+
+    xgb_model = xgb.XGBRegressor(
+        n_estimators=200, 
+        objective='reg:tweedie',
+        n_jobs=-1,
+        missing=np.nan,
+        monotone_constraints=constraints_TA_HA
+    )
+
+    grid_search = GridSearchCV(
+        estimator=xgb_model,
+        param_grid=param_grid,
+        scoring='neg_mean_squared_error',
+        cv=tscv,
+        n_jobs=-1,
+        verbose=1
+    )
+
+    grid_search.fit(
+        X_train,
+        y_train,
+    )
+
+The resulting parameters made the model perform worse, my suspision is that in the fit process I didn't add the sample_weights parameter so the model was being penalized for dry and wet days the same and n_estimators is set to 200 which doesn't give the model much legroom in its exploration for each parameter combination, I'm gonna rerun this tuning with n_estimators=1000 and the sample_weights set to 10.
+
+Well, I tried to tune the model using a TimeSeriesSplit but based on my observation its rewarding low learning rate and low params overall because the training data that is being split spans 3 years and when splitting it accross 5 folds makes it so that the model is being evaluated on dry folds on some of the runs where it teaches it that predicting 0 is the best for error reduction. Every result came out with a weaker and underfitted model than the basic initialization I had before tuning. Now I will experiment with tuning it using my static temporal split to allow it a large window of data.
+
+After testing it seems the basic initialization I had of XGBoost outperformed every tuned model regardless of the method, this points to the fact that the results are heavily influenced by the physics and features rather than tuning.
+
+Possible improvements to model performance will come from smarter feature engineering and deeper domain knowledge.
 
 ### Goals for project improvement
 
