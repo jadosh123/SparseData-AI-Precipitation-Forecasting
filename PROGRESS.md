@@ -203,5 +203,48 @@ Possible improvements to model performance will come from smarter feature engine
 ### Goals for project improvement
 
 - [ ] Investigate the data of Haifa karmel and Haifa Port if they have more continuous rich data compared to Haifa Technion (its missing some blocks of wind vector data).
-- [ ] Investigate the stations above Afula and Nazareth like the one near Sakhnin and Deir Hana to allow a proper interpolation environment for the RFSI or XGBoost with RFSI features.
-- [ ] Investigate all coastal station data for continuity to add them later to the system (guarantees that no storm passes between haifa and telaviv and surprises our model).
+- [x] Investigate the stations above Afula and Nazareth like the one near Sakhnin and Deir Hana to allow a proper interpolation environment for the RFSI or XGBoost with RFSI features.
+- [x] Investigate all coastal station data for continuity to add them later to the system (guarantees that no storm passes between haifa and telaviv and surprises our model).
+
+### Date: February 1, 2026
+
+stations for interpolation:
+
+- Tel Yosef: 380 (good fetched data from 2018 and up)
+- Galed: 263 (bad because its only measuring like 4-5 metrics which is insufficient)
+- En Hashofet: 67 (good data stretches back to 1998)
+
+new coastal stations:
+
+- Zikhron Yaaqov: 45 (good data stretches back beyond 2018)
+- Hadera Port: 46 (good data stretches back to 1990)
+- En Karmel: 44 (good data stretches back to 1992)
+
+Stations to inspect further in python against existing stations:
+
+FOR INTERPOLATION:
+
+- En Hashofet: 67
+- Tel Yosef: 380
+
+FOR COASTAL:
+
+- Zikhron Yaaqov: 45
+- Hadera Port: 46
+- En Karmel: 44
+
+### Date: February 2, 2026
+
+I observed a big mistake in the monotone constraints generation that I had before.
+I was setting the temperature feature to 1 which means strictly positive relationship so that was telling the model that whenever the temperature increased the rain will increase.
+After fixing this and setting the temperature and temperature_max to -1 the errors dropped and here is the table displaying pre-fix and post-fix:
+
+| Model Type | Global t+1 RMSE (mm) | Storm-Only t+1 RMSE (mm) | Storm Intensity Bias (mm) | Storm Scatter Index (%) |
+| :--- | :--- | :--- | :--- | :--- |
+| **XGBoost upstream Tel Aviv + Haifa (Before Fix)** | 0.4671 | 2.1177 | -0.70 | 125.4% |
+| **XGBoost upstream Tel Aviv + Haifa (After Fix)** | 0.4724 | 2.1084 | -0.64 | 124.9% |
+| **Total Improvement per metric pct** | -1.1% (Worse) | +0.4% | +9% | +0.4% |
+
+After fixing the monotone constraint you can see in the feature importances the model changed drastically in terms of which features it relies on to predict precipitation, it used to be the rain at Haifa and at Afula as the most important features now its the temperature at Afula followed by rain at Haifa and the minimum temperature at Afula. The rest of the features are the upstream feeders for the most part confirming the validity of them.
+
+![alt text](imgs/feature_importance1.png)
