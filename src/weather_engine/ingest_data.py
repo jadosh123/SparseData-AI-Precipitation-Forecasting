@@ -7,14 +7,19 @@ import glob
 from weather_engine.database import engine
 
 DATA_DIR = "/app/cloud_data/"
-TABLE_NAME = "raw_station_data"
+RAW_STATION_TABLE = "raw_station_data"
+METADATA_TABLE = "station_metadata"
 
 STATION_MAP = {
     "Afula_Nir_HaEmek": 16, 
     "Tavor_Kadoorie": 13,
     "Newe_Yaar": 186,
     "Nazareth_City": 500,
-    "Haifa_Technion": 43
+    "Haifa_Technion": 43,
+    "TelAviv_Coast": 178,
+    "Galed": 263,
+    "Tel_Yosef": 380,
+    "En_Hashofet": 67
 }
 
 def insert_on_conflict_nothing(table, conn, keys, data_iter):
@@ -24,6 +29,15 @@ def insert_on_conflict_nothing(table, conn, keys, data_iter):
     data = [dict(zip(keys, row)) for row in data_iter]
     stmt = insert(table.table).values(data)
     stmt = stmt.on_conflict_do_nothing(index_elements=['station_id', 'timestamp'])
+    conn.execute(stmt)
+
+def insert_metadata_on_conflict(table, conn, keys, data_iter):
+    """
+    Custom insert method to handle duplicates for metadata table.
+    """
+    data = [dict(zip(keys, row)) for row in data_iter]
+    stmt = insert(table.table).values(data)
+    stmt = stmt.on_conflict_do_nothing(index_elements=['station_id'])
     conn.execute(stmt)
 
 def ingest_data():
@@ -121,6 +135,29 @@ def ingest_data():
                     'station_id': types.Integer()
                 }
                 
+                # ----- METADATA EXTRACTION -----
+                meta_cols_present = [c for c in ['latitude', 'longitude', 'elevation'] if c in df.columns]
+                if meta_cols_present:
+                    meta_df = df[['station_id'] + meta_cols_present].drop_duplicates(subset=['station_id']).copy()
+                    
+                    meta_dtype_mapping = {'station_id': types.Integer()}
+                    for c in meta_cols_present:
+                        meta_df[c] = pd.to_numeric(meta_df[c], errors='coerce')
+                        meta_dtype_mapping[c] = types.Float()
+                        
+                    meta_df.to_sql(
+                        METADATA_TABLE,
+                        engine,
+                        if_exists='append',
+                        index=False,
+                        dtype=meta_dtype_mapping,
+                        method=insert_metadata_on_conflict
+                    )
+                    
+                    # Drop them from the main observation DataFrame
+                    df = df.drop(columns=meta_cols_present)
+                # --------------------------------
+                
                 numeric_cols = [col for col in df.columns if col not in ['timestamp', 'station_id']]
                 for col in numeric_cols:
                     df[col] = pd.to_numeric(df[col], errors='coerce')
@@ -132,7 +169,7 @@ def ingest_data():
 
                 # Upload with Chunking (Prevent memory crash)
                 df.to_sql(
-                    TABLE_NAME,
+                    RAW_STATION_TABLE,
                     engine,
                     if_exists='append',
                     index=False,

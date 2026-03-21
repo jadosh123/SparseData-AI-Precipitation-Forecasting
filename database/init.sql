@@ -1,4 +1,12 @@
 DROP TABLE IF EXISTS raw_station_data;
+DROP TABLE IF EXISTS station_metadata;
+
+CREATE TABLE station_metadata (
+    station_id INTEGER PRIMARY KEY,
+    latitude NUMERIC,
+    longitude NUMERIC,
+    elevation NUMERIC
+);
 
 CREATE TABLE raw_station_data (
     -- SQLite stores datetimes as ISO8601 strings (TEXT) or Real numbers.
@@ -21,10 +29,6 @@ CREATE TABLE raw_station_data (
     
     station_id INTEGER NOT NULL,
     
-    -- SQLite ignores precision (7,4), but keeps NUMERIC affinity
-    latitude NUMERIC,
-    longitude NUMERIC,
-
     -- Constraint syntax is identical
     CONSTRAINT unique_station_id_time UNIQUE (station_id, timestamp)
 );
