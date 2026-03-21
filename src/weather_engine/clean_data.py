@@ -62,15 +62,6 @@ def clean_station_data():
             'v_vec': 'mean'
         }
         
-        # Grabbing first lat and lon from unclean station data
-        try:
-            lat = group['latitude'].dropna().iloc[0]
-            lon = group['longitude'].dropna().iloc[0]
-        except IndexError:
-            print(f"Warning: No Lat/Lon found for Station {station_id}. Using 0.0.")
-            lat, lon = 0.0, 0.0
-
-        
         # Filter to only use cols present in the data
         valid_agg = {k: v for k, v in agg_rules.items() if k in group.columns}
         
@@ -81,8 +72,6 @@ def clean_station_data():
         hourly = hourly.interpolate(method='linear', limit=2)
         
         hourly['station_id'] = station_id
-        hourly['latitude'] = lat
-        hourly['longitude'] = lon
         clean_dfs.append(hourly)
 
     print("Merging cleaned data.")
@@ -95,9 +84,7 @@ def clean_station_data():
         'rain': types.Float(),
         'td': types.Float(),
         'u_vec': types.Float(),
-        'v_vec': types.Float(),
-        'latitude': types.Float(),
-        'longitude': types.Float()
+        'v_vec': types.Float()
     }
     
     final_df.to_sql(
@@ -105,7 +92,7 @@ def clean_station_data():
         engine, 
         if_exists='replace',
         index=False,
-        dtype=dtype_mapping, # type: ignore
+        dtype=dtype_mapping,
         chunksize=5000
     )
     

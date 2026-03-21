@@ -2,12 +2,15 @@ import requests
 import csv
 import os
 import time
+import math
+import rasterio
+import utils as ut
 from datetime import datetime
 from pathlib import Path
 from dotenv import load_dotenv
 
 # Configuration
-base_dir = Path(__file__).resolve().parent.parent
+base_dir = ut.get_project_root()
 env_file = base_dir / '.env'
 load_dotenv(env_file)
 
@@ -20,11 +23,14 @@ STATIONS = {
     186: "Newe_Yaar", 
     500: "Nazareth_City",
     43: "Haifa_Technion",
-    178: "TelAviv_Coast"
+    178: "TelAviv_Coast",
+    263: "Galed",
+    380: "Tel_Yosef",
+    67: "En_Hashofet"
 }
 
 START_YEAR = 2020
-END_YEAR = 2025
+END_YEAR = 2026
 OUTPUT_DIR = "/app/cloud_data"
 
 CSV_HEADERS = [
@@ -32,6 +38,7 @@ CSV_HEADERS = [
     'station_id',
     'latitude',
     'longitude', 
+    'elevation',
     'rain', 
     'wsmax', 
     'wdmax', 
@@ -74,17 +81,18 @@ def fetch_yearly_data(station_id, year):
     
     print(f"Fetching {year}...")
     
-    for attempt in range(3):
+    for attempt in range(5):
         try:
             response = requests.get(url, headers=headers, timeout=60)
             
             if response.status_code == 200:
-                time.sleep(15)
+                time.sleep(30)
                 return response.json()
             
             elif response.status_code in [429, 500, 502, 503, 504]:
-                print(f"Status {response.status_code}. Retrying in {attempt * 5}s...")
-                time.sleep(attempt * 5) # Exponential backoff (5s, 10s, 15s)
+                wait_time = 15 + (attempt * 15)
+                print(f"Status {response.status_code}. Retrying in {wait_time}s...")
+                time.sleep(wait_time) # Aggressive backoff (15s, 30s, 45s, 60s)
                 continue
             
             elif response.status_code == 204:
@@ -95,11 +103,12 @@ def fetch_yearly_data(station_id, year):
                 return None
 
         except requests.exceptions.RequestException as e:
-            # Network level errors (Connection Refused, Timeout)
-            print(f"Network Error ({e}). Retrying in {attempt * 5}s...")
-            time.sleep(attempt * 5)
+            # Network level errors (Connection Refused, Timeout, Empty HTTP pages)
+            wait_time = 15 + (attempt * 15)
+            print(f"Network Error ({e}). Retrying in {wait_time}s...")
+            time.sleep(wait_time)
 
-    print(f"\nFailed after 3 attempts.")
+    print(f"\nFailed after 5 attempts.")
     return None
 
 def fetch_location_data():
@@ -134,13 +143,43 @@ def fetch_location_data():
         print(f"\nError fetching metadata: {e}")
         return {}
 
-def process_observation(obs, station_id, lat, lon):
+def get_elevation_from_hgt(lat, lon):
+    """Uses rasterio to pinpoint a latitude/longitude and extract its exact elevation from the .hgt tile."""
+    if not lat or not lon:
+        return None
+        
+    hgt_dir = base_dir / 'data' / 'SRTMGL1_003-20260321_112154'
+    lat_prefix = 'N' if lat >= 0 else 'S'
+    lon_prefix = 'E' if lon >= 0 else 'W'
+    
+    lat_int = math.floor(abs(lat))
+    lon_int = math.floor(abs(lon))
+    
+    tile_name = f"{lat_prefix}{lat_int:02d}{lon_prefix}{lon_int:03d}.hgt"
+    tile_path = hgt_dir / tile_name
+    
+    if not tile_path.exists():
+        return None
+        
+    try:
+        with rasterio.open(tile_path) as src:
+            for val in src.sample([(lon, lat)]):
+                elev = val[0]
+                if int(elev) == -32768:  # SRTM NoData
+                    return None
+                return float(elev)
+    except Exception as e:
+        print(f"Error reading {tile_name}: {e}")
+        return None
+
+def process_observation(obs, station_id, lat, lon, elev):
     """Flattens a single JSON observation into a CSV row dict."""
     row = {h: None for h in CSV_HEADERS}
     row['timestamp'] = obs.get('datetime')
     row['station_id'] = station_id
     row['latitude'] = lat
     row['longitude'] = lon
+    row['elevation'] = elev
     
     for channel in obs.get('channels', []):
         if channel.get('valid'):
@@ -165,6 +204,7 @@ def main():
         station_loc = location_map.get(station_id, {})
         lat = station_loc.get('lat')
         lon = station_loc.get('lon')
+        elev = get_elevation_from_hgt(lat, lon)
         
         if not lat or not lon:
             print(f"Warning: No coordinates found for Station {station_id}. CSV will have empty Lat/Lon.")
@@ -183,13 +223,14 @@ def main():
                 if data and 'data' in data:
                     rows = []
                     for obs in data['data']:
-                        rows.append(process_observation(obs, station_id, lat, lon))
+                        rows.append(process_observation(obs, station_id, lat, lon, elev))
                     
                     if rows:
                         writer.writerows(rows)
                         total_rows += len(rows)
                 
-                time.sleep(10)
+                # Big delay between hitting the server for a new year of data
+                time.sleep(30)
             
             print(f"\nFinished {station_name}: {total_rows} rows saved.")
 
