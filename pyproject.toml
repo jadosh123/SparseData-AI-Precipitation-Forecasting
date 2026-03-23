@@ -7,7 +7,7 @@ name = "weather_engine"
 version = "0.1.0"
 description = "Physics-Informed Precipitation Forecasting System"
 requires-python = ">=3.11"
-authors = [{name = "Jad", email = "jadosh2000@gmail.com"}]
+authors = [{ name = "Jad", email = "jadosh2000@gmail.com" }]
 readme = "README.md"
 
 # -----------------------------------------------------------
@@ -20,9 +20,9 @@ dependencies = [
     "python-dotenv==1.2.1",
     "SQLAlchemy==2.0.44",
     "openpyxl==3.1.5",
-    "beautifulsoup4==4.14.2",
     "xgboost==3.1.2",
     "rasterio",
+    "scikit-learn",
 ]
 
 # -----------------------------------------------------------
@@ -53,12 +53,7 @@ pythonpath = ["src"]
 [tool.pyright]
 include = ["src", "tests"]
 
-exclude = [
-    "**/cloud_data",
-    "**/data",
-    "**/.venv",
-    "**/__pycache__"
-]
+exclude = ["**/cloud_data", "**/data", "**/.venv", "**/__pycache__"]
 
 venvPath = "."
 venv = ".venv"
