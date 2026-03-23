@@ -20,7 +20,9 @@ BASE_URL = "https://api.ims.gov.il/v1/envista/stations"
 
 START_YEAR = 2020
 END_YEAR = 2026
-OUTPUT_DIR = "/app/cloud_data"
+OUTPUT_DIR = Path("/app/cloud_data")
+
+LOG_PATH = Path("logs/")
 
 CSV_HEADERS = [
     'timestamp', 
@@ -79,32 +81,44 @@ def fetch_yearly_data(station_id, year):
             
             elif response.status_code in [429, 500, 502, 503, 504]:
                 wait_time = 15 + (attempt * 15)
-                print(f"Status {response.status_code}. Retrying in {wait_time}s...")
-                time.sleep(wait_time) # Aggressive backoff (15s, 30s, 45s, 60s)
+                msg = f"Status {response.status_code} for station {station_id}. Retrying in {wait_time}s..."
+                print(msg)
+                with open(LOG_PATH / "network_responses.log", "a", encoding="utf-8") as log:
+                    log.write(f"{datetime.now()}: {msg}\n")
+                time.sleep(wait_time)  # Aggressive backoff (15s, 30s, 45s, 60s)
                 continue
             
             elif response.status_code == 204:
                 print("No Content (204). Station might be inactive this year.")
                 return None
             else:
-                print(f"\nClient Error {response.status_code}: {response.text[:100]}")
+                msg = f"Client Error {response.status_code} for station {station_id}: {response.text[:100]}"
+                print(f"\n{msg}")
+                with open(LOG_PATH / "network_responses.log", "a", encoding="utf-8") as log:
+                    log.write(f"{datetime.now()}: {msg}\n")
                 return None
 
         except requests.exceptions.RequestException as e:
             # Network level errors (Connection Refused, Timeout, Empty HTTP pages)
             wait_time = 15 + (attempt * 15)
-            print(f"Network Error ({e}). Retrying in {wait_time}s...")
+            msg = f"Network Error ({e}) for station {station_id}. Retrying in {wait_time}s..."
+            print(msg)
+            with open(LOG_PATH / "network_responses.log", "a", encoding="utf-8") as log:
+                log.write(f"{datetime.now()}: {msg}\n")
             time.sleep(wait_time)
 
-    print(f"\nFailed after 5 attempts.")
+    fail_msg = f"Failed after 5 attempts for station {station_id} (year {year})."
+    print(f"\n{fail_msg}")
+    with open(LOG_PATH / "network_responses.log", "a", encoding="utf-8") as log:
+        log.write(f"{datetime.now()}: {fail_msg}\n")
     return None
 
-def fetch_location_data():
+def fetch_location_data() -> dict[int, dict[str, str | float]]:
     """Fetches latitude and longitude data, caching to a file."""
-    cache_file = "stations_and_locations.txt"
+    cache_file = LOG_PATH / "stations_and_locations.json"
     
     try:
-        if os.path.exists(cache_file):
+        if cache_file.exists():
             print(f"Loading location map from {cache_file}...", end="\r")
             with open(cache_file, "r", encoding="utf-8") as f:
                 data = json.load(f)
@@ -196,20 +210,37 @@ def process_observation(obs, station_id, lat, lon, elev):
     return row
 
 def main():
-    if not os.path.exists(OUTPUT_DIR):
+    if not OUTPUT_DIR.exists():
         print(f"Creating output directory: {OUTPUT_DIR}")
-        os.makedirs(OUTPUT_DIR, exist_ok=True)
+        OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
+    
+    LOG_PATH.mkdir(parents=True, exist_ok=True)
         
     location_map = fetch_location_data()
 
-    print(f"Starting Data Fetch for {len(location_map)} stations...")
+    # Checkpoint logic to not refetch station data
+    processed_stations = set()
+    fp = LOG_PATH / "fetch_stats.csv"
+    
+    # Load all previously finished station IDs into a fast Python set
+    if fp.exists():
+        with open(fp, "r", encoding="utf-8") as f:
+            reader = csv.DictReader(f)
+            for row in reader:
+                processed_stations.add(int(row['station_id']))
+    print(f"Starting Data Fetch for {len(location_map)} stations... ({len(processed_stations)} already done!)")
 
     for station_id, station_loc in location_map.items():
+
+        if int(station_id) in processed_stations:
+            print(f"Station ID {station_id} already exists in CSV logs. Skipping...")
+            continue
+
         name = station_loc.get('name')
         station_name = str(name).replace(' ', '_')
         
         filename = f"{station_name}_{START_YEAR}-{END_YEAR}.csv"
-        filepath = os.path.join(OUTPUT_DIR, filename)
+        filepath = OUTPUT_DIR / filename
         
         lat = station_loc.get('lat')
         lon = station_loc.get('lon')
@@ -241,7 +272,24 @@ def main():
                 # Big delay between hitting the server for a new year of data
                 time.sleep(5)
             
-            print(f"\nFinished {station_name}: {total_rows} rows saved.")
+            success_msg = f"Finished {station_name}: {total_rows} rows saved."
+            print(f"\n{success_msg}")
+
+            fp = LOG_PATH / "fetch_stats.csv"
+            file_exists = fp.exists()
+
+            with open(fp, "a", newline='', encoding="utf-8") as csv_log:
+                csv_headers = ['station_name', 'station_id', 'total_rows']
+                writer = csv.DictWriter(csv_log, csv_headers)
+
+                if not file_exists:
+                    writer.writeheader()
+
+                writer.writerow({
+                    'station_name': station_loc.get('name'),
+                    'station_id': station_id,
+                    'total_rows': total_rows
+                })
 
     print("\nAll downloads complete.")
 
