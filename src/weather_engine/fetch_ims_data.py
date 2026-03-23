@@ -1,6 +1,7 @@
 import requests
 import csv
 import os
+import json
 import time
 import math
 import rasterio
@@ -16,18 +17,6 @@ load_dotenv(env_file)
 
 API_KEY = os.getenv("API_KEY")
 BASE_URL = "https://api.ims.gov.il/v1/envista/stations"
-
-STATIONS = {
-    16: "Afula_Nir_HaEmek", 
-    13: "Tavor_Kadoorie", 
-    186: "Newe_Yaar", 
-    500: "Nazareth_City",
-    43: "Haifa_Technion",
-    178: "TelAviv_Coast",
-    263: "Galed",
-    380: "Tel_Yosef",
-    67: "En_Hashofet"
-}
 
 START_YEAR = 2020
 END_YEAR = 2026
@@ -76,7 +65,7 @@ def fetch_yearly_data(station_id, year):
     
     headers = {
         "Authorization": f"ApiToken {API_KEY}",
-        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36"
+        "User-Agent": "MyWeatherApp/1.0 (Contact: jadosh2000@gmail.com)"
     }
     
     print(f"Fetching {year}...")
@@ -86,7 +75,6 @@ def fetch_yearly_data(station_id, year):
             response = requests.get(url, headers=headers, timeout=60)
             
             if response.status_code == 200:
-                time.sleep(30)
                 return response.json()
             
             elif response.status_code in [429, 500, 502, 503, 504]:
@@ -112,27 +100,46 @@ def fetch_yearly_data(station_id, year):
     return None
 
 def fetch_location_data():
-    """Fetches latitude and longitude data with retries and User-Agent spoofing."""
-
-    headers = {
-        "Authorization": f"ApiToken {API_KEY}",
-        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36"
-    }
-    
-    print(f"Fetching location map...", end="\r")
+    """Fetches latitude and longitude data, caching to a file."""
+    cache_file = "stations_and_locations.txt"
     
     try:
-        # We hit the base /stations endpoint to get the full list
-        response = requests.get(BASE_URL, headers=headers, timeout=60)
-        response.raise_for_status()
-        data = response.json()
-        
+        if os.path.exists(cache_file):
+            print(f"Loading location map from {cache_file}...", end="\r")
+            with open(cache_file, "r", encoding="utf-8") as f:
+                data = json.load(f)
+        else:
+            headers = {
+                "Authorization": f"ApiToken {API_KEY}",
+                "User-Agent": "MyWeatherApp/1.0 (Contact: jadosh2000@gmail.com)"
+            }
+            print(f"Fetching location map from API...", end="\r")
+            
+            # We hit the base /stations endpoint to get the full list
+            response = requests.get(BASE_URL, headers=headers, timeout=60)
+            response.raise_for_status()
+            data_temp = response.json()
+            
+            data = []
+
+            # Filter for relevant station names
+            for s in data_temp:
+                if any(char.isdigit() for char in s.get('name')):
+                    continue
+                else:
+                    data.append(s)
+
+            # Save it for next time
+            with open(cache_file, "w", encoding="utf-8") as f:
+                json.dump(data, f, indent=4)
+                
         # Convert list to a fast lookup dictionary
         meta_map = {}
         for s in data:
             sid = s.get('stationId')
             loc = s.get('location', {})
             meta_map[sid] = {
+                'name': s.get('name'),
                 'lat': loc.get('latitude'),
                 'lon': loc.get('longitude')
             }
@@ -195,13 +202,15 @@ def main():
         
     location_map = fetch_location_data()
 
-    print(f"Starting Data Fetch for {len(STATIONS)} stations...")
+    print(f"Starting Data Fetch for {len(location_map)} stations...")
 
-    for station_id, station_name in STATIONS.items():
+    for station_id, station_loc in location_map.items():
+        name = station_loc.get('name')
+        station_name = str(name).replace(' ', '_')
+        
         filename = f"{station_name}_{START_YEAR}-{END_YEAR}.csv"
         filepath = os.path.join(OUTPUT_DIR, filename)
         
-        station_loc = location_map.get(station_id, {})
         lat = station_loc.get('lat')
         lon = station_loc.get('lon')
         elev = get_elevation_from_hgt(lat, lon)
@@ -230,7 +239,7 @@ def main():
                         total_rows += len(rows)
                 
                 # Big delay between hitting the server for a new year of data
-                time.sleep(30)
+                time.sleep(5)
             
             print(f"\nFinished {station_name}: {total_rows} rows saved.")
 
