@@ -17,6 +17,7 @@ load_dotenv(env_file)
 
 API_KEY = os.getenv("API_KEY")
 BASE_URL = "https://api.ims.gov.il/v1/envista/stations"
+DISCORD_WEBHOOK = os.getenv("DISCORD_WEBHOOK")
 
 START_YEAR = 2020
 END_YEAR = 2026
@@ -59,11 +60,29 @@ CHANNEL_MAP = {
     'ws10mm': 'ws10mm',
 }
 
+def send_discord_alert(message: str) -> None:
+    """
+    Sends discord alerts to configured webhook regarding failed data fetching.
+    """
+    data = {'content': message}
+    try:
+        requests.post(DISCORD_WEBHOOK, json=data)
+    except:
+        pass
+
 def fetch_yearly_data(station_id, year):
-    """Fetches weather station data with retries and User-Agent spoofing."""
-    from_date = f"{year}/01/01"
-    to_date = f"{year + 1}/01/01"
-    url = f"{BASE_URL}/{station_id}/data?from={from_date}&to={to_date}"
+    """Fetches weather station data with retries and User-Agent data."""
+
+    date_intervals = []
+    for month in range(1, 13):
+        start_date = f"{year}/{month:02d}/01"
+
+        if month != 12:
+            end_date = f"{year}/{month + 1:02d}/01"
+        else:
+            end_date = f"{year + 1}/01/01"
+
+        date_intervals.append((start_date, end_date))
     
     headers = {
         "Authorization": f"ApiToken {API_KEY}",
@@ -71,47 +90,67 @@ def fetch_yearly_data(station_id, year):
     }
     
     print(f"Fetching {year}...")
-    
-    for attempt in range(5):
-        try:
-            response = requests.get(url, headers=headers, timeout=60)
-            
-            if response.status_code == 200:
-                return response.json()
-            
-            elif response.status_code in [429, 500, 502, 503, 504]:
+    all_observations = []
+
+    start_time = datetime.now()
+    for start_date, end_date in date_intervals:
+        url = f"{BASE_URL}/{station_id}/data?from={start_date}&to={end_date}"
+
+        month_success = False
+        for attempt in range(5):
+            try:
+                response = requests.get(url, headers=headers, timeout=60)
+                
+                if response.status_code == 200:
+                    data_json = response.json()
+                    if data_json and 'data' in data_json:
+                        all_observations.extend(data_json['data'])
+                    month_success = True
+                    print(f"Fetched data for {start_date} to {end_date}")
+                    break
+
+                elif response.status_code in [429, 500, 502, 503, 504]:
+                    wait_time = 15 + (attempt * 15)
+                    msg = f"Status {response.status_code} for station {station_id}. Retrying in {wait_time}s..."
+                    print(msg)
+                    with open(LOG_PATH / "network_responses.log", "a", encoding="utf-8") as log:
+                        log.write(f"{datetime.now()}: {msg}\n")
+                    time.sleep(wait_time)  # Aggressive backoff (15s, 30s, 45s, 60s)
+                    continue
+                
+                elif response.status_code == 204:
+                    print("No Content (204). Station might be inactive this month.")
+                    month_success = True
+                    break
+
+                else:
+                    msg = f"Client Error {response.status_code} for station {station_id}: {response.text[:100]}"
+                    print(f"\n{msg}")
+                    with open(LOG_PATH / "network_responses.log", "a", encoding="utf-8") as log:
+                        log.write(f"{datetime.now()}: {msg}\n")
+
+            except requests.exceptions.RequestException as e:
+                # Network level errors (Connection Refused, Timeout, Empty HTTP pages)
                 wait_time = 15 + (attempt * 15)
-                msg = f"Status {response.status_code} for station {station_id}. Retrying in {wait_time}s..."
+                msg = f"Network Error ({e}) for station {station_id}. Retrying in {wait_time}s..."
                 print(msg)
                 with open(LOG_PATH / "network_responses.log", "a", encoding="utf-8") as log:
                     log.write(f"{datetime.now()}: {msg}\n")
-                time.sleep(wait_time)  # Aggressive backoff (15s, 30s, 45s, 60s)
-                continue
-            
-            elif response.status_code == 204:
-                print("No Content (204). Station might be inactive this year.")
-                return None
-            else:
-                msg = f"Client Error {response.status_code} for station {station_id}: {response.text[:100]}"
-                print(f"\n{msg}")
-                with open(LOG_PATH / "network_responses.log", "a", encoding="utf-8") as log:
-                    log.write(f"{datetime.now()}: {msg}\n")
-                return None
+                time.sleep(wait_time)
+        
+        # Breather between requests
+        time.sleep(10)
 
-        except requests.exceptions.RequestException as e:
-            # Network level errors (Connection Refused, Timeout, Empty HTTP pages)
-            wait_time = 15 + (attempt * 15)
-            msg = f"Network Error ({e}) for station {station_id}. Retrying in {wait_time}s..."
-            print(msg)
+        if not month_success:
+            fail_msg = f"Failed after 5 attempts for station {station_id} (year {year}) (date {start_date})."
+            print(f"\n{fail_msg}")
+            send_discord_alert(fail_msg)
             with open(LOG_PATH / "network_responses.log", "a", encoding="utf-8") as log:
-                log.write(f"{datetime.now()}: {msg}\n")
-            time.sleep(wait_time)
+                log.write(f"{datetime.now()}: {fail_msg}\n")
 
-    fail_msg = f"Failed after 5 attempts for station {station_id} (year {year})."
-    print(f"\n{fail_msg}")
-    with open(LOG_PATH / "network_responses.log", "a", encoding="utf-8") as log:
-        log.write(f"{datetime.now()}: {fail_msg}\n")
-    return None
+    end_time = datetime.now()
+    print(f"Data fetching took: {end_time - start_time}")
+    return {'data': all_observations} if all_observations else None
 
 def fetch_location_data() -> dict[int, dict[str, str | float]]:
     """Fetches latitude and longitude data, caching to a file."""
@@ -270,7 +309,7 @@ def main():
                         total_rows += len(rows)
                 
                 # Big delay between hitting the server for a new year of data
-                time.sleep(5)
+                time.sleep(15)
             
             success_msg = f"Finished {station_name}: {total_rows} rows saved."
             print(f"\n{success_msg}")
@@ -292,6 +331,7 @@ def main():
                 })
 
     print("\nAll downloads complete.")
+    send_discord_alert("✅ All 84 stations have been downloaded successfully!")
 
 if __name__ == "__main__":
     main()
