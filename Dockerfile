@@ -7,10 +7,10 @@ WORKDIR /app
 # Copy modern metadata
 COPY pyproject.toml README.md ./
 
-# Install from pyproject.toml
-RUN pip install --no-cache-dir .
-
 # Copy source
 COPY . .
+
+# Install from pyproject.toml
+RUN pip install --no-cache-dir .
 
 CMD ["python", "src/weather_engine/ingestion.py"]
