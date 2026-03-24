@@ -249,6 +249,8 @@ def process_observation(obs, station_id, lat, lon, elev):
     return row
 
 def main():
+    send_discord_alert("Starting data fetching...")
+
     if not OUTPUT_DIR.exists():
         print(f"Creating output directory: {OUTPUT_DIR}")
         OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
@@ -313,6 +315,7 @@ def main():
             
             success_msg = f"Finished {station_name}: {total_rows} rows saved."
             print(f"\n{success_msg}")
+            send_discord_alert(success_msg)
 
             fp = LOG_PATH / "fetch_stats.csv"
             file_exists = fp.exists()
