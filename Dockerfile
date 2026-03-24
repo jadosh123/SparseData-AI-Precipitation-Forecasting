@@ -1,20 +1,16 @@
-# Use an official Python runtime as a parent image
 FROM python:3.11-slim
 
-# Install required OS-level C libraries for rasterio (GDAL)
 RUN apt-get update && apt-get install -y libexpat1 && rm -rf /var/lib/apt/lists/*
 
-# Set the working directory in the container
 WORKDIR /app
 
-# Copy the dependencies file to the working directory
-COPY requirements.txt .
+# Copy modern metadata
+COPY pyproject.toml README.md ./
 
-# Install any needed packages specified in requirements.txt
-RUN pip install --no-cache-dir -r requirements.txt
+# Install from pyproject.toml
+RUN pip install --no-cache-dir .
 
-# Copy the content of the local src directory to the working directory
-COPY . /app
+# Copy source
+COPY . .
 
-# Specify the command to run on container start
 CMD ["python", "src/weather_engine/ingestion.py"]
