@@ -2,11 +2,11 @@ import pandas as pd
 from sqlalchemy import create_engine, types
 from sqlalchemy.dialects.sqlite import insert
 import time
-import os
-import glob
+from pathlib import Path
 from weather_engine.database import engine
+import weather_engine.utils as ut
 
-DATA_DIR = "/app/cloud_data/"
+DATA_DIR = Path("/app/cloud_data/")
 RAW_STATION_TABLE = "raw_station_data"
 METADATA_TABLE = "station_metadata"
 
@@ -45,9 +45,9 @@ def ingest_data():
     time.sleep(1)
 
     try:
-        files = glob.glob(os.path.join(DATA_DIR, '*.xlsx')) + glob.glob(os.path.join(DATA_DIR, '*.csv'))
-        # files = glob.glob(os.path.join(DATA_DIR, '*Nazareth*.csv'))
-        # files = glob.glob(os.path.join(DATA_DIR, '*.xlsx'))
+        files = list(DATA_DIR.glob('*.xlsx')) + list(DATA_DIR.glob('*.csv'))
+        # files = list(DATA_DIR.glob('*Nazareth*.csv'))
+        # files = list(DATA_DIR.glob('*.xlsx'))
         
         if not files:
             print(f"No Excel or CSV files found in {DATA_DIR}")
@@ -57,11 +57,11 @@ def ingest_data():
 
         for file_path in files:
             try:
-                station_name = os.path.basename(file_path).split('.')[0]
+                station_name = file_path.stem
                 print(f"Processing: {station_name}")
 
                 # Read File
-                if file_path.endswith('.xlsx'):
+                if file_path.suffix == '.xlsx':
                     df = pd.read_excel(file_path, header=2, na_values=["NoData", "-", ""])
                 else:
                     # Try UTF-8, fallback to Hebrew encoding if needed
@@ -140,6 +140,11 @@ def ingest_data():
                 if meta_cols_present:
                     meta_df = df[['station_id'] + meta_cols_present].drop_duplicates(subset=['station_id']).copy()
                     
+                    if 'latitude' in meta_df.columns and 'longitude' in meta_df.columns:
+                        meta_df['elevation'] = meta_df.apply(lambda row: ut.get_elevation_from_hgt(row['latitude'], row['longitude']), axis=1)
+                        if 'elevation' not in meta_cols_present:
+                            meta_cols_present.append('elevation')
+
                     meta_dtype_mapping = {'station_id': types.Integer()}
                     for c in meta_cols_present:
                         meta_df[c] = pd.to_numeric(meta_df[c], errors='coerce')
@@ -155,7 +160,7 @@ def ingest_data():
                     )
                     
                     # Drop them from the main observation DataFrame
-                    df = df.drop(columns=meta_cols_present)
+                    df = df.drop(columns=meta_cols_present, errors='ignore')
                 # --------------------------------
                 
                 numeric_cols = [col for col in df.columns if col not in ['timestamp', 'station_id']]

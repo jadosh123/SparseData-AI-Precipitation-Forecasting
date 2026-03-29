@@ -30,7 +30,6 @@ CSV_HEADERS = [
     'station_id',
     'latitude',
     'longitude', 
-    'elevation',
     'rain', 
     'wsmax', 
     'wdmax', 
@@ -203,43 +202,15 @@ def fetch_location_data() -> dict[int, dict[str, str | float]]:
         print(f"\nError fetching metadata: {e}")
         return {}
 
-def get_elevation_from_hgt(lat, lon):
-    """Uses rasterio to pinpoint a latitude/longitude and extract its exact elevation from the .hgt tile."""
-    if not lat or not lon:
-        return None
-        
-    hgt_dir = base_dir / 'data' / 'SRTMGL1_003-20260321_112154'
-    lat_prefix = 'N' if lat >= 0 else 'S'
-    lon_prefix = 'E' if lon >= 0 else 'W'
-    
-    lat_int = math.floor(abs(lat))
-    lon_int = math.floor(abs(lon))
-    
-    tile_name = f"{lat_prefix}{lat_int:02d}{lon_prefix}{lon_int:03d}.hgt"
-    tile_path = hgt_dir / tile_name
-    
-    if not tile_path.exists():
-        return None
-        
-    try:
-        with rasterio.open(tile_path) as src:
-            for val in src.sample([(lon, lat)]):
-                elev = val[0]
-                if int(elev) == -32768:  # SRTM NoData
-                    return None
-                return float(elev)
-    except Exception as e:
-        print(f"Error reading {tile_name}: {e}")
-        return None
 
-def process_observation(obs, station_id, lat, lon, elev):
+
+def process_observation(obs, station_id, lat, lon):
     """Flattens a single JSON observation into a CSV row dict."""
     row = {h: None for h in CSV_HEADERS}
     row['timestamp'] = obs.get('datetime')
     row['station_id'] = station_id
     row['latitude'] = lat
     row['longitude'] = lon
-    row['elevation'] = elev
     
     for channel in obs.get('channels', []):
         if channel.get('valid'):
@@ -285,7 +256,6 @@ def main():
         
         lat = station_loc.get('lat')
         lon = station_loc.get('lon')
-        elev = get_elevation_from_hgt(lat, lon)
         
         if not lat or not lon:
             print(f"Warning: No coordinates found for Station {station_id}. CSV will have empty Lat/Lon.")
@@ -304,7 +274,7 @@ def main():
                 if data and 'data' in data:
                     rows = []
                     for obs in data['data']:
-                        rows.append(process_observation(obs, station_id, lat, lon, elev))
+                        rows.append(process_observation(obs, station_id, lat, lon))
                     
                     if rows:
                         writer.writerows(rows)
