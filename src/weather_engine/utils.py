@@ -32,7 +32,7 @@ def get_elevation_from_hgt(lat, lon):
     if pd.isna(lat) or pd.isna(lon):
         return None
         
-    hgt_dir = get_project_root() / 'data' / 'SRTMGL1_003-20260321_112154'
+    hgt_dir = get_project_root() / 'data' / 'elevation_data'
     lat_prefix = 'N' if lat >= 0 else 'S'
     lon_prefix = 'E' if lon >= 0 else 'W'
     
