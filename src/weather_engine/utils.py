@@ -24,7 +24,7 @@ def get_project_root() -> Path:
         # Move up one level
         current_path = current_path.parent
         
-        raise FileNotFoundError("Could not find the project root (no .toml file found in any parent directories).")
+    raise FileNotFoundError("Could not find the project root (no .toml file found in any parent directories).")
 
 def get_elevation_from_hgt(lat, lon):
     """Uses rasterio to pinpoint a latitude/longitude and extract its exact elevation from the .hgt tile."""
