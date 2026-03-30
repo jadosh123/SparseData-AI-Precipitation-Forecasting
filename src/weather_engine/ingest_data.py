@@ -114,17 +114,14 @@ def ingest_data():
                 
                 garbage_cols = [
                         'time', 'time.1', 'vbatt', 'id', 'stab', 
-                        'heatstresscalc', 'dewpointcalc', 'coldstresscalc', 'bp'
+                        'heatstresscalc', 'dewpointcalc', 'coldstresscalc', 'bp',
+                        'ws1mm', 'ws10mm'
                 ]
                 df = df.drop(columns=garbage_cols, errors='ignore')
 
                 # Station ID Logic
                 if 'station_id' in df.columns:
                     df['station_id'] = pd.to_numeric(df['station_id'], errors='coerce')
-                elif any(station_name.startswith(k) for k in STATION_MAP):
-                    match = next(k for k in STATION_MAP if station_name.startswith(k))
-                    print(f"   Mapped '{station_name}' to ID {STATION_MAP[match]}")
-                    df['station_id'] = STATION_MAP[match]
                 else:
                     print(f"Error: Could not determine Station ID for '{station_name}'. Skipping.")
                     continue

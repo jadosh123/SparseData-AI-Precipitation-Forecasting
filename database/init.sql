@@ -24,8 +24,6 @@ CREATE TABLE raw_station_data (
     rh REAL,
     tdmax REAL,
     tdmin REAL,
-    ws1mm REAL,
-    ws10mm REAL,
     
     station_id INTEGER NOT NULL,
     
