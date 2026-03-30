@@ -266,3 +266,74 @@ Subject: Multi-Horizon Forecasting Engine Refactor and Physical Shift Analysis
     - Built a comprehensive evaluation matrix combining Classification Metrics (Recall, Precision, F1) and Missed Rain Analysis for each horizon.
     - Results demonstrate an operationally sound "Graceful Degradation," with F1-scores dropping smoothly from 0.66 (t+1) to 0.41 (t+12), respecting standard atmospheric prediction decay.
     - The operational safety bias remains intact. At t+12, the model sacrifices Precision (32%) to maintain a high Recall (57%), minimizing dangerous misses. The "Average Rain Missed" remains near ~1.0 mm/hr, proving the model catches severe events and only fails on minor drizzles.
+
+
+### Date: March 30, 2026
+
+Subject: RFSI Training Methodology & Implementation Plan
+
+---
+
+**Objective:** Train a Random Forest Spatial Interpolation (RFSI) model on the full 84-station national IMS network to learn generalizable spatial interpolation of meteorological features, then deploy it to generate synthetic station data at each grid cell over the Jezreel Valley for downstream single-point precipitation forecasting.
+
+---
+
+**1. Data Quality & Station Selection**
+
+- Computed per-station missingness report across all core features: `rain`, `ws`, `wd`, `wsmax`, `wdmax`, `stdwd`, `td`, `rh`, `tdmax`, `tdmin`
+- Excluded non-informative columns from quality assessment: `elevation`, `ws1mm`, `ws10mm`, `timestamp`, `station_id`, `latitude`, `longitude`
+- Applied 40% missingness threshold on core features — stations exceeding this on any core column are dropped from the RFSI training corpus
+- **Result: 66 stations retained out of 89**
+- Removed `ws1mm` and `ws10mm` from schema and ingestion pipeline entirely — instantaneous gust metrics with no forecasting value and widespread sensor absence
+
+**2. Temporal Window Strategy**
+
+- Stations have uneven temporal coverage (e.g. Nazareth City only available from 2023 onwards due to recent deployment)
+- Rather than forcing a fixed 6-year window, each station contributes its longest continuous segment ending at 2026
+- RFSI training samples at timestep `t` are only valid if **all K neighbors** have non-null core feature observations at that same `t`
+- This naturally excludes outage blocks and late-deployment stations from affected timesteps without explicit imputation or arbitrary decisions
+- Effective training corpus is the intersection of valid neighbor windows per sample, not a global fixed date range
+
+**3. RFSI Feature Construction**
+
+- For each target station at each valid timestep, identify K nearest neighbors by geographic distance (Haversine)
+- Extract per-neighbor features:
+  - Observed values of all core features at time `t`
+  - Distance to target cell
+  - Elevation difference between neighbor and target
+  - Bearing/direction from neighbor to target
+- Lag features: rolling lags at t-1h, t-2h, t-3h per neighbor
+- Target variable: observed feature value at the target station at time `t`
+- Apply Leave-Location-Out Cross Validation (LLOCV) — each fold holds out one station entirely as the target, trains on all remaining stations, ensuring the model learns to interpolate to **unseen locations** rather than memorizing training station patterns
+
+**4. Model Training**
+
+- One RFSI model trained per interpolated feature (rain, ws, wd, td, etc.) or a multi-output variant if feasible
+- Algorithm: Random Forest (or XGBoost for consistency with downstream forecaster)
+- Evaluation metric per feature: RMSE on held-out LLOCV folds
+- Primary validation: apply trained RFSI to Jezreel Valley grid, compare synthetic Afula cell output against real Afula station observations as geographic ground truth
+
+**5. Grid Generation & Deployment**
+
+- Define Jezreel Valley bounding box and generate a regular grid of synthetic station cells at chosen spatial resolution
+- For each grid cell at each timestep, identify K nearest real stations and extract neighbor features
+- Run trained RFSI models to generate full synthetic feature vectors per cell
+- Feed synthetic feature vectors into trained single-point XGBoost forecaster to produce per-cell precipitation forecasts
+- Cron-triggered inference pipeline writes output grid to storage for Streamlit frontend consumption
+
+**6. Frontend & Validation Display**
+
+- Streamlit frontend renders interpolated feature grid and forecast grid over Jezreel Valley using Folium or pydeck
+- Afula station displayed as labeled ground truth point with predicted vs observed values shown side by side
+- Multi-horizon forecast layers (t+1 to t+12) toggleable on the map
+- Confidence layer flagging low-reliability cells during upstream sensor outages (Master Time Index integration)
+
+---
+
+**Open Questions / Next Steps**
+
+- [ ] Determine optimal K for neighbor selection via cross-validation
+- [ ] Decide whether to train one RFSI model per feature or a unified multi-output model
+- [ ] Investigate whether bearing/elevation features meaningfully improve interpolation over distance alone
+- [ ] Finalize Jezreel Valley bounding box and grid resolution
+- [ ] Assess whether coastal stations (Zikhron Yaaqov, Hadera Port, En Karmel) improve spatial coverage sufficiently to include despite later start dates

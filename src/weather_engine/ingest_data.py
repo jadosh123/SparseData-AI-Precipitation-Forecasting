@@ -10,18 +10,6 @@ DATA_DIR = Path("/app/cloud_data/")
 RAW_STATION_TABLE = "raw_station_data"
 METADATA_TABLE = "station_metadata"
 
-STATION_MAP = {
-    "Afula_Nir_HaEmek": 16, 
-    "Tavor_Kadoorie": 13,
-    "Newe_Yaar": 186,
-    "Nazareth_City": 500,
-    "Haifa_Technion": 43,
-    "TelAviv_Coast": 178,
-    "Galed": 263,
-    "Tel_Yosef": 380,
-    "En_Hashofet": 67
-}
-
 def insert_on_conflict_nothing(table, conn, keys, data_iter):
     """
     Custom insert method to handle duplicates via ON CONFLICT DO NOTHING.
