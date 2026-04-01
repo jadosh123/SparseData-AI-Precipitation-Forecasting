@@ -15,8 +15,6 @@ CREATE TABLE raw_station_data (
     
     -- DOUBLE PRECISION maps to REAL in SQLite
     rain REAL,
-    wsmax REAL,
-    wdmax REAL,
     ws REAL,
     wd REAL,
     stdwd REAL,
