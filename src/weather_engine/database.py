@@ -4,9 +4,9 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, declarative_base
 from weather_engine.utils import get_project_root
 
-# 1. Get the URL (Defaults to absolute local /app/data path dynamically)
+# 1. Get the URL (falls back to data/weather.db relative to project root)
 db_path = get_project_root() / "data" / "weather.db"
-DATABASE_URL = os.getenv("DATABASE_URL", f"sqlite:///{db_path}")
+DATABASE_URL = f"sqlite:///{db_path}"
 
 # 2. Configure for SQLite Concurrency
 # SQLite doesn't like multiple threads sharing a connection by default.
