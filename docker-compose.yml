@@ -10,9 +10,8 @@ services:
       - ./.env
     volumes:
       - .:/app
-      - ~/GoogleDrive/weather_data:/app/cloud_data
     environment:
-      - DATABASE_URL=sqlite:////data/weather.db
+      - DATABASE_URL=sqlite:////app/data/weather.db
       - PYTHONPATH=/app/src
     ports:
       - "8000:8000"

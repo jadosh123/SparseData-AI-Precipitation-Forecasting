@@ -6,7 +6,7 @@ from pathlib import Path
 from weather_engine.database import engine
 import weather_engine.utils as ut
 
-DATA_DIR = Path("/app/cloud_data/")
+DATA_DIR = ut.get_project_root() / "data"
 RAW_STATION_TABLE = "raw_station_data"
 METADATA_TABLE = "station_metadata"
 
@@ -34,8 +34,6 @@ def ingest_data():
 
     try:
         files = list(DATA_DIR.glob('*.xlsx')) + list(DATA_DIR.glob('*.csv'))
-        # files = list(DATA_DIR.glob('*Nazareth*.csv'))
-        # files = list(DATA_DIR.glob('*.xlsx'))
         
         if not files:
             print(f"No Excel or CSV files found in {DATA_DIR}")
