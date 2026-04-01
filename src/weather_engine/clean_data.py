@@ -45,19 +45,15 @@ def clean_station_data():
         group = group.set_index('timestamp').sort_index()
         
         # cols in bronze layer
-        # ['timestamp', 'rain', 'wsmax', 'wdmax', 'ws', 'wd', 'stdwd', 'td', 'rh', 'tdmax', 'tdmin', 'ws1mm', 'ws10mm', 'station_id']
+        # ['timestamp', 'rain', 'ws', 'wd', 'stdwd', 'td', 'rh', 'tdmax', 'tdmin', 'station_id']
         agg_rules = {
             'rain': 'sum',
-            'wsmax': 'max',
-            'wdmax': 'max',
             'ws': 'mean',
             'stdwd': 'mean',
             'td': 'mean',
             'rh': 'mean',
             'tdmax': 'max',
             'tdmin': 'min',
-            'ws1mm': 'max',
-            'ws10mm': 'max',
             'u_vec': 'mean',
             'v_vec': 'mean'
         }

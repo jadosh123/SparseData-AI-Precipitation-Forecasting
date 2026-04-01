@@ -101,9 +101,9 @@ def ingest_data():
                     df = df.dropna(subset=['timestamp'])
                 
                 garbage_cols = [
-                        'time', 'time.1', 'vbatt', 'id', 'stab', 
+                        'time', 'time.1', 'vbatt', 'id', 'stab',
                         'heatstresscalc', 'dewpointcalc', 'coldstresscalc', 'bp',
-                        'ws1mm', 'ws10mm'
+                        'ws1mm', 'ws10mm', 'wsmax', 'wdmax'
                 ]
                 df = df.drop(columns=garbage_cols, errors='ignore')
 
