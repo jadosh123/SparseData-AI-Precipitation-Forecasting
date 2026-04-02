@@ -11,7 +11,7 @@
 - [x] Extract all feature engineering methods from notebook into standalone `feature_engineering.py`
 - [x] Implement `main()` entry point that loads from `clean_station_data`, runs all transforms, and outputs a feature-ready dataframe
 - [x] Confirm output schema matches exactly what XGBoost forecaster expects as input
-- [ ] Unit test each transform method independently
+- [x] Unit test each transform method independently
 
 **Spatial neighbor lookup**
 - [ ] Build `get_k_neighbors(station_id, k=3)` using haversine distance on station lat/lon
