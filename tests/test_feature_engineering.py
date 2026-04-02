@@ -271,12 +271,13 @@ class TestTemporalSplit:
         pd.testing.assert_index_equal(X_val.index, y_val.index)
         pd.testing.assert_index_equal(X_test.index, y_test.index)
 
-    def test_empty_split_when_dates_exceed_range(self):
+    def test_val_is_bounded_between_train_and_test(self):
         df = self._make_split_df()
-        _, _, X_test, *_ = temporal_split(
-            df, "target_rain_t+1", "2024-01-01", "2099-01-01"
+        X_train, X_val, X_test, *_ = temporal_split(
+            df, "target_rain_t+1", "2024-01-01", "2024-07-01"
         )
-        assert len(X_test) == 0
+        assert X_val.index.max() < pd.Timestamp("2024-07-01")
+        assert X_val.index.min() >= pd.Timestamp("2024-01-01")
 
 
 # ---------------------------------------------------------------------------
