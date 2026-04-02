@@ -8,9 +8,9 @@
 ### `Apr 1 → May 4` (~5 weeks)
 
 **Feature engineering module**
-- [ ] Extract all feature engineering methods from notebook into standalone `feature_engineering.py`
-- [ ] Implement `main()` entry point that loads from `clean_station_data`, runs all transforms, and outputs a feature-ready dataframe
-- [ ] Confirm output schema matches exactly what XGBoost forecaster expects as input
+- [x] Extract all feature engineering methods from notebook into standalone `feature_engineering.py`
+- [x] Implement `main()` entry point that loads from `clean_station_data`, runs all transforms, and outputs a feature-ready dataframe
+- [x] Confirm output schema matches exactly what XGBoost forecaster expects as input
 - [ ] Unit test each transform method independently
 
 **Spatial neighbor lookup**
