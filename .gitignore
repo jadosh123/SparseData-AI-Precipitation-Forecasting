@@ -6,6 +6,7 @@
 /data
 cloud_data
 logs
+models
 
 # Python distribution metadata
 *.egg-info

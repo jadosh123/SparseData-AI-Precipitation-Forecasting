@@ -63,10 +63,14 @@ def clean_station_data():
         df = pd.read_sql(f"SELECT * FROM {SOURCE_TABLE} WHERE station_id = {station_id}", engine)
 
         df['timestamp'] = pd.to_datetime(df['timestamp'], utc=True)
-        if df['ws'].isna().all() or df['wd'].isna().all():
-            print(f"  Skipping station {station_id}: wind data is entirely null.")
+
+        cols_to_check = ['rain', 'ws', 'wd', 'stdwd', 'td', 'rh', 'tdmax', 'tdmin']
+        high_miss = [c for c in cols_to_check if c in df.columns and df[c].isna().mean() > 0.30]
+        if high_miss:
+            print(f"  Skipping station {station_id}: >30% missing in {high_miss}.")
             del df
             continue
+
         df['u_vec'], df['v_vec'] = get_wind_components(df['ws'], df['wd'])
         df = df.set_index('timestamp').sort_index()
 
