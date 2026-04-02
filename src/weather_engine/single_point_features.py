@@ -9,10 +9,12 @@ def single_station_load(station_id: int) -> pd.DataFrame:
     return pd.read_sql(query, engine, params={'sid': station_id})
 
 
-def sort_by_ts(df: pd.DataFrame) -> None:
+def sort_by_ts(df: pd.DataFrame) -> pd.DataFrame:
+    df = df.copy()
     df['timestamp'] = pd.to_datetime(df['timestamp'], errors='coerce')
     df.set_index('timestamp', inplace=True)
     df.sort_index(axis=0, ascending=True, inplace=True)
+    return df
 
 
 def create_local_lags(df: pd.DataFrame, lag_hours=[1, 2, 3, 6, 12, 24], target_lag: int = 1) -> pd.DataFrame:
@@ -127,14 +129,11 @@ def make_single_point_features(
         - constraints_dict[lag]: monotonicity constraints for each horizon
         - test_sets[lag]: dict with X_train, X_val, X_test, y_train, y_val, y_test
     """
-    df_target = single_station_load(target_station_id)
-    sort_by_ts(df_target)
+    df_target = sort_by_ts(single_station_load(target_station_id))
 
     upstream_dfs = {}
     for name, sid in upstream_station_ids.items():
-        df_up = single_station_load(sid)
-        sort_by_ts(df_up)
-        upstream_dfs[name] = df_up
+        upstream_dfs[name] = sort_by_ts(single_station_load(sid))
 
     df_backbone = create_production_backbone(raw_start_str, raw_end_str, max_lag_hours)
 
