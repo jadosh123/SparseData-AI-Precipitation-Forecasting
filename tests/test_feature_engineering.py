@@ -79,6 +79,14 @@ class TestSortByTs:
         result = sort_by_ts(shuffled)
         assert result.index.is_monotonic_increasing
 
+    def test_with_mixed_timestamp_formats(self):
+        df = pd.DataFrame({
+            "timestamp": ["2023-03-01 10:00", "2023-01-01 00:00", "2023-06-15 12:30"],
+            "rain": [1.0, 0.0, 2.0],
+        })
+        result = sort_by_ts(df)
+        assert result.index.is_monotonic_increasing
+
     def test_with_invalid_timestamps_coerced(self):
         df = pd.DataFrame({
             "timestamp": ["2023-01-01", "not_a_date", "2023-01-03"],
