@@ -30,50 +30,11 @@ def get_wind_components(ws, wd):
 def clean_station_data():
     print(f"Reading from {SOURCE_TABLE}...")
     try:
-        # pd.read_sql_table automatically grabs a connection from the engine pool
-        df = pd.read_sql_table(SOURCE_TABLE, engine)
+        station_ids = pd.read_sql(f"SELECT DISTINCT station_id FROM {SOURCE_TABLE}", engine)['station_id'].tolist()
     except ValueError:
         print(f"Error: Table {SOURCE_TABLE} not found or empty.")
         return
-    
-    df['timestamp'] = pd.to_datetime(df["timestamp"], utc=True)
-    df = df.sort_values(['station_id', 'timestamp'])
-    
-    clean_dfs = []
-    for station_id, group in df.groupby('station_id'):
-        group['u_vec'], group['v_vec'] = get_wind_components(group['ws'], group['wd'])
-        group = group.set_index('timestamp').sort_index()
-        
-        # cols in bronze layer
-        # ['timestamp', 'rain', 'ws', 'wd', 'stdwd', 'td', 'rh', 'tdmax', 'tdmin', 'station_id']
-        agg_rules = {
-            'rain': 'sum',
-            'ws': 'mean',
-            'stdwd': 'mean',
-            'td': 'mean',
-            'rh': 'mean',
-            'tdmax': 'max',
-            'tdmin': 'min',
-            'u_vec': 'mean',
-            'v_vec': 'mean'
-        }
-        
-        # Filter to only use cols present in the data
-        valid_agg = {k: v for k, v in agg_rules.items() if k in group.columns}
-        
-        hourly = group.resample('1h').agg(valid_agg) # type: ignore
 
-        # Capturing max rain intensity in a 10-min segment for storm identification
-        hourly['rain_intensity_max'] = group['rain'].resample('1h').max()
-        hourly = hourly.interpolate(method='linear', limit=2)
-        
-        hourly['station_id'] = station_id
-        clean_dfs.append(hourly)
-
-    print("Merging cleaned data.")
-    final_df = pd.concat(clean_dfs).reset_index()
-    print(f"Saving {len(final_df)} hourly rows to '{TARGET_TABLE}'.")
-    
     dtype_mapping = {
         'timestamp': types.DateTime(),
         'station_id': types.Integer(),
@@ -82,17 +43,50 @@ def clean_station_data():
         'u_vec': types.Float(),
         'v_vec': types.Float()
     }
-    
-    final_df.to_sql(
-        TARGET_TABLE, 
-        engine, 
-        if_exists='replace',
-        index=False,
-        dtype=dtype_mapping,
-        chunksize=5000
-    )
-    
-    print("Data Cleaning Complete.") 
+
+    # cols in bronze layer
+    # ['timestamp', 'rain', 'ws', 'wd', 'stdwd', 'td', 'rh', 'tdmax', 'tdmin', 'station_id']
+    agg_rules = {
+        'rain': 'sum',
+        'ws': 'mean',
+        'stdwd': 'mean',
+        'td': 'mean',
+        'rh': 'mean',
+        'tdmax': 'max',
+        'tdmin': 'min',
+        'u_vec': 'mean',
+        'v_vec': 'mean'
+    }
+
+    for i, station_id in enumerate(station_ids):
+        print(f"Processing station {station_id} ({i + 1}/{len(station_ids)})...")
+        df = pd.read_sql(f"SELECT * FROM {SOURCE_TABLE} WHERE station_id = {station_id}", engine)
+
+        df['timestamp'] = pd.to_datetime(df['timestamp'], utc=True)
+        if df['ws'].isna().all() or df['wd'].isna().all():
+            print(f"  Skipping station {station_id}: wind data is entirely null.")
+            del df
+            continue
+        df['u_vec'], df['v_vec'] = get_wind_components(df['ws'], df['wd'])
+        df = df.set_index('timestamp').sort_index()
+
+        valid_agg = {k: v for k, v in agg_rules.items() if k in df.columns}
+        hourly = df.resample('1h').agg(valid_agg) # type: ignore
+        hourly['rain_intensity_max'] = df['rain'].resample('1h').max()
+        hourly = hourly.interpolate(method='linear', limit=2)
+        hourly['station_id'] = station_id
+
+        hourly.reset_index().to_sql(
+            TARGET_TABLE,
+            engine,
+            if_exists='replace' if i == 0 else 'append',
+            index=False,
+            dtype=dtype_mapping,
+            chunksize=5000
+        )
+        del df, hourly
+
+    print("Data Cleaning Complete.")
 
 if __name__ == "__main__":
     clean_station_data()
