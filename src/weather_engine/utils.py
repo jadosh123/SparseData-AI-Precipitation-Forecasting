@@ -89,3 +89,20 @@ def point_in_triangle(
     has_pos = (d1 > 0) or (d2 > 0) or (d3 > 0)
 
     return not (has_neg and has_pos)
+
+def triangle_area(
+    A: tuple[float, float],
+    B: tuple[float, float],
+    C: tuple[float, float],
+) -> float:
+    """
+    Computes the area of triangle ABC using the shoelace formula.
+
+    :param A: First vertex as (x, y).
+    :param B: Second vertex as (x, y).
+    :param C: Third vertex as (x, y).
+    :returns: The area of the triangle (always non-negative).
+    """
+    return abs(
+        (A[0] * (B[1] - C[1]) + B[0] * (C[1] - A[1]) + C[0] * (A[1] - B[1])) / 2
+    )
