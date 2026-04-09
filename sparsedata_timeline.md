@@ -14,10 +14,10 @@
 - [x] Unit test each transform method independently
 
 **Spatial neighbor lookup**
-- [ ] Build `get_k_neighbors(station_id, k=3)` using haversine distance on station lat/lon
-- [ ] Load all 66 station coordinates and validate CRS is consistent
-- [ ] Manually inspect neighbors for 5–6 geographically known stations and verify they make physical sense on a map
-- [ ] Confirm Afula is excluded from the neighbor candidate pool at all times
+- [x] Build `get_k_neighbors(station_id, k=3)` using haversine distance on station lat/lon
+- [x] Load all 66 station coordinates and validate CRS is consistent
+- [x] Manually inspect neighbors for 5–6 geographically known stations and verify they make physical sense on a map
+- [x] Confirm Afula is excluded from the neighbor candidate pool at all times
 
 **LLOCV fold logic**
 - [ ] Implement LLOCV split: for each station, hold it out as validation, train on all others

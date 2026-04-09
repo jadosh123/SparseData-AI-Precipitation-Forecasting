@@ -35,6 +35,7 @@ class TestPointInTriangle:
         P = (5.0, 5.0)  # clearly outside
         assert point_in_triangle(P, A, B, C) is False
 
+    # Method treats 0 cross product as inside
     def test_point_on_edge_is_inside(self):
         A = (0.0, 0.0)
         B = (4.0, 0.0)
@@ -90,6 +91,15 @@ class TestGetKNeighbors:
             5: (35.0, 38.0),
             6: (36.0, 39.0),
         }
+
+    def test_enclosed_triangle_actually_contains_target(self):
+        stations = self._make_enclosed_stations()
+        result = get_k_neighbors(0, stations)
+        target = stations[0]
+        A = stations[result['neighbor_1_id']]
+        B = stations[result['neighbor_2_id']]
+        C = stations[result['neighbor_3_id']]
+        assert point_in_triangle(target, A, B, C) is True
 
     def test_enclosed_station_is_not_boundary(self):
         stations = self._make_enclosed_stations()
