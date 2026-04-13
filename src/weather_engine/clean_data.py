@@ -76,7 +76,6 @@ def clean_station_data():
 
         valid_agg = {k: v for k, v in agg_rules.items() if k in df.columns}
         hourly = df.resample('1h').agg(valid_agg) # type: ignore
-        hourly['rain_intensity_max'] = df['rain'].resample('1h').max()
         hourly = hourly.interpolate(method='linear', limit=2)
         hourly['station_id'] = station_id
 

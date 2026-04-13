@@ -19,7 +19,7 @@ def sort_by_ts(df: pd.DataFrame) -> pd.DataFrame:
 
 def create_local_lags(df: pd.DataFrame, lag_hours=[1, 2, 3, 6, 12, 24], target_lag: int = 1) -> pd.DataFrame:
     df_out = df.copy()
-    target_cols = ['rain', 'u_vec', 'v_vec', 'td', 'rh', 'rain_intensity_max']
+    target_cols = ['rain', 'u_vec', 'v_vec', 'td', 'rh' ]
 
     for col in target_cols:
         if col in df_out.columns:
