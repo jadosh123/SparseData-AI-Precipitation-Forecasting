@@ -1,5 +1,7 @@
 from itertools import combinations
 from math import radians, sin, cos, sqrt, atan2
+import pandas as pd
+from weather_engine.database import engine
 
 def haversine(
     lat1: float, lon1: float,
@@ -114,6 +116,40 @@ def point_in_triangle(
 
     return not (has_neg and has_pos)
 
+def compute_and_store_neighbors() -> None:
+    """
+    Computes the 3 best spatial neighbours for every station that has clean data,
+    then writes the results to the station_neighbors table.
+
+    Only stations present in both clean_station_data and station_metadata are
+    included — this ensures we never use a station whose data was dropped by
+    the quality filter in clean_data.py.
+    """
+    query = """
+        SELECT sm.station_id, sm.latitude, sm.longitude
+        FROM station_metadata sm
+        INNER JOIN (
+            SELECT DISTINCT station_id FROM clean_station_data
+        ) csd ON sm.station_id = csd.station_id
+    """
+    coords_df = pd.read_sql(query, engine)
+    all_stations = {
+        int(sid): (float(lat), float(lon))
+        for sid, lat, lon in zip(coords_df['station_id'], coords_df['latitude'], coords_df['longitude'])
+    }
+
+    print(f"Computing neighbors for {len(all_stations)} stations...")
+    records = []
+    for station_id in all_stations:
+        result = get_k_neighbors(station_id, all_stations)
+        result['is_boundary'] = int(result['is_boundary'])
+        records.append(result)
+
+    df = pd.DataFrame(records)
+    df.to_sql('station_neighbors', engine, if_exists='replace', index=False)
+    print(f"Saved {len(df)} rows to station_neighbors.")
+
+
 def triangle_area(
     A: tuple[float, float],
     B: tuple[float, float],
@@ -130,3 +166,6 @@ def triangle_area(
     return abs(
         (A[0] * (B[1] - C[1]) + B[0] * (C[1] - A[1]) + C[0] * (A[1] - B[1])) / 2
     )
+    
+if __name__ == "__main__":
+    compute_and_store_neighbors()
