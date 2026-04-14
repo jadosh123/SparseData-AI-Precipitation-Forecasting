@@ -9,7 +9,7 @@ def get_wind_components(ws, wd):
     v = -ws * np.cos(wd_rad)
     return u, v
 
-@pytest.fixture(scope="session")
+@pytest.fixture(scope="module")
 def sample_bronze_data():
     """
     Returns all bronze layer data in a pandas dataframe

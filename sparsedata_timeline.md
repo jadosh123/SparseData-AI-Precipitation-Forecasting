@@ -20,10 +20,10 @@
 - [x] Confirm Afula is excluded from the neighbor candidate pool at all times
 
 **LLOCV fold logic**
-- [ ] Implement LLOCV split: for each station, hold it out as validation, train on all others
-- [ ] Write explicit assertion that held-out station ID appears nowhere in the training feature matrix for that fold
-- [ ] Confirm held-out station is also excluded from neighbor lookup during its own fold
-- [ ] Log per-fold train/val size to confirm no silent data leakage
+- [x] Implement LLOCV split: for each station, hold it out as label, train on all others
+- [x] Write explicit assertion that held-out station ID appears nowhere in the training feature matrix for that fold
+- [x] Confirm held-out station is also excluded from neighbor lookup during its own fold
+- [x] Log per-fold train/val size to confirm no silent data leakage
 
 **Interpolation model training (10 features)**
 > Features: `rain`, `ws`, `stdwd`, `td`, `rh`, `tdmax`, `tdmin`, `u_vec`, `v_vec`, `rain_intensity_max`

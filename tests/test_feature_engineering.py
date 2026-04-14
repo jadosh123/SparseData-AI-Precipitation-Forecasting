@@ -17,7 +17,7 @@ from weather_engine.single_point_features import (
 # Fixtures
 # ---------------------------------------------------------------------------
 
-@pytest.fixture(scope="session")
+@pytest.fixture(scope="module")
 def db_station_df():
     """Loads a real station from the DB once for the whole session."""
     try:

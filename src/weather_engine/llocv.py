@@ -46,3 +46,30 @@ def load_fold(
     X = combined[[c for c in combined.columns if c.endswith(('_n1', '_n2', '_n3'))]]
 
     return X, y
+
+
+def temporal_split_fold(
+    X: pd.DataFrame,
+    y: pd.DataFrame,
+    val_ratio: float = 0.8,
+) -> tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame, pd.DataFrame]:
+    """
+    Splits a fold dataset into train and validation sets by time.
+
+    The split point is determined by the val_ratio applied to the sorted
+    timestamp index, preserving temporal order. No shuffling is performed.
+
+    :param X: Neighbor feature matrix with timestamp index.
+    :param y: Target feature labels with the same timestamp index.
+    :param val_ratio: Fraction of data to use for training (default 0.8).
+    :returns: (X_train, X_val, y_train, y_val)
+    """
+    split_idx = int(len(X) * val_ratio)
+    split_ts = X.index[split_idx]
+
+    X_train = X[X.index < split_ts]
+    X_val = X[X.index >= split_ts]
+    y_train = y[y.index < split_ts]
+    y_val = y[y.index >= split_ts]
+
+    return X_train, X_val, y_train, y_val
