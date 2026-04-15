@@ -371,3 +371,18 @@ timestamp
 
 I concluded this was a sentinel value used by the IMS when the rain sensor was corrupt or down which survived my cleaning script, now the cleaning script is refactored and replaces negative rain with 0 since its physically invalid, that was clearly causing the rain errors to inflate so much which is why it was the worst out of all.
 Classic case of data corruption, garbage in garbage out.
+
+After fixing the sentinel values and switching `rain` to `reg:tweedie` (variance power 1.5), the models were retrained. Updated metrics below. Rain global MAE looks deceptively low (0.035) due to zero-inflation — rain-only evaluation on actual rain events (≥ 0.1mm, n=17,239) gives the honest picture.
+
+| Feature | MAE | RMSE | Notes |
+| :--- | :--- | :--- | :--- |
+| rain (global) | 0.0353 | 0.3579 | Misleading — zero-inflated |
+| **rain (events ≥ 0.1mm only)** | **0.9075** | **1.9960** | Honest rain performance |
+| ws | 0.9840 | 1.3200 | |
+| stdwd | 6.2309 | 34.1043 | Expected — local turbulence variability |
+| td | 1.4002 | 1.8737 | |
+| rh | 5.8496 | 8.3644 | |
+| tdmax | 1.4184 | 1.8973 | |
+| tdmin | 1.4162 | 1.8958 | |
+| u_vec | 1.1090 | 1.5226 | |
+| v_vec | 0.9629 | 1.2990 | |
