@@ -133,6 +133,27 @@ def test_wind_vector_aggregation_logic():
     print(f"\nSUCCESS: Aggregated Vector is U={result_u:.2f}, V={result_v:.2f}")
     print("Logic confirms: Wind is blowing FROM North (approx 0 degrees) despite crossing the 360/0 boundary.")
 
+def test_afula_not_in_neighbor_pool():
+    """
+    Spatial leakage check: Afula is the held-out test station and must never
+    appear as a neighbor (neighbor_1_id, neighbor_2_id, neighbor_3_id) for any
+    other station in the station_neighbors table.
+    """
+    afula_id = 16
+
+    neighbors_df = pd.read_sql(
+        "SELECT station_id, neighbor_1_id, neighbor_2_id, neighbor_3_id FROM station_neighbors",
+        engine,
+    )
+
+    for col in ['neighbor_1_id', 'neighbor_2_id', 'neighbor_3_id']:
+        leakers = neighbors_df[neighbors_df[col] == afula_id]
+        assert leakers.empty, (
+            f"Afula (id={afula_id}) found as {col} for stations: "
+            f"{leakers['station_id'].tolist()}"
+        )
+
+
 def test_wind_cancellation_logic():
     """
     Verifies that opposing winds cancel each other out (Simulating a calm average).

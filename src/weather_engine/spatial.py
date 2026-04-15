@@ -23,7 +23,7 @@ def haversine(
     return R * 2 * atan2(sqrt(a), sqrt(1 - a))
 
 
-def get_k_neighbors(target_id: int, all_stations: dict) -> dict:
+def get_k_neighbors(target_id: int, all_stations: dict, hold_out_station_id: int) -> dict:
     """
     Finds the three best neighbouring stations to use as upstream inputs
     for a target station, using Delaunay-style triangle enclosure.
@@ -47,7 +47,7 @@ def get_k_neighbors(target_id: int, all_stations: dict) -> dict:
     candidates = [
         (sid, haversine(*target, *coords))
         for sid, coords in all_stations.items()
-        if sid != target_id
+        if sid != target_id and sid != hold_out_station_id
     ]
     candidates = sorted(candidates, key=lambda x: x[1])[:10]
     candidate_ids = [sid for sid, _ in candidates]
@@ -141,7 +141,7 @@ def compute_and_store_neighbors() -> None:
     print(f"Computing neighbors for {len(all_stations)} stations...")
     records = []
     for station_id in all_stations:
-        result = get_k_neighbors(station_id, all_stations)
+        result = get_k_neighbors(station_id, all_stations, 16)
         result['is_boundary'] = int(result['is_boundary'])
         records.append(result)
 

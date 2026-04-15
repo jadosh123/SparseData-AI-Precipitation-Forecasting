@@ -25,8 +25,8 @@
 - [x] Confirm held-out station is also excluded from neighbor lookup during its own fold
 - [x] Log per-fold train/val size to confirm no silent data leakage
 
-**Interpolation model training (10 features)**
-> Features: `rain`, `ws`, `stdwd`, `td`, `rh`, `tdmax`, `tdmin`, `u_vec`, `v_vec`, `rain_intensity_max`
+**Interpolation model training (9 features)**
+> Features: `rain`, `ws`, `stdwd`, `td`, `rh`, `tdmax`, `tdmin`, `u_vec`, `v_vec`
 - [ ] Train one spatial interpolation model per feature using LLOCV
 - [ ] Report per-feature reconstruction errors (MAE, RMSE) across all folds
 - [ ] Sanity check: pick one station, plot predicted vs actual for each feature over a representative week — outputs should look physically plausible
