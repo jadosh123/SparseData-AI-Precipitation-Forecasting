@@ -71,12 +71,14 @@ def clean_station_data():
             del df
             continue
 
+        df['rain'] = df['rain'].where(df['rain'] >= 0, other=np.nan)
         df['u_vec'], df['v_vec'] = get_wind_components(df['ws'], df['wd'])
         df = df.set_index('timestamp').sort_index()
 
         valid_agg = {k: v for k, v in agg_rules.items() if k in df.columns}
         hourly = df.resample('1h').agg(valid_agg) # type: ignore
         hourly = hourly.interpolate(method='linear', limit=2)
+        hourly['td'] = hourly['td'].clip(upper=hourly['tdmax'], lower=hourly['tdmin'])
         hourly['station_id'] = station_id
 
         hourly.reset_index().to_sql(

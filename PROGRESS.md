@@ -357,3 +357,17 @@ Trained 9 RFSI models (one per feature) on the full 66-station network using def
 | v_vec | 0.9672 | 1.3033 |
 
 `rain` RMSE of 203 indicates extreme sensitivity to heavy rain events — zero-inflation problem. Next step: switch `rain` to `reg:tweedie` objective. `stdwd` MAE of 6.2° confirms expected local turbulence variability noted in timeline.
+
+After trying to move from RMSE for the rain interpolation model to Tweedie Loss function it threw an error because of negative values, I then checked the data because why on earth would rain contain negative values and found this:
+                        rain
+timestamp                   
+2024-10-25 18:00:00 -59994.0
+2024-10-25 19:00:00 -59994.0
+2024-10-26 04:00:00 -59994.0
+2024-10-26 05:00:00 -59994.0
+2024-10-26 09:00:00 -59994.0
+2024-10-26 06:00:00 -59994.0
+2024-11-08 14:00:00 -59994.0
+
+I concluded this was a sentinel value used by the IMS when the rain sensor was corrupt or down which survived my cleaning script, now the cleaning script is refactored and replaces negative rain with 0 since its physically invalid, that was clearly causing the rain errors to inflate so much which is why it was the worst out of all.
+Classic case of data corruption, garbage in garbage out.

@@ -94,7 +94,7 @@ class TestGetKNeighbors:
 
     def test_enclosed_triangle_actually_contains_target(self):
         stations = self._make_enclosed_stations()
-        result = get_k_neighbors(0, stations)
+        result = get_k_neighbors(0, stations, hold_out_station_id=999)
         target = stations[0]
         A = stations[result['neighbor_1_id']]
         B = stations[result['neighbor_2_id']]
@@ -103,27 +103,27 @@ class TestGetKNeighbors:
 
     def test_enclosed_station_is_not_boundary(self):
         stations = self._make_enclosed_stations()
-        result = get_k_neighbors(0, stations)
+        result = get_k_neighbors(0, stations, hold_out_station_id=999)
         assert result['is_boundary'] is False
         assert result['triangle_area'] is not None
         assert result['triangle_area'] > 0
 
     def test_enclosed_station_returns_three_neighbors(self):
         stations = self._make_enclosed_stations()
-        result = get_k_neighbors(0, stations)
+        result = get_k_neighbors(0, stations, hold_out_station_id=999)
         assert 'neighbor_1_id' in result
         assert 'neighbor_2_id' in result
         assert 'neighbor_3_id' in result
 
     def test_boundary_station_uses_fallback(self):
         stations = self._make_boundary_stations()
-        result = get_k_neighbors(0, stations)
+        result = get_k_neighbors(0, stations, hold_out_station_id=999)
         assert result['is_boundary'] is True
         assert result['triangle_area'] is None
 
     def test_boundary_station_returns_three_nearest(self):
         stations = self._make_boundary_stations()
-        result = get_k_neighbors(0, stations)
+        result = get_k_neighbors(0, stations, hold_out_station_id=999)
         # The 3 nearest to (28, 30) should be the three stations with smallest coords
         assert result['neighbor_1_id'] == 1
         assert result['neighbor_2_id'] == 2
@@ -131,12 +131,12 @@ class TestGetKNeighbors:
 
     def test_neighbor_distances_are_positive(self):
         stations = self._make_enclosed_stations()
-        result = get_k_neighbors(0, stations)
+        result = get_k_neighbors(0, stations, hold_out_station_id=999)
         for i in range(1, 4):
             assert result[f'neighbor_{i}_distance'] > 0
 
     def test_target_not_its_own_neighbor(self):
         stations = self._make_enclosed_stations()
-        result = get_k_neighbors(0, stations)
+        result = get_k_neighbors(0, stations, hold_out_station_id=999)
         neighbor_ids = {result[f'neighbor_{i}_id'] for i in range(1, 4)}
         assert 0 not in neighbor_ids
