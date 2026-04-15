@@ -78,7 +78,8 @@ def clean_station_data():
         valid_agg = {k: v for k, v in agg_rules.items() if k in df.columns}
         hourly = df.resample('1h').agg(valid_agg) # type: ignore
         hourly = hourly.interpolate(method='linear', limit=2)
-        hourly['td'] = hourly['td'].clip(upper=hourly['tdmax'], lower=hourly['tdmin'])
+        hourly.loc[hourly['td'] > hourly['tdmax'], 'tdmax'] = hourly['td']
+        hourly.loc[hourly['td'] < hourly['tdmin'], 'tdmin'] = hourly['td']
         hourly['station_id'] = station_id
 
         hourly.reset_index().to_sql(
