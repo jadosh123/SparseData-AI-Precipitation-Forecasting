@@ -9,6 +9,7 @@ def load_fold(
     neighbor_1_id: int,
     neighbor_2_id: int,
     neighbor_3_id: int,
+    station_frames: dict | None = None,
 ) -> tuple[pd.DataFrame, pd.DataFrame]:
     """
     Loads a single LLOCV fold: target station as labels (y), neighbors as inputs (X).
@@ -28,14 +29,17 @@ def load_fold(
 
     frames = {}
     for sid in all_ids:
-        df = pd.read_sql(
-            "SELECT timestamp, " + ", ".join(FEATURES) + " FROM clean_station_data WHERE station_id = :sid",
-            engine,
-            params={'sid': sid},
-        )
-        df['timestamp'] = pd.to_datetime(df['timestamp'])
-        df = df.set_index('timestamp').sort_index()
-        frames[sid] = df
+        if station_frames is not None:
+            frames[sid] = station_frames[sid]
+        else:
+            df = pd.read_sql(
+                "SELECT timestamp, " + ", ".join(FEATURES) + " FROM clean_station_data WHERE station_id = :sid",
+                engine,
+                params={'sid': sid},
+            )
+            df['timestamp'] = pd.to_datetime(df['timestamp'])
+            df = df.set_index('timestamp').sort_index()
+            frames[sid] = df
 
     df_target = frames[target_id]
     df_neighbors = [frames[nid].add_suffix(f'_n{i + 1}') for i, nid in enumerate(neighbor_ids)]

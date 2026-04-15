@@ -337,3 +337,23 @@ Subject: RFSI Training Methodology & Implementation Plan
 - [ ] Investigate whether bearing/elevation features meaningfully improve interpolation over distance alone
 - [ ] Finalize Jezreel Valley bounding box and grid resolution
 - [ ] Assess whether coastal stations (Zikhron Yaaqov, Hadera Port, En Karmel) improve spatial coverage sufficiently to include despite later start dates
+
+### Date: April 15, 2026
+
+Subject: RFSI Baseline Training — First Results
+
+Trained 9 RFSI models (one per feature) on the full 66-station network using default XGBoost with Delaunay-triangle neighbor clusters. All station data loaded in a single query and stacked before training. Temporal split at 80/20.
+
+| Feature | MAE | RMSE |
+| :--- | :--- | :--- |
+| rain | 5.6107 | 203.9911 |
+| ws | 0.9812 | 1.3166 |
+| stdwd | 6.2437 | 34.4657 |
+| td | 1.4058 | 1.8816 |
+| rh | 5.8358 | 8.3472 |
+| tdmax | 1.4191 | 1.8976 |
+| tdmin | 1.4106 | 1.8889 |
+| u_vec | 1.1089 | 1.5226 |
+| v_vec | 0.9672 | 1.3033 |
+
+`rain` RMSE of 203 indicates extreme sensitivity to heavy rain events — zero-inflation problem. Next step: switch `rain` to `reg:tweedie` objective. `stdwd` MAE of 6.2° confirms expected local turbulence variability noted in timeline.
