@@ -1,7 +1,7 @@
 from weather_engine.database import engine
 import pandas as pd
 
-FEATURES = ['rain', 'ws', 'stdwd', 'td', 'rh', 'tdmax', 'tdmin', 'u_vec', 'v_vec']
+FEATURES = ['rain', 'ws', 'td', 'rh', 'tdmax', 'tdmin', 'u_vec', 'v_vec']
 
 
 def load_fold(

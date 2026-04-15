@@ -45,11 +45,10 @@ def clean_station_data():
     }
 
     # cols in bronze layer
-    # ['timestamp', 'rain', 'ws', 'wd', 'stdwd', 'td', 'rh', 'tdmax', 'tdmin', 'station_id']
+    # ['timestamp', 'rain', 'ws', 'wd', 'td', 'rh', 'tdmax', 'tdmin', 'station_id']
     agg_rules = {
         'rain': 'sum',
         'ws': 'mean',
-        'stdwd': 'mean',
         'td': 'mean',
         'rh': 'mean',
         'tdmax': 'max',
@@ -64,7 +63,7 @@ def clean_station_data():
 
         df['timestamp'] = pd.to_datetime(df['timestamp'], utc=True)
 
-        cols_to_check = ['rain', 'ws', 'wd', 'stdwd', 'td', 'rh', 'tdmax', 'tdmin']
+        cols_to_check = ['rain', 'ws', 'wd', 'td', 'rh', 'tdmax', 'tdmin']
         high_miss = [c for c in cols_to_check if c in df.columns and df[c].isna().mean() > 0.30]
         if high_miss:
             print(f"  Skipping station {station_id}: >30% missing in {high_miss}.")
