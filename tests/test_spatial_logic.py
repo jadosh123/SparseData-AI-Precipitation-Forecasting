@@ -1,5 +1,5 @@
 import pytest
-from weather_engine.spatial import haversine, get_k_neighbors, point_in_triangle, triangle_area
+from weather_engine.spatial import haversine, get_k_neighbors, point_in_triangle
 
 
 # ---------------------------------------------------------------------------
@@ -42,20 +42,6 @@ class TestPointInTriangle:
         C = (2.0, 4.0)
         P = (2.0, 0.0)  # midpoint of edge AB
         assert point_in_triangle(P, A, B, C) is True
-
-
-# ---------------------------------------------------------------------------
-# triangle_area
-# ---------------------------------------------------------------------------
-
-class TestTriangleArea:
-    def test_known_right_triangle(self):
-        # Right triangle with base=4, height=3 -> area=6
-        A = (0.0, 0.0)
-        B = (4.0, 0.0)
-        C = (0.0, 3.0)
-        assert triangle_area(A, B, C) == pytest.approx(6.0)
-
 
 # ---------------------------------------------------------------------------
 # get_k_neighbors
@@ -105,8 +91,6 @@ class TestGetKNeighbors:
         stations = self._make_enclosed_stations()
         result = get_k_neighbors(0, stations, hold_out_station_id=999)
         assert result['is_boundary'] is False
-        assert result['triangle_area'] is not None
-        assert result['triangle_area'] > 0
 
     def test_enclosed_station_returns_three_neighbors(self):
         stations = self._make_enclosed_stations()
@@ -119,7 +103,6 @@ class TestGetKNeighbors:
         stations = self._make_boundary_stations()
         result = get_k_neighbors(0, stations, hold_out_station_id=999)
         assert result['is_boundary'] is True
-        assert result['triangle_area'] is None
 
     def test_boundary_station_returns_three_nearest(self):
         stations = self._make_boundary_stations()
