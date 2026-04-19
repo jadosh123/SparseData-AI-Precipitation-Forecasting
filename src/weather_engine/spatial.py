@@ -1,3 +1,4 @@
+
 from itertools import combinations
 from math import radians, sin, cos, sqrt, atan2
 import pandas as pd
@@ -25,60 +26,45 @@ def haversine(
 
 def get_k_neighbors(target_id: int, all_stations: dict, hold_out_station_id: int) -> dict:
     """
-    Finds the three best neighbouring stations to use as upstream inputs
-    for a target station, using Delaunay-style triangle enclosure.
-
-    The algorithm:
-    1. Computes haversine distances from the target to all other stations.
-    2. Retains the 10 closest candidates to limit the search space.
-    3. Tests all triangles formed by those candidates; keeps ones that
-       geometrically enclose the target station.
-    4. Selects the enclosing triangle with the smallest area (tightest fit).
-    5. If no enclosing triangle exists (boundary station), falls back to the
-       3 nearest neighbours by distance.
+    Finds the three nearest neighbouring stations to a target station
+    by haversine distance.
 
     :param target_id: Station ID of the target station to find neighbours for.
     :param all_stations: Dict mapping station_id -> (lat, lon).
-    :returns: Dict with keys: station_id, is_boundary, triangle_area,
-              neighbor_1_id, neighbor_1_distance, neighbor_2_id, ...
+    :param hold_out_station_id: Station ID to exclude from candidates.
+    :returns: Dict with keys: station_id, neighbor_1_id, neighbor_1_distance, ...
     """
     target = all_stations[target_id]
 
-    candidates = [
-        (sid, haversine(*target, *coords))
-        for sid, coords in all_stations.items()
-        if sid != target_id and sid != hold_out_station_id
-    ]
-    candidates = sorted(candidates, key=lambda x: x[1])[:10]
-    candidate_ids = [sid for sid, _ in candidates]
+    all_candidates = sorted(
+        [
+            (sid, haversine(*target, *coords))
+            for sid, coords in all_stations.items()
+            if sid != target_id and sid != hold_out_station_id
+        ],
+        key=lambda x: x[1],
+    )[:10]
 
-    valid_triangles = []
+    dist_map = dict(all_candidates)
+    candidate_ids = [sid for sid, _ in all_candidates]
+
+    interpolation = []
     for trio in combinations(candidate_ids, 3):
-        A = all_stations[trio[0]]
-        B = all_stations[trio[1]]
-        C = all_stations[trio[2]]
-        if point_in_triangle(target, A, B, C):
-            area = triangle_area(A, B, C)
-            valid_triangles.append((trio, area))
+        if point_in_triangle(target, *[all_stations[sid] for sid in trio]):
+            interpolation.append((trio, sum(dist_map[sid] for sid in trio)))
 
-    if valid_triangles:
-        best = min(valid_triangles, key=lambda x: x[1])
-        neighbors = best[0]
+    if interpolation:
+        best_trio, _ = min(interpolation, key=lambda x: x[1])
+        neighbors = [(sid, dist_map[sid]) for sid in best_trio]
         is_boundary = False
-        area = best[1]
     else:
-        neighbors = tuple(candidate_ids[:3])
+        neighbors = all_candidates[:3]
         is_boundary = True
-        area = None
 
-    result = {
-        'station_id': target_id,
-        'is_boundary': is_boundary,
-        'triangle_area': area,
-    }
-    for i, nid in enumerate(neighbors, 1):
+    result = {'station_id': target_id, 'is_boundary': is_boundary}
+    for i, (nid, dist) in enumerate(neighbors, 1):
         result[f'neighbor_{i}_id'] = nid
-        result[f'neighbor_{i}_distance'] = haversine(*target, *all_stations[nid])
+        result[f'neighbor_{i}_distance'] = dist
 
     return result
 
@@ -149,23 +135,5 @@ def compute_and_store_neighbors() -> None:
     df.to_sql('station_neighbors', engine, if_exists='replace', index=False)
     print(f"Saved {len(df)} rows to station_neighbors.")
 
-
-def triangle_area(
-    A: tuple[float, float],
-    B: tuple[float, float],
-    C: tuple[float, float],
-) -> float:
-    """
-    Computes the area of triangle ABC using the shoelace formula.
-
-    :param A: First vertex as (x, y).
-    :param B: Second vertex as (x, y).
-    :param C: Third vertex as (x, y).
-    :returns: The area of the triangle (always non-negative).
-    """
-    return abs(
-        (A[0] * (B[1] - C[1]) + B[0] * (C[1] - A[1]) + C[0] * (A[1] - B[1])) / 2
-    )
-    
 if __name__ == "__main__":
     compute_and_store_neighbors()
