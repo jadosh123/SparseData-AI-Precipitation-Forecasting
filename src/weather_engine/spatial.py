@@ -123,6 +123,10 @@ def compute_and_store_neighbors() -> None:
         int(sid): (float(lat), float(lon))
         for sid, lat, lon in zip(coords_df['station_id'], coords_df['latitude'], coords_df['longitude'])
     }
+    
+    ### FOR TRAINING/TESTING IN DEVELOPMENT PHASE (NAZARETH HAS NO DATA OLDER THAN 2024)
+    NAZARETH_ID = 500
+    all_stations.pop(NAZARETH_ID)
 
     print(f"Computing neighbors for {len(all_stations)} stations...")
     records = []

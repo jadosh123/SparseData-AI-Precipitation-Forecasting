@@ -29,7 +29,7 @@
 > Features: `rain`, `ws`, `stdwd`, `td`, `rh`, `tdmax`, `tdmin`, `u_vec`, `v_vec`
 - [x] Train one spatial interpolation model per feature using LLOCV
 - [x] Report per-feature reconstruction errors (MAE, RMSE) across all folds
-- [ ] Sanity check: pick one station, plot predicted vs actual for each feature over a representative week — outputs should look physically plausible
+- [x] Sanity check: (Picked Afula since its the held out test station) pick one station, plot predicted vs actual for each feature over a representative week — outputs should look physically plausible
 - [x] Flag `stdwd` result separately — expected to be the weakest interpolating feature due to local turbulence variability (removed due to it being useless and noisy)
 
 **RFSI → XGBoost wiring**
