@@ -386,3 +386,35 @@ After fixing the sentinel values and switching `rain` to `reg:tweedie` (variance
 | tdmin | 1.4162 | 1.8958 | |
 | u_vec | 1.1090 | 1.5226 | |
 | v_vec | 0.9629 | 1.2990 | |
+
+### Date: April 19, 2026
+
+Subject: RFSI LLOCV Evaluation — Afula Held-Out Test Results & Error Analysis
+
+**LLOCV Interpolation Results (Afula held-out, station 16 excluded from training entirely)**
+
+| Feature | MAE | RMSE | RMSE (rain events ≥ 0.1mm only) |
+| :--- | :--- | :--- | :--- |
+| rain (global) | 0.0460 | 0.3301 | 1.4917 |
+| ws | 1.2244 | 1.4205 | — |
+| td | 1.4335 | 1.8149 | — |
+| rh | 4.5308 | 6.1525 | — |
+| tdmax | 1.3779 | 1.7491 | — |
+| tdmin | 1.4549 | 1.8415 | — |
+| u_vec | 1.0206 | 1.2876 | — |
+| v_vec | 0.8336 | 1.0661 | — |
+
+**Error Analysis by Feature**
+
+**Rain:** Global RMSE is clean (0.33mm) but rain-only RMSE of 1.49mm is driven almost entirely by a small number of extreme events exceeding 20mm at Afula. RFSI interpolates from neighboring stations which may not capture local intensity of convective events in the valley — the same systematic underestimation of extremes documented in the tree-based precipitation literature.
+
+**Wind speed:** Visually consistent positive offset across the full plot — predictions sit above ground truth by a roughly stable margin. Physically explained by Afula's local topographic exposure or orographic channeling not shared by surrounding stations, causing RFSI to interpolate toward the regional mean wind rather than Afula's local wind regime. Planned correction: fit a bias correction to the residual distribution derived from training stations only (not Afula), apply as a learned post-processing step before features enter XGBoost. Worth checking whether the bias is uniform across summer/winter before applying a single correction.
+
+**All other features (td, rh, tdmax, tdmin, u_vec, v_vec):** Visually close to ground truth, following seasonal trends correctly. These are spatially smooth fields that RFSI handles well.
+
+**Key Methodological Notes**
+
+- LLOCV metrics and XGBoost forecast metrics evaluate different pipeline stages and cannot be directly compared. LLOCV measures interpolation reconstruction quality; XGBoost metrics measure forecast quality given clean inputs. At real inference both error sources compound.
+- Rain-only RMSE at interpolation (1.49mm) and storm-only RMSE at forecast are in the same units but measure different things — do not conflate them.
+- The Gaussian noise injection during XGBoost training (sampled from per-feature LLOCV RMSE) was designed to make the forecaster robust to upstream interpolation error. There is no empirical measurement yet of how much storm RMSE degrades when XGBoost is fed RFSI-interpolated inputs vs. real Afula observations — that delta would be the true cost of the RFSI approximation at inference.
+- Wind speed bias correction, if implemented, should be framed as "systematic bias correction derived from the leave-one-out residual distribution" — a legitimate post-processing step with precedent in the NWP bias correction literature.
