@@ -2,6 +2,7 @@ import re
 import pandas as pd
 import numpy as np
 from weather_engine.database import engine
+from weather_engine.utils import encode_time_features
 
 
 def single_station_load(station_id: int) -> pd.DataFrame:
@@ -136,6 +137,8 @@ def make_single_point_features(
         upstream_dfs[name] = sort_by_ts(single_station_load(sid))
 
     df_backbone = create_production_backbone(raw_start_str, raw_end_str, max_lag_hours)
+    
+    df_target = encode_time_features(df_target)
 
     datasets = {}
     constraints_dict = {}

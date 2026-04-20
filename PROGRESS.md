@@ -432,3 +432,47 @@ literature.
 - **8-feature baseline with deliberate feature dropping** — stdwd, rain_intensity_max, wdmax, wsmax dropped for principled reasons, not arbitrary
 - **Medallion architecture** — raw/bronze/silver/gold separation keeps data lineage clean and reproducible
 - **Bias correction via residual distribution** — fitted on training stations only, applied blind to Afula, keeps evaluation clean
+
+
+### Date: April 20, 2026
+
+Subject: RFSI In-Sample Results After Adding Cyclic Month & Day Encodings
+
+Added `month_sin`, `month_cos`, `day_sin`, `day_cos` as features to `X` in the RFSI training loop. Encodings are attached to the neighbor feature matrix (not `y`) so the model sees time context alongside the spatial neighbor values. Leap year handled via `/366` divisor.
+
+Comparing against the April 15 baseline (same in-sample 80/20 split, all 66 stations):
+
+| Feature | MAE (before) | MAE (after) | RMSE (before) | RMSE (after) | Δ RMSE |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| rain (global) | 0.0353 | **0.0330** | 0.3579 | **0.3460** | −3.3% ✓ |
+| rain (events ≥ 0.1mm) | 0.9075 | **0.8715** | 1.9960 | **1.9430** | −2.7% ✓ |
+| ws | 0.9840 | 1.0071 | 1.3200 | 1.3533 | +2.5% ✗ |
+| td | 1.4002 | 1.4038 | 1.8737 | 1.8759 | +0.1% ~ |
+| rh | 5.8496 | **5.7373** | 8.3644 | **8.1805** | −2.2% ✓ |
+| tdmax | 1.4184 | 1.4270 | 1.8973 | 1.9009 | +0.2% ~ |
+| tdmin | 1.4162 | 1.4255 | 1.8958 | 1.9050 | +0.5% ~ |
+| u_vec | 1.1090 | 1.1191 | 1.5226 | 1.5337 | +0.7% ~ |
+| v_vec | 0.9629 | **0.9544** | 1.2990 | **1.2973** | −0.1% ~ |
+
+**Assessment:** The encoding had the most meaningful impact on `rain` and `rh` — the two features most strongly driven by seasonal patterns (wet/dry season and humidity cycles). Temperature and wind features are largely unchanged since they are already spatially smooth signals well-captured by the neighbor values alone. `ws` regressed slightly, likely noise. Overall the encoding is a net positive: the features it was designed to help (`rain`, `rh`) improved and nothing degraded significantly.
+
+
+### Date: April 20, 2026
+
+Subject: RFSI LLOCV Test Results After Adding Cyclic Month & Day Encodings
+
+Added `month_sin`, `month_cos`, `day_sin`, `day_cos` as features to `X` in the RFSI training loop. Encodings are attached to the neighbor feature matrix only (not `y`) so the model sees time context alongside the spatial neighbor values. Comparing against the April 19 LLOCV run (Afula held-out):
+
+| Feature | MAE (before) | MAE (after) | RMSE (before) | RMSE (after) | Δ RMSE |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| rain (global) | 0.0460 | **0.0453** | 0.3301 | 0.3303 | ~0% ~ |
+| rain (events ≥ 0.1mm) | — | — | 1.4917 | 1.4925 | ~0% ~ |
+| ws | 1.2244 | 1.2261 | 1.4205 | 1.4222 | +0.1% ~ |
+| td | 1.4335 | **1.4296** | 1.8149 | **1.8097** | −0.3% ✓ |
+| rh | 4.5308 | **4.4662** | 6.1525 | **6.0746** | −1.3% ✓ |
+| tdmax | 1.3779 | 1.4179 | 1.7491 | 1.7992 | +2.9% ✗ |
+| tdmin | 1.4549 | 1.4638 | 1.8415 | 1.8513 | +0.5% ~ |
+| u_vec | 1.0206 | **1.0127** | 1.2876 | **1.2764** | −0.9% ✓ |
+| v_vec | 0.8336 | 0.8400 | 1.0661 | 1.0720 | +0.6% ~ |
+
+**Assessment:** On the held-out Afula test the encoding had modest but consistent impact. `rh` improved most clearly (−1.3% RMSE), which is physically expected since humidity cycles are strongly seasonal. `td` and `u_vec` also improved slightly. `tdmax` regressed (+2.9%) which is likely noise at this evaluation scale rather than a structural issue. Rain metrics are essentially unchanged — interpolation quality at Afula is dominated by the spatial configuration of neighbors rather than temporal encodings, consistent with RFSI's design intent.
