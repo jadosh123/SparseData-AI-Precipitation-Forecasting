@@ -25,7 +25,7 @@
 - [x] Confirm held-out station is also excluded from neighbor lookup during its own fold
 - [x] Log per-fold train/val size to confirm no silent data leakage
 
-**Interpolation model training (9 features)**
+**Interpolation model training (8 features)**
 > Features: `rain`, `ws`, `stdwd`, `td`, `rh`, `tdmax`, `tdmin`, `u_vec`, `v_vec`
 - [x] Train one spatial interpolation model per feature using LLOCV
 - [x] Report per-feature reconstruction errors (MAE, RMSE) across all folds

@@ -2,6 +2,7 @@ from pathlib import Path
 import rasterio
 import math
 import pandas as pd
+import numpy as np
 
 def get_project_root() -> Path:
     """
@@ -55,3 +56,16 @@ def get_elevation_from_hgt(lat, lon):
     except Exception as e:
         print(f"Error reading {tile_name}: {e}")
         return None
+    
+def encode_time_features(df: pd.DataFrame) -> pd.DataFrame:
+    df['timestamp'] = pd.to_datetime(df['timestamp']).dt.tz_localize('UTC').dt.tz_convert('Asia/Jerusalem')
+    
+    month = df['timestamp'].dt.month
+    df['month_sin'] = np.sin(2 * np.pi * month / 12)
+    df['month_cos'] = np.cos(2 * np.pi * month / 12)
+    
+    day = df['timestamp'].dt.day_of_year
+    df['day_sin'] = np.sin(2 * np.pi * day / df['timestamp'].dt.is_leap_year.map({True: 366, False: 365}))
+    df['day_cos'] = np.cos(2 * np.pi * day / df['timestamp'].dt.is_leap_year.map({True: 366, False: 365}))
+    
+    return df

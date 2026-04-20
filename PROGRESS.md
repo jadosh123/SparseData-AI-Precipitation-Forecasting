@@ -417,4 +417,18 @@ Subject: RFSI LLOCV Evaluation — Afula Held-Out Test Results & Error Analysis
 - LLOCV metrics and XGBoost forecast metrics evaluate different pipeline stages and cannot be directly compared. LLOCV measures interpolation reconstruction quality; XGBoost metrics measure forecast quality given clean inputs. At real inference both error sources compound.
 - Rain-only RMSE at interpolation (1.49mm) and storm-only RMSE at forecast are in the same units but measure different things — do not conflate them.
 - The Gaussian noise injection during XGBoost training (sampled from per-feature LLOCV RMSE) was designed to make the forecaster robust to upstream interpolation error. There is no empirical measurement yet of how much storm RMSE degrades when XGBoost is fed RFSI-interpolated inputs vs. real Afula observations — that delta would be the true cost of the RFSI approximation at inference.
-- Wind speed bias correction, if implemented, should be framed as "systematic bias correction derived from the leave-one-out residual distribution" — a legitimate post-processing step with precedent in the NWP bias correction literature.
+- Wind speed bias correction, if implemented, should be framed as "systematic bias correction derived from the leave-one-out residual distribution" — a legitimate post-processing step with precedent in the NWP bias correction 
+literature.
+
+
+### Architectural Decisions Made Recently
+- **LLOCV over random CV** — spatially aware validation that prevents neighboring stations from leaking information into the held-out target, giving realistic error estimates for unseen locations
+- **Temporal split within LLOCV** — prevents future timestamps leaking into interpolation model training.
+- **RFSI for spatial interpolation then XGBoost for temporal forecasting** — clean separation of concerns, each model does one job, avoids muddying spatial and temporal signals
+- **Afula as held-out test station** — never seen in training or validation, in the target deployment region, gives honest generalization estimate
+- **Gaussian noise injection sampled from per-feature LLOCV RMSE** — makes XGBoost robust to upstream interpolation error at inference, grounded in the actual measured error distribution rather than arbitrary noise (not tested yet).
+- **Wind decomposition into u/v vectors** — eliminates the 0°/360° circular discontinuity that would create artificial distance in the feature space
+- **Cyclic sin/cos encoding for month and day** — same reasoning as wind vectors, December and January remain close in the encoded space
+- **8-feature baseline with deliberate feature dropping** — stdwd, rain_intensity_max, wdmax, wsmax dropped for principled reasons, not arbitrary
+- **Medallion architecture** — raw/bronze/silver/gold separation keeps data lineage clean and reproducible
+- **Bias correction via residual distribution** — fitted on training stations only, applied blind to Afula, keeps evaluation clean
