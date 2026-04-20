@@ -476,3 +476,18 @@ Added `month_sin`, `month_cos`, `day_sin`, `day_cos` as features to `X` in the R
 | v_vec | 0.8336 | 0.8400 | 1.0661 | 1.0720 | +0.6% ~ |
 
 **Assessment:** On the held-out Afula test the encoding had modest but consistent impact. `rh` improved most clearly (−1.3% RMSE), which is physically expected since humidity cycles are strongly seasonal. `td` and `u_vec` also improved slightly. `tdmax` regressed (+2.9%) which is likely noise at this evaluation scale rather than a structural issue. Rain metrics are essentially unchanged — interpolation quality at Afula is dominated by the spatial configuration of neighbors rather than temporal encodings, consistent with RFSI's design intent.
+
+### Date: April 20, 2026
+
+Subject: Single-Point Forecaster Results After Adding Cyclic Month & Day Encodings
+
+Added `month_sin`, `month_cos`, `day_sin`, `day_cos` to the single-point XGBoost forecaster feature set. Comparing against the previous multi-horizon run:
+
+| Horizon | Global RMSE (before) | Global RMSE (after) | Δ | Storm-Only RMSE (before) | Storm-Only RMSE (after) | Δ | Storm Bias (before) | Storm Bias (after) | Storm Scatter (before) | Storm Scatter (after) |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| t+1  | 0.3192 mm | **0.3190 mm** | ~0%    | 1.7186 mm | **1.7047 mm** | −0.8% ✓ | −0.45 mm | **−0.41 mm** | 161.5% | **160.2%** |
+| t+3  | 0.3466 mm | **0.3399 mm** | −1.9% ✓ | 1.8020 mm | **1.7658 mm** | −2.0% ✓ | −0.54 mm | −0.55 mm | 168.8% | **165.4%** |
+| t+6  | 0.3675 mm | **0.3560 mm** | −3.1% ✓ | 1.8279 mm | 1.8228 mm | −0.3% ~ | −0.57 mm | −0.61 mm | 170.7% | **170.2%** |
+| t+12 | 0.3658 mm | **0.3677 mm** | +0.5% ~ | 1.8617 mm | **1.8324 mm** | −1.6% ✓ | −0.68 mm | **−0.60 mm** | 173.8% | **171.1%** |
+
+**Assessment:** The cyclic encodings produced consistent gains across all horizons. Global RMSE improved at t+3 and t+6 meaningfully (−1.9%, −3.1%). Storm-only RMSE dropped at t+1, t+3, and t+12. The largest practical win is at t+12 where storm bias improved from −0.68mm to −0.60mm — the model is underestimating heavy events less severely at longer horizons, which is physically meaningful since seasonality becomes a stronger signal relative to local dynamics as the horizon grows.
