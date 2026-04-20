@@ -491,3 +491,18 @@ Added `month_sin`, `month_cos`, `day_sin`, `day_cos` to the single-point XGBoost
 | t+12 | 0.3658 mm | **0.3677 mm** | +0.5% ~ | 1.8617 mm | **1.8324 mm** | −1.6% ✓ | −0.68 mm | **−0.60 mm** | 173.8% | **171.1%** |
 
 **Assessment:** The cyclic encodings produced consistent gains across all horizons. Global RMSE improved at t+3 and t+6 meaningfully (−1.9%, −3.1%). Storm-only RMSE dropped at t+1, t+3, and t+12. The largest practical win is at t+12 where storm bias improved from −0.68mm to −0.60mm — the model is underestimating heavy events less severely at longer horizons, which is physically meaningful since seasonality becomes a stronger signal relative to local dynamics as the horizon grows.
+
+**Extra Additions:**
+Added much more aggressive sample weights before training each model to battle the insanely imbalanced dataset we have which contains:
+
+| Rain Category | Fraction  |
+|---------------|-----------|
+| dry           | 0.009566  |
+| 0.1–2mm       | 0.026435  |
+| 2–5mm         | 0.006162  |
+| 5–10mm        | 0.001521  |
+| 10–20mm       | 0.000152  |
+| 20mm+         | 0.000038  |
+
+As you can see from the rain distributions setting the sample weights to a constant 10 is useless and yielded a -0.45mm storm bias in the t+1 hour forecasting horizon, I split the rain into buckets then gave each one weights inversely proportional to frequency and it reduced to a -0.2mm storm bias at t+1 hour which is a massive gain, although its still not where I want it to be by meteorological standards which is a positive bias its still a big achievement.
+[written by me]

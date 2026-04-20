@@ -126,7 +126,7 @@ def make_single_point_features(
     :param test_start_date: Start date for test split.
 
     :returns: (datasets, constraints_dict, test_sets)
-        - datasets[lag]: fully engineered DataFrame for each horizon
+        - datasets[lag]: fully engineered DataFrame for each horizon (for inspection and analysis)
         - constraints_dict[lag]: monotonicity constraints for each horizon
         - test_sets[lag]: dict with X_train, X_val, X_test, y_train, y_val, y_test
     """
