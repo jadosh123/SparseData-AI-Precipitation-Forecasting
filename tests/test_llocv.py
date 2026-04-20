@@ -11,13 +11,12 @@ TARGET_ID = 8
 NEIGHBOR_IDS = (28, 43, 121)
 
 GAP_RANGES = [
-    ('2020-06-28 11:00', '2020-09-10 10:00'),   # station 8  worst gap
     ('2020-03-19 01:00', '2020-05-24 09:00'),   # station 28 worst gap
     ('2019-12-31 22:00', '2020-06-29 12:00'),   # station 43 worst gap
     ('2023-01-04 18:00', '2023-01-05 12:00'),   # station 121 worst gap
 ]
 
-FEATURES = ['rain', 'ws', 'stdwd', 'td', 'rh', 'tdmax', 'tdmin', 'u_vec', 'v_vec']
+FEATURES = ['rain', 'ws', 'td', 'rh', 'tdmax', 'tdmin', 'u_vec', 'v_vec']
 NEIGHBOR_SUFFIXES = ('_n1', '_n2', '_n3')
 
 

@@ -1,6 +1,7 @@
 import pytest
 import pandas as pd
 import numpy as np
+from weather_engine.utils import encode_time_features
 from weather_engine.single_point_features import (
     single_station_load,
     sort_by_ts,
@@ -231,6 +232,51 @@ class TestGetConstraints:
 # ---------------------------------------------------------------------------
 # temporal_split
 # ---------------------------------------------------------------------------
+
+class TestEncodeTimeFeatures:
+    def _make_ts_df(self, timestamps):
+        return pd.DataFrame({"timestamp": pd.to_datetime(timestamps)})
+
+    def test_normal_month_and_day_range(self):
+        df = self._make_ts_df(["2023-05-15 12:00"])
+        result = encode_time_features(df)
+        assert result["month_sin"].iloc[0] == pytest.approx(np.sin(2 * np.pi * 5 / 12))
+        assert result["month_cos"].iloc[0] == pytest.approx(np.cos(2 * np.pi * 5 / 12))
+
+    def test_december_january_month_closeness(self):
+        df = self._make_ts_df(["2023-12-15 12:00", "2023-01-15 12:00"])
+        result = encode_time_features(df)
+        dec_sin, jan_sin = result["month_sin"].iloc[0], result["month_sin"].iloc[1]
+        dec_cos, jan_cos = result["month_cos"].iloc[0], result["month_cos"].iloc[1]
+        dist = np.sqrt((dec_sin - jan_sin) ** 2 + (dec_cos - jan_cos) ** 2)
+        jun_df = self._make_ts_df(["2023-06-15 12:00"])
+        jun_result = encode_time_features(jun_df)
+        jun_dist = np.sqrt(
+            (dec_sin - jun_result["month_sin"].iloc[0]) ** 2 +
+            (dec_cos - jun_result["month_cos"].iloc[0]) ** 2
+        )
+        assert dist < jun_dist
+
+    def test_day_365_and_day_1_closeness(self):
+        df = self._make_ts_df(["2023-12-31 12:00", "2023-01-01 12:00"])
+        result = encode_time_features(df)
+        d365_sin, d1_sin = result["day_sin"].iloc[0], result["day_sin"].iloc[1]
+        d365_cos, d1_cos = result["day_cos"].iloc[0], result["day_cos"].iloc[1]
+        dist = np.sqrt((d365_sin - d1_sin) ** 2 + (d365_cos - d1_cos) ** 2)
+        mid_df = self._make_ts_df(["2023-07-01 12:00"])
+        mid_result = encode_time_features(mid_df)
+        mid_dist = np.sqrt(
+            (d365_sin - mid_result["day_sin"].iloc[0]) ** 2 +
+            (d365_cos - mid_result["day_cos"].iloc[0]) ** 2
+        )
+        assert dist < mid_dist
+
+    def test_leap_year_day_366_close_to_day_1(self):
+        df = self._make_ts_df(["2024-12-31 12:00"])  # day 366 in leap year
+        result = encode_time_features(df)
+        assert result["day_sin"].iloc[0] == pytest.approx(np.sin(2 * np.pi * 366 / 366))
+        assert result["day_cos"].iloc[0] == pytest.approx(np.cos(2 * np.pi * 366 / 366))
+
 
 class TestTemporalSplit:
     def _make_split_df(self):
