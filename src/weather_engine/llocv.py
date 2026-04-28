@@ -1,9 +1,6 @@
 from weather_engine.database import engine
 import pandas as pd
 
-FEATURES = ['rain', 'ws', 'td', 'rh', 'tdmax', 'tdmin', 'u_vec', 'v_vec']
-
-
 def load_fold(
     target_id: int,
     neighbor_1_id: int,
@@ -33,13 +30,20 @@ def load_fold(
             frames[sid] = station_frames[sid]
         else:
             df = pd.read_sql(
-                "SELECT timestamp, " + ", ".join(FEATURES) + " FROM clean_station_data WHERE station_id = :sid",
+                "SELECT * FROM clean_station_data WHERE station_id = :sid",
                 engine,
                 params={'sid': sid},
             )
+            df = df.drop(columns=['station_id'])
             df['timestamp'] = pd.to_datetime(df['timestamp'])
             df = df.set_index('timestamp').sort_index()
             frames[sid] = df
+
+    placeholders = ','.join(str(sid) for sid in all_ids)
+    elevations = pd.read_sql(
+        f"SELECT station_id, elevation FROM station_metadata WHERE station_id IN ({placeholders})",
+        engine,
+    ).set_index('station_id')['elevation']
 
     df_target = frames[target_id]
     df_neighbors = [frames[nid].add_suffix(f'_n{i + 1}') for i, nid in enumerate(neighbor_ids)]
@@ -48,6 +52,11 @@ def load_fold(
 
     y = combined[[c for c in combined.columns if not c.endswith(('_n1', '_n2', '_n3'))]]
     X = combined[[c for c in combined.columns if c.endswith(('_n1', '_n2', '_n3'))]]
+
+    X = X.copy()
+    X['elevation_target'] = elevations.get(target_id)
+    for i, nid in enumerate(neighbor_ids):
+        X[f'elevation_n{i + 1}'] = elevations.get(nid)
 
     return X, y
 

@@ -16,7 +16,6 @@ GAP_RANGES = [
     ('2023-01-04 18:00', '2023-01-05 12:00'),   # station 121 worst gap
 ]
 
-FEATURES = ['rain', 'ws', 'td', 'rh', 'tdmax', 'tdmin', 'u_vec', 'v_vec']
 NEIGHBOR_SUFFIXES = ('_n1', '_n2', '_n3')
 
 
@@ -27,14 +26,20 @@ def fold():
 
 
 class TestLoadFoldTargetIsolation:
-    def test_X_contains_only_neighbor_columns(self, fold):
+    def test_X_contains_only_neighbor_and_elevation_columns(self, fold):
         X, _ = fold
-        bare = [c for c in X.columns if not c.endswith(NEIGHBOR_SUFFIXES)]
-        assert bare == [], f"X contains non-neighbor columns: {bare}"
+        allowed_extra = {'elevation_target'}
+        bare = [c for c in X.columns if not c.endswith(NEIGHBOR_SUFFIXES) and c not in allowed_extra]
+        assert bare == [], f"X contains unexpected columns: {bare}"
+
+    def test_X_has_elevation_columns(self, fold):
+        X, _ = fold
+        expected = {'elevation_target', 'elevation_n1', 'elevation_n2', 'elevation_n3'}
+        assert expected.issubset(set(X.columns)), f"Missing elevation columns: {expected - set(X.columns)}"
 
     def test_y_contains_only_target_feature_columns(self, fold):
         _, y = fold
-        assert list(y.columns) == FEATURES
+        assert not any(c.endswith(NEIGHBOR_SUFFIXES) or 'elevation' in c for c in y.columns)
 
     def test_X_and_y_share_same_index(self, fold):
         X, y = fold
