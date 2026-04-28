@@ -3,6 +3,7 @@ import rasterio
 import math
 import pandas as pd
 import numpy as np
+import h5py
 
 def get_project_root() -> Path:
     """
@@ -57,6 +58,28 @@ def get_elevation_from_hgt(lat, lon):
         print(f"Error reading {tile_name}: {e}")
         return None
     
+def get_distance_to_coast(lat, lon) -> float | None:
+    """Samples the GSHHG distance-to-coast NetCDF grid at the given lat/lon and returns distance in km."""
+    if pd.isna(lat) or pd.isna(lon):
+        return None
+
+    nc_path = get_project_root() / 'data' / 'dist_to_GSHHG_v2.3.7_1m.nc'
+    if not nc_path.exists():
+        return None
+
+    try:
+        with h5py.File(nc_path, 'r') as f:
+            lats = f['lat'][:]
+            lons = f['lon'][:]
+            lat_idx = int(np.argmin(np.abs(lats - lat)))
+            lon_idx = int(np.argmin(np.abs(lons - lon)))
+            dist = float(f['dist'][lat_idx, lon_idx])
+        return dist
+    except Exception as e:
+        print(f"Error reading distance to coast: {e}")
+        return None
+
+
 def encode_time_features(df: pd.DataFrame) -> pd.DataFrame:
     if 'timestamp' in df.columns:
         ts = pd.to_datetime(df['timestamp']).dt.tz_localize('UTC').dt.tz_convert('Asia/Jerusalem')

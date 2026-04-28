@@ -24,6 +24,7 @@ dependencies = [
     "rasterio",
     "scikit-learn",
     "folium",
+    "h5py",
 ]
 
 # -----------------------------------------------------------
