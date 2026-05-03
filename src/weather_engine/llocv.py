@@ -1,4 +1,5 @@
 from weather_engine.database import engine
+from weather_engine.utils import get_distance_to_coast
 import pandas as pd
 
 def load_fold(
@@ -40,10 +41,10 @@ def load_fold(
             frames[sid] = df
 
     placeholders = ','.join(str(sid) for sid in all_ids)
-    elevations = pd.read_sql(
-        f"SELECT station_id, elevation FROM station_metadata WHERE station_id IN ({placeholders})",
+    metadata = pd.read_sql(
+        f"SELECT * FROM station_metadata WHERE station_id IN ({placeholders})",
         engine,
-    ).set_index('station_id')['elevation']
+    ).set_index('station_id')
 
     df_target = frames[target_id]
     df_neighbors = [frames[nid].add_suffix(f'_n{i + 1}') for i, nid in enumerate(neighbor_ids)]
@@ -54,9 +55,11 @@ def load_fold(
     X = combined[[c for c in combined.columns if c.endswith(('_n1', '_n2', '_n3'))]]
 
     X = X.copy()
-    X['elevation_target'] = elevations.get(target_id)
+    X['elevation_target'] = metadata.loc[target_id, 'elevation']
+    X['dist_to_coast_target'] = metadata.loc[target_id, 'dist_to_coast']
     for i, nid in enumerate(neighbor_ids):
-        X[f'elevation_n{i + 1}'] = elevations.get(nid)
+        X[f'elevation_n{i+1}'] = metadata.loc[nid, 'elevation']
+        X[f'dist_to_coast_n{i+1}'] = metadata.loc[nid, 'dist_to_coast']
 
     return X, y
 

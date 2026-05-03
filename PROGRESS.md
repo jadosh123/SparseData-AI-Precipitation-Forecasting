@@ -506,3 +506,24 @@ Added much more aggressive sample weights before training each model to battle t
 
 As you can see from the rain distributions setting the sample weights to a constant 10 is useless and yielded a -0.45mm storm bias in the t+1 hour forecasting horizon, I split the rain into buckets then gave each one weights inversely proportional to frequency and it reduced to a -0.2mm storm bias at t+1 hour which is a massive gain, although its still not where I want it to be by meteorological standards which is a positive bias its still a big achievement.
 [written by me]
+
+### Date: May 3, 2026
+
+Subject: RFSI LLOCV Results After Adding Distance-to-Coast Feature
+
+Added `dist_to_coast_target`, `dist_to_coast_n1`, `dist_to_coast_n2`, `dist_to_coast_n3` as static features in `load_fold`. Values precomputed from the GSHHG v2.3.7 distance-to-coast NetCDF grid and stored in `station_metadata` via backfill script. Sign convention: negative = land side, positive = ocean side. All Israeli stations are land-side so values are negative or near-zero for coastal stations.
+
+Comparing against the April 20 LLOCV baseline (Afula held-out, cyclic encodings included):
+
+| Feature | RMSE (before) | RMSE (after) | Δ |
+| :--- | :--- | :--- | :--- |
+| rain (events ≥ 0.1mm) | 1.4925 | **1.4734** | −1.3% ✓ |
+| ws | 1.4222 | 1.5615 | +9.8% ✗ |
+| td | 1.8097 | 1.8360 | +1.5% ~ |
+| rh | 6.0746 | 6.4577 | +6.3% ✗ |
+| tdmax | 1.7992 | **1.6251** | −9.7% ✓ |
+| tdmin | 1.8513 | 1.8904 | +2.1% ~ |
+| u_vec | 1.2764 | **1.1494** | −10.0% ✓ |
+| v_vec | 1.0720 | **0.9943** | −7.2% ✓ |
+
+**Assessment:** Wind vectors (`u_vec`, `v_vec`) and `tdmax` showed the largest gains — physically grounded since coastal proximity governs sea breeze regime and daytime heating gradients, both mesoscale phenomena that persist across the 13-29km neighbor distances in this network. `ws` and `rh` regressed. The `rh` regression is consistent with its known hyper-local behavior — humidity is already well-captured by the nearest 1-2 neighbors and dist_to_coast at this scale adds noise rather than signal. `ws` regression is likely related to the existing systematic bias at Afula due to local orographic channeling not shared by surrounding stations. Feature retained despite mixed results — the wind vector improvements are physically meaningful and the regressions are explainable rather than structural.

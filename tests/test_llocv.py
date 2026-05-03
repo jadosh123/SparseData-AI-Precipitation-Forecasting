@@ -28,7 +28,7 @@ def fold():
 class TestLoadFoldTargetIsolation:
     def test_X_contains_only_neighbor_and_elevation_columns(self, fold):
         X, _ = fold
-        allowed_extra = {'elevation_target'}
+        allowed_extra = {'elevation_target', 'dist_to_coast_target'}
         bare = [c for c in X.columns if not c.endswith(NEIGHBOR_SUFFIXES) and c not in allowed_extra]
         assert bare == [], f"X contains unexpected columns: {bare}"
 
@@ -36,6 +36,11 @@ class TestLoadFoldTargetIsolation:
         X, _ = fold
         expected = {'elevation_target', 'elevation_n1', 'elevation_n2', 'elevation_n3'}
         assert expected.issubset(set(X.columns)), f"Missing elevation columns: {expected - set(X.columns)}"
+
+    def test_X_has_dist_to_coast_columns(self, fold):
+        X, _ = fold
+        expected = {'dist_to_coast_target', 'dist_to_coast_n1', 'dist_to_coast_n2', 'dist_to_coast_n3'}
+        assert expected.issubset(set(X.columns)), f"Missing dist_to_coast columns: {expected - set(X.columns)}"
 
     def test_y_contains_only_target_feature_columns(self, fold):
         _, y = fold

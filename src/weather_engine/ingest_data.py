@@ -127,8 +127,11 @@ def ingest_data():
                         meta_df['elevation'] = meta_df.apply(lambda row: ut.get_elevation_from_hgt(row['latitude'], row['longitude']), axis=1)
                         if 'elevation' not in meta_cols_present:
                             meta_cols_present.append('elevation')
+                        meta_df['dist_to_coast'] = meta_df.apply(lambda row: ut.get_distance_to_coast(row['latitude'], row['longitude']), axis=1)
+                        if 'dist_to_coast' not in meta_cols_present:
+                            meta_cols_present.append('dist_to_coast')
 
-                    meta_dtype_mapping = {'station_id': types.Integer()}
+                    meta_dtype_mapping: dict[str, types.TypeEngine] = {'station_id': types.Integer()}
                     for c in meta_cols_present:
                         meta_df[c] = pd.to_numeric(meta_df[c], errors='coerce')
                         meta_dtype_mapping[c] = types.Float()
@@ -138,7 +141,7 @@ def ingest_data():
                         engine,
                         if_exists='append',
                         index=False,
-                        dtype=meta_dtype_mapping,
+                        dtype=meta_dtype_mapping,  # type: ignore[arg-type]
                         method=insert_metadata_on_conflict
                     )
                     
