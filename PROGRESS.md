@@ -527,3 +527,40 @@ Comparing against the April 20 LLOCV baseline (Afula held-out, cyclic encodings 
 | v_vec | 1.0720 | **0.9943** | −7.2% ✓ |
 
 **Assessment:** Wind vectors (`u_vec`, `v_vec`) and `tdmax` showed the largest gains — physically grounded since coastal proximity governs sea breeze regime and daytime heating gradients, both mesoscale phenomena that persist across the 13-29km neighbor distances in this network. `ws` and `rh` regressed. The `rh` regression is consistent with its known hyper-local behavior — humidity is already well-captured by the nearest 1-2 neighbors and dist_to_coast at this scale adds noise rather than signal. `ws` regression is likely related to the existing systematic bias at Afula due to local orographic channeling not shared by surrounding stations. Feature retained despite mixed results — the wind vector improvements are physically meaningful and the regressions are explainable rather than structural.
+
+### Date: May 5, 2026
+
+Subject: RFSI LLOCV Results After Adding Neighbor Distances as Features + IDW Baseline
+
+Added `dist_n1`, `dist_n2`, `dist_n3` (haversine distance from target to each neighbor in km) as static features in `load_fold`, fetched from `station_neighbors`. This is the core RFSI feature from the original paper — the model now explicitly knows how far each neighbor is from the interpolation target.
+
+Also computed IDW (Inverse Distance Weighting) baseline: `predicted = Σ(v_i / d_i) / Σ(1 / d_i)` over the 3 neighbors on the same Afula held-out test fold.
+
+Comparing against May 3 LLOCV run, then RFSI vs IDW:
+
+| Feature | RMSE (May 3) | RMSE (today) | Δ |
+| :--- | :--- | :--- | :--- |
+| rain (events ≥ 0.1mm) | 1.4734 | 1.4913 | +1.2% ~ |
+| ws | 1.5615 | **1.1567** | −25.9% ✓ |
+| td | 1.8360 | **1.7806** | −3.0% ✓ |
+| rh | 6.4577 | **6.1911** | −4.1% ✓ |
+| tdmax | 1.6251 | 1.6466 | +1.3% ~ |
+| tdmin | 1.8904 | **1.7731** | −6.2% ✓ |
+| u_vec | 1.1494 | **1.0464** | −9.0% ✓ |
+| v_vec | 0.9943 | **0.9757** | −1.9% ✓ |
+
+**RFSI vs IDW Baseline (Afula test fold):**
+
+| Feature | RFSI MAE | IDW MAE | RFSI RMSE | IDW RMSE |
+| :--- | :--- | :--- | :--- | :--- |
+| rain (global) | **0.0468** | 0.0479 | **0.3328** | 0.3596 |
+| rain (events ≥ 0.1mm) | — | — | **1.4913** | 1.5627 |
+| ws | **0.9831** | 1.1120 | **1.1567** | 1.2957 |
+| td | 1.3696 | **1.0182** | 1.7806 | **1.4103** |
+| rh | 4.6062 | **4.2571** | 6.1911 | **5.8815** |
+| tdmax | 1.2362 | **0.9822** | 1.6466 | **1.3671** |
+| tdmin | 1.3099 | **1.0904** | 1.7731 | **1.5004** |
+| u_vec | **0.7711** | 0.9759 | **1.0464** | 1.2183 |
+| v_vec | **0.7532** | 0.7656 | **0.9757** | 1.0043 |
+
+**Assessment:** Adding neighbor distances is the strongest single improvement to date — ws dropped 25.9%, u_vec 9%, with broad gains across temperature and humidity. RFSI beats IDW on precipitation and wind, consistent with the original paper. IDW wins on temperature and humidity (td, rh, tdmax, tdmin) — these are spatially smooth fields where simple distance weighting suffices and the learned model adds complexity without benefit. IDW is the appropriate baseline given hardware constraints precluding kriging.

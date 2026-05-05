@@ -46,6 +46,12 @@ def load_fold(
         engine,
     ).set_index('station_id')
 
+    neighbor_row = pd.read_sql(
+        "SELECT * FROM station_neighbors WHERE station_id = :sid",
+        engine,
+        params={'sid': target_id},
+    ).iloc[0]
+
     df_target = frames[target_id]
     df_neighbors = [frames[nid].add_suffix(f'_n{i + 1}') for i, nid in enumerate(neighbor_ids)]
 
@@ -60,6 +66,10 @@ def load_fold(
     for i, nid in enumerate(neighbor_ids):
         X[f'elevation_n{i+1}'] = metadata.loc[nid, 'elevation']
         X[f'dist_to_coast_n{i+1}'] = metadata.loc[nid, 'dist_to_coast']
+
+    X['dist_n1'] = neighbor_row['neighbor_1_distance']
+    X['dist_n2'] = neighbor_row['neighbor_2_distance']
+    X['dist_n3'] = neighbor_row['neighbor_3_distance']
 
     return X, y
 
