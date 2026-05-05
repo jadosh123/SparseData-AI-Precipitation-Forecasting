@@ -96,7 +96,7 @@ def main():
         records.append(res)
         
     df = pd.DataFrame(records)
-    df.to_sql('cell_neighbors', engine, if_exists='replace', index=False)
+    df.to_sql('cell_neighbors', engine, if_exists='append', index=False)
     print(f"Saved {len(df)} rows to cell_neighbors.")
 
 
