@@ -84,7 +84,7 @@ def clean_station_data():
         hourly.reset_index().to_sql(
             TARGET_TABLE,
             engine,
-            if_exists='replace' if i == 0 else 'append',
+            if_exists='append',
             index=False,
             dtype=dtype_mapping,
             chunksize=5000
