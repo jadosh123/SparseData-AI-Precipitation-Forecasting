@@ -7,6 +7,9 @@ def load_cell_features(
     neighbor_1_id: int,
     neighbor_2_id: int,
     neighbor_3_id: int,
+    neighbor_1_distance: float,
+    neighbor_2_distance: float,
+    neighbor_3_distance: float,
     station_frames: dict,
 ) -> pd.DataFrame:
     """
@@ -41,4 +44,7 @@ def load_cell_features(
         X[f'elevation_n{i+1}'] = metadata.loc[nid, 'elevation']
         X[f'dist_to_coast_n{i+1}'] = metadata.loc[nid, 'dist_to_coast']
 
+    X['dist_n1'] = neighbor_1_distance
+    X['dist_n2'] = neighbor_2_distance
+    X['dist_n3'] = neighbor_3_distance
     return X
