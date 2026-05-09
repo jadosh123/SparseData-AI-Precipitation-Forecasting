@@ -35,10 +35,10 @@
 **RFSI → XGBoost wiring**
 - [x] Precompute Jezreel Valley grid cells from bounding box and store in `cell_metadata(cell_id, lat, lon)` — cells are static so this runs once
 - [x] For each cell in `cell_metadata`, compute K nearest real stations by haversine and store in `cell_neighbors(cell_id, neighbor_1_id, neighbor_2_id, neighbor_3_id, distances)` — analogous to `station_neighbors`
-- [ ] Wire RFSI: for each cell and each timestep, fetch clean neighbor data from DB, run trained interpolation models, store outputs in `cell_interpolated(cell_id, timestamp, rain, ws, td, rh, tdmax, tdmin, u_vec, v_vec)`
+- [x] Wire RFSI: for each cell and each timestep, fetch clean neighbor data from DB, run trained interpolation models, store outputs in `cell_interpolated(cell_id, timestamp, rain, ws, td, rh, tdmax, tdmin, u_vec, v_vec)`
 - [ ] Evaluate RFSI wiring in notebook: find cell nearest to Afula, compare interpolated values against real Afula observations
-- [ ] Wire XGBoost: fetch `cell_interpolated` rows per cell, treat each cell as a synthetic station, run `single_point_features.py` feature engineering, forecast precipitation per horizon
-- [ ] Store forecast outputs → `cell_forecasts(cell_id, lat, lon, timestamp, precipitation_t1, t3, t6, t12)`
+- [x] Wire XGBoost: fetch `cell_interpolated` rows per cell, treat each cell as a synthetic station, run `single_point_features.py` feature engineering, forecast precipitation per horizon
+- [x] Store forecast outputs → `cell_forecasts(cell_id, lat, lon, timestamp, precipitation_t1, t3, t6, t12)`
 - [ ] Evaluate end-to-end: compare `cell_forecasts` for Afula-nearest cell against Afula ground truth to get combined interpolation + forecast error estimate
 - [ ] **Phase 1 milestone: trained pipeline, evaluated, outputs stored in DB ✓**
 
@@ -65,7 +65,7 @@
 
 **End-to-end test**
 - [ ] IMS data in → `cell_forecasts` populated → `/predict` returns correct payload
-- [ ] Fix `if_exists='replace'` in `clean_station_data` — downstream tables must not be wiped mid-pipeline
+- [x] Fix `if_exists='replace'` in `clean_station_data` — downstream tables must not be wiped mid-pipeline
 - [ ] **Phase 2 milestone: backend locked, no open bugs ✓**
 
 ---

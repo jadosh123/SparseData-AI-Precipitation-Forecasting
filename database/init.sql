@@ -11,7 +11,7 @@ CREATE TABLE IF NOT EXISTS station_metadata (
     latitude NUMERIC,
     longitude NUMERIC,
     elevation NUMERIC,
-    dist_to_coast REAL,
+    dist_to_coast REAL
 );
 
 CREATE TABLE IF NOT EXISTS clean_station_data (

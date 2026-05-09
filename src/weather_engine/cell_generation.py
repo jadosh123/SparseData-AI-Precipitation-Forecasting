@@ -85,6 +85,8 @@ def main():
     
     # Pop nazareth since its insufficient in data and made all interpolation features regress in accuracy
     all_stations.pop(500, None)
+    # Pop afula for held-out evaluation
+    all_stations.pop(16, None)
     
     cells = generate_grid_cells()
     records = []

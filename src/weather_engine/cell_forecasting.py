@@ -51,9 +51,9 @@ def make_inference_features(
     """
     df = encode_time_features(df_target.copy())
     df = create_local_lags(df)
-    df = df.iloc[max_lag_hours:].dropna()
+    df = df.iloc[max_lag_hours:]
 
     for name, df_up in upstream_dfs.items():
         df = add_upstream_features(df, df_up, upstream_name=name)
 
-    return df
+    return df.dropna()
