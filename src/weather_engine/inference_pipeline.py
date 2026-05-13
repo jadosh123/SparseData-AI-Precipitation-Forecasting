@@ -1,0 +1,419 @@
+"""
+Production inference pipeline — runs hourly via cronjob.
+
+Checks MAX(timestamp) in raw_station_data to determine how far back to fetch,
+then runs the full chain: fetch → clean → interpolate → forecast → replace cell_forecasts.
+"""
+
+import os
+import time
+import requests
+import numpy as np
+import pandas as pd
+import xgboost as xgb
+from datetime import datetime, timedelta, timezone
+from sqlalchemy import text, types
+
+from weather_engine.database import engine
+from weather_engine.cell_interpolation import load_cell_features
+from weather_engine.cell_forecasting import make_inference_features
+from weather_engine.utils import encode_time_features, get_project_root, get_elevation_from_hgt, get_distance_to_coast
+from weather_engine.fetch_ims_data import process_observation, fetch_location_data, send_discord_alert
+from weather_engine.cell_generation import populate_cell_neighbors
+
+from dotenv import load_dotenv
+load_dotenv(get_project_root() / '.env')
+
+API_KEY = os.getenv("API_KEY")
+BASE_URL = "https://api.ims.gov.il/v1/envista/stations"
+WINDOW_HOURS = 25
+UPSTREAM_STATION_IDS = {178, 43}  # Tel Aviv, Haifa — hardcoded to match forecasting models
+
+DTYPE_RAW = {
+    'timestamp': types.DateTime(),
+    'station_id': types.Integer(),
+    'rain': types.Float(),
+    'ws': types.Float(),
+    'wd': types.Float(),
+    'td': types.Float(),
+    'rh': types.Float(),
+    'tdmax': types.Float(),
+    'tdmin': types.Float(),
+}
+
+DTYPE_CLEAN = {
+    'timestamp': types.DateTime(),
+    'station_id': types.Integer(),
+    'rain': types.Float(),
+    'ws': types.Float(),
+    'td': types.Float(),
+    'rh': types.Float(),
+    'tdmax': types.Float(),
+    'tdmin': types.Float(),
+    'u_vec': types.Float(),
+    'v_vec': types.Float(),
+}
+
+
+# ---------------------------------------------------------------------------
+# Helpers
+# ---------------------------------------------------------------------------
+
+def get_required_station_ids(location_map: dict) -> set[int]:
+    """Returns station IDs to fetch. Uses cell_neighbors if populated, else all known stations."""
+    cn = pd.read_sql(
+        "SELECT neighbor_1_id, neighbor_2_id, neighbor_3_id FROM cell_neighbors", engine
+    )
+    if cn.empty:
+        # Cold start — fetch all stations so cell_generation has data to work with
+        return set(int(sid) for sid in location_map.keys()) | UPSTREAM_STATION_IDS
+
+    neighbor_ids = set(cn[['neighbor_1_id', 'neighbor_2_id', 'neighbor_3_id']].values.flatten().tolist())
+    return neighbor_ids | UPSTREAM_STATION_IDS
+
+
+def now_utc_naive() -> datetime:
+    """Current UTC time as a naive datetime (matches how timestamps are stored in DB)."""
+    return datetime.now(timezone.utc).replace(tzinfo=None, minute=0, second=0, microsecond=0)
+
+
+def get_fetch_window() -> tuple[datetime, datetime]:
+    """
+    Returns (from_dt, to_dt) as naive UTC datetimes matching DB storage format.
+    If raw_station_data is empty, fetches the last WINDOW_HOURS.
+    Otherwise fetches from MAX(timestamp) forward.
+    """
+    row = pd.read_sql("SELECT MAX(timestamp) as latest FROM raw_station_data", engine)
+    latest = row['latest'].iloc[0]
+    now = now_utc_naive()
+
+    if latest is None:
+        from_dt = now - timedelta(hours=WINDOW_HOURS)
+    else:
+        from_dt = pd.Timestamp(latest).to_pydatetime()  # already naive UTC from DB
+
+    return from_dt, now
+
+
+def fetch_station_range(station_id: int, lat: float, lon: float, from_dt: datetime, to_dt: datetime) -> list[dict]:
+    """Fetches observations for one station between from_dt and to_dt."""
+    fmt = "%Y/%m/%d"
+    url = f"{BASE_URL}/{station_id}/data?from={from_dt.strftime(fmt)}&to={to_dt.strftime(fmt)}"
+    headers = {
+        "Authorization": f"ApiToken {API_KEY}",
+        "User-Agent": "MyWeatherApp/1.0 (Contact: jadosh2000@gmail.com)"
+    }
+
+    for attempt in range(5):
+        try:
+            resp = requests.get(url, headers=headers, timeout=60)
+            if resp.status_code == 200:
+                data = resp.json()
+                rows = []
+                for obs in data.get('data', []):
+                    ts = pd.Timestamp(obs.get('datetime'))
+                    if ts.tzinfo is None:
+                        ts = ts.tz_localize('UTC')
+                    if ts < pd.Timestamp(from_dt) or ts > pd.Timestamp(to_dt):
+                        continue
+                    rows.append(process_observation(obs, station_id, lat, lon))
+                return rows
+            elif resp.status_code == 204:
+                return []
+            elif resp.status_code in [429, 500, 502, 503, 504]:
+                time.sleep(30 + attempt * 30)
+        except requests.exceptions.RequestException:
+            time.sleep(30 + attempt * 30)
+
+    send_discord_alert(f"[inference_pipeline] Failed to fetch station {station_id} after 5 attempts.")
+    return []
+
+
+# ---------------------------------------------------------------------------
+# Bootstrap helpers (run once on clean DB)
+# ---------------------------------------------------------------------------
+
+def populate_station_metadata(location_map: dict) -> None:
+    rows = []
+    for sid, meta in location_map.items():
+        lat = meta.get('lat')
+        lon = meta.get('lon')
+        if lat is None or lon is None:
+            continue
+        rows.append({
+            'station_id': int(sid),
+            'latitude': float(lat),
+            'longitude': float(lon),
+            'elevation': get_elevation_from_hgt(float(lat), float(lon)),
+            'dist_to_coast': get_distance_to_coast(float(lat), float(lon)),
+        })
+
+    df = pd.DataFrame(rows)
+    df.to_sql('station_metadata', engine, if_exists='append', index=False)
+    print(f"Populated station_metadata with {len(df)} stations.")
+
+
+# ---------------------------------------------------------------------------
+# Step 1: Fetch → raw_station_data
+# ---------------------------------------------------------------------------
+
+def fetch_and_store_raw(station_ids: set[int], from_dt: datetime, to_dt: datetime, location_map: dict) -> None:
+    print(f"Fetching {len(station_ids)} stations from {from_dt} to {to_dt}...")
+
+    all_rows = []
+    for sid in station_ids:
+        meta = location_map.get(sid, {})
+        lat = meta.get('lat')
+        lon = meta.get('lon')
+        if lat is None or lon is None:
+            print(f"  Skipping station {sid}: no coordinates in location map.")
+            continue
+        rows = fetch_station_range(sid, float(lat), float(lon), from_dt, to_dt)
+        all_rows.extend(rows)
+
+    if not all_rows:
+        print("No new rows fetched.")
+        return
+
+    df = pd.DataFrame(all_rows)
+    df['timestamp'] = pd.to_datetime(df['timestamp'], utc=True).dt.tz_localize(None)
+    df = df.drop(columns=['latitude', 'longitude', 'wsmax', 'wdmax', 'stdwd', 'ws1mm', 'ws10mm'], errors='ignore')
+
+    df.to_sql('raw_station_data', engine, if_exists='append', index=False,
+              dtype=DTYPE_RAW, method='multi')  # type: ignore[arg-type]
+
+    # Trim to rolling window
+    with engine.begin() as conn:
+        conn.execute(text(
+            "DELETE FROM raw_station_data WHERE timestamp < :cutoff"
+        ), {'cutoff': datetime.now(timezone.utc).replace(tzinfo=None) - timedelta(hours=WINDOW_HOURS)})
+
+    print(f"Stored {len(df)} raw rows, trimmed to {WINDOW_HOURS}h window.")
+
+
+# ---------------------------------------------------------------------------
+# Step 2: Clean → clean_station_data
+# ---------------------------------------------------------------------------
+
+def get_wind_components(ws, wd):
+    wd_rad = np.deg2rad(wd)
+    return -ws * np.sin(wd_rad), -ws * np.cos(wd_rad)
+
+
+def clean_and_store(station_ids: set[int]) -> None:
+    print("Cleaning raw data...")
+
+    latest_clean = pd.read_sql(
+        "SELECT MAX(timestamp) as latest FROM clean_station_data", engine
+    )['latest'].iloc[0]
+
+    agg_rules = {
+        'rain': 'sum', 'ws': 'mean', 'td': 'mean',
+        'rh': 'mean', 'tdmax': 'max', 'tdmin': 'min',
+        'u_vec': 'mean', 'v_vec': 'mean'
+    }
+
+    for sid in station_ids:
+        if latest_clean is not None:
+            query = f"SELECT * FROM raw_station_data WHERE station_id = {sid} AND timestamp > '{latest_clean}'"
+        else:
+            query = f"SELECT * FROM raw_station_data WHERE station_id = {sid}"
+
+        df = pd.read_sql(query, engine)
+        if df.empty:
+            continue
+
+        df['timestamp'] = pd.to_datetime(df['timestamp'], utc=True)
+        df['rain'] = df['rain'].where(df['rain'] >= 0, other=np.nan)
+        df['u_vec'], df['v_vec'] = get_wind_components(df['ws'], df['wd'])
+        df = df.set_index('timestamp').sort_index()
+
+        valid_agg = {k: v for k, v in agg_rules.items() if k in df.columns}
+        hourly = df.resample('1h').agg(valid_agg)  # type: ignore[arg-type]
+        hourly = hourly.interpolate(method='linear', limit=2)
+        hourly.loc[hourly['td'] > hourly['tdmax'], 'tdmax'] = hourly['td']
+        hourly.loc[hourly['td'] < hourly['tdmin'], 'tdmin'] = hourly['td']
+        hourly['station_id'] = sid
+
+        hourly.reset_index().to_sql(
+            'clean_station_data', engine, if_exists='append',
+            index=False, dtype=DTYPE_CLEAN, chunksize=500  # type: ignore[arg-type]
+        )
+
+    # Trim to rolling window
+    with engine.begin() as conn:
+        conn.execute(text(
+            "DELETE FROM clean_station_data WHERE timestamp < :cutoff"
+        ), {'cutoff': datetime.now(timezone.utc).replace(tzinfo=None) - timedelta(hours=WINDOW_HOURS)})
+
+    print("Clean step complete.")
+
+
+# ---------------------------------------------------------------------------
+# Step 3: Interpolate → cell_interpolated
+# ---------------------------------------------------------------------------
+
+def load_interpolation_models() -> dict[str, xgb.Booster]:
+    models_dir = get_project_root() / "models" / "spatial_interpolation"
+    models = {}
+    for path in models_dir.glob("*.json"):
+        feature = path.stem.split("xgb_")[1]
+        m = xgb.Booster()
+        m.load_model(path)
+        models[feature] = m
+    return models
+
+
+def interpolate_and_store(cell_neighbors: pd.DataFrame, station_frames: dict, models: dict) -> None:
+    print("Interpolating cells...")
+
+    latest_interp = pd.read_sql(
+        "SELECT MAX(timestamp) as latest FROM cell_interpolated", engine
+    )['latest'].iloc[0]
+
+    records = []
+    for _, row in cell_neighbors.iterrows():
+        X = load_cell_features(
+            row['elevation'], row['dist_to_coast'],
+            int(row['neighbor_1_id']), int(row['neighbor_2_id']), int(row['neighbor_3_id']),
+            row['neighbor_1_distance'], row['neighbor_2_distance'], row['neighbor_3_distance'],
+            station_frames=station_frames
+        )
+        X = encode_time_features(X)
+
+        # Only new timestamps
+        if latest_interp is not None:
+            X = X[X.index > pd.Timestamp(latest_interp)]
+
+        if X.empty:
+            continue
+
+        record = {'cell_id': int(row['cell_id']), 'timestamp': X.index}
+        for feature, model in models.items():
+            preds = model.predict(xgb.DMatrix(X[model.feature_names]))
+            if feature in ('rain', 'ws', 'rh'):
+                preds = preds.clip(0)
+            if feature == 'rh':
+                preds = preds.clip(0, 100)
+            record[feature] = preds
+
+        records.append(pd.DataFrame(record))
+
+    if records:
+        pd.concat(records).to_sql('cell_interpolated', engine, if_exists='append', index=False)
+
+    # Trim to rolling window
+    with engine.begin() as conn:
+        conn.execute(text(
+            "DELETE FROM cell_interpolated WHERE timestamp < :cutoff"
+        ), {'cutoff': datetime.now(timezone.utc).replace(tzinfo=None) - timedelta(hours=WINDOW_HOURS)})
+
+    print("Interpolation complete.")
+
+
+# ---------------------------------------------------------------------------
+# Step 4: Forecast → replace cell_forecasts
+# ---------------------------------------------------------------------------
+
+def load_forecast_models() -> dict[str, xgb.Booster]:
+    models_dir = get_project_root() / "models" / "single_point"
+    models = {}
+    for path in models_dir.glob("*.json"):
+        _, step = path.stem.split("xgb_")[1].split("+")
+        m = xgb.Booster()
+        m.load_model(path)
+        models[f"precipitation_t{step}"] = m
+    return models
+
+
+def forecast_and_store(cell_neighbors: pd.DataFrame, station_frames: dict, models: dict) -> None:
+    print("Forecasting cells...")
+
+    upstream_dfs = {
+        "tel_aviv": station_frames[178],
+        "haifa": station_frames[43],
+    }
+
+    records = []
+    for _, row in cell_neighbors.iterrows():
+        cell_id = int(row['cell_id'])
+        df_target = pd.read_sql(
+            "SELECT * FROM cell_interpolated WHERE cell_id = :cid",
+            engine, params={'cid': cell_id}
+        )
+        df_target['timestamp'] = pd.to_datetime(df_target['timestamp'])
+        df_target = df_target.drop(columns=['cell_id']).set_index('timestamp').sort_index()
+
+        X = make_inference_features(df_target, upstream_dfs)
+        if X.empty:
+            print(f"  Cell {cell_id}: not enough data for lag features, skipping.")
+            continue
+
+        # Take only the last row — current forecast
+        X = X.iloc[[-1]]
+
+        record = {'cell_id': cell_id, 'timestamp': X.index}
+        for key, model in models.items():
+            record[key] = model.predict(xgb.DMatrix(X[model.feature_names])).clip(0)
+
+        records.append(pd.DataFrame(record))
+
+    if not records:
+        print("No forecast records produced.")
+        return
+
+    forecasts = pd.concat(records)
+
+    with engine.begin() as conn:  # type: ignore[reportUnreachable]
+        conn.execute(text("DELETE FROM cell_forecasts"))
+
+    forecasts.to_sql('cell_forecasts', engine, if_exists='append', index=False)
+    print(f"Replaced cell_forecasts with {len(forecasts)} rows.")
+
+
+# ---------------------------------------------------------------------------
+# Orchestrator
+# ---------------------------------------------------------------------------
+
+def main() -> None:
+    print(f"[{datetime.now(timezone.utc).replace(tzinfo=None).isoformat()}] inference_pipeline starting...")
+
+    location_map = fetch_location_data()
+
+    # Bootstrap: populate static tables on first run
+    meta_count = pd.read_sql("SELECT COUNT(*) as n FROM station_metadata", engine)['n'].iloc[0]
+    if meta_count == 0:
+        print("station_metadata is empty — bootstrapping...")
+        populate_station_metadata(location_map)
+
+    station_ids = get_required_station_ids(location_map)
+    from_dt, to_dt = get_fetch_window()
+
+    fetch_and_store_raw(station_ids, from_dt, to_dt, location_map)
+    clean_and_store(station_ids)
+
+    # Bootstrap: populate cell_neighbors after clean data exists
+    cell_count = pd.read_sql("SELECT COUNT(*) as n FROM cell_neighbors", engine)['n'].iloc[0]
+    if cell_count == 0:
+        print("cell_neighbors is empty — running cell generation...")
+        populate_cell_neighbors()
+
+    # Load station frames from clean_station_data for interpolation + upstream forcing
+    all_clean = pd.read_sql("SELECT * FROM clean_station_data", engine)
+    all_clean['timestamp'] = pd.to_datetime(all_clean['timestamp'])
+    all_clean = all_clean.set_index('timestamp').sort_index()
+    station_frames = {sid: grp.drop(columns='station_id')
+                      for sid, grp in all_clean.groupby('station_id')}
+
+    cell_neighbors = pd.read_sql("SELECT * FROM cell_neighbors", engine)
+    interp_models = load_interpolation_models()
+    forecast_models = load_forecast_models()
+
+    interpolate_and_store(cell_neighbors, station_frames, interp_models)
+    forecast_and_store(cell_neighbors, station_frames, forecast_models)
+
+    print(f"[{datetime.now(timezone.utc).replace(tzinfo=None).isoformat()}] Pipeline complete.")
+
+
+if __name__ == "__main__":
+    main()

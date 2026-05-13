@@ -69,7 +69,7 @@ def get_k_neighbors_for_cell(lat: float, lon: float, all_stations: dict) -> dict
     return result
     
 
-def main():
+def populate_cell_neighbors():
     query = """
         SELECT sm.station_id, sm.latitude, sm.longitude
         FROM station_metadata sm
@@ -97,6 +97,10 @@ def main():
     df = pd.DataFrame(records)
     df.to_sql('cell_neighbors', engine, if_exists='append', index=False)
     print(f"Saved {len(df)} rows to cell_neighbors.")
+
+
+def main():
+    populate_cell_neighbors()
 
 
 if __name__ == "__main__":
