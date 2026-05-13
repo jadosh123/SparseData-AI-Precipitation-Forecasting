@@ -131,7 +131,7 @@ def compute_and_store_neighbors() -> None:
     print(f"Computing neighbors for {len(all_stations)} stations...")
     records = []
     for station_id in all_stations:
-        result = get_k_neighbors(station_id, all_stations, 16)
+        result = get_k_neighbors(station_id, all_stations, -1)
         result['is_boundary'] = int(result['is_boundary'])
         records.append(result)
 
