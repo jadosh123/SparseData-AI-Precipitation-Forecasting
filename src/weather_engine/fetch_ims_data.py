@@ -3,8 +3,6 @@ import csv
 import os
 import json
 import time
-import math
-import rasterio
 import weather_engine.utils as ut
 from datetime import datetime
 from pathlib import Path
@@ -173,7 +171,7 @@ def fetch_location_data() -> dict[int, dict[str, str | float]]:
 
 def process_observation(obs, station_id, lat, lon):
     """Flattens a single JSON observation into a CSV row dict."""
-    row = {h: None for h in CSV_HEADERS}
+    row: dict = {h: None for h in CSV_HEADERS}
     row['timestamp'] = obs.get('datetime')
     row['station_id'] = station_id
     row['latitude'] = lat

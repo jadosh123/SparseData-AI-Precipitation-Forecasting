@@ -1,8 +1,7 @@
 import pandas as pd
-from sqlalchemy import create_engine, types
+from sqlalchemy import types
 from sqlalchemy.dialects.sqlite import insert
 import time
-from pathlib import Path
 from weather_engine.database import engine
 import weather_engine.utils as ut
 
@@ -70,32 +69,10 @@ def ingest_data():
                 df.columns = df.columns.str.strip().str.lower().str.replace(r'[\s\(\)]+', '_', regex=True).str.strip('_')
 
                 # Timestamp Handling
-                if 'date' in df.columns and 'time' in df.columns:
-                    # Handle 24:00 format in excel
-                    mask_24 = df['time'].astype(str).str.contains('24:00')
-                    df.loc[mask_24, 'time'] = '00:00'
-
-                    # Legacy Excel Format (Split columns)
-                    df['timestamp'] = pd.to_datetime(df['date'].astype(str) + ' ' + df['time'].astype(str), dayfirst=True, errors='coerce')
-                    
-                    # Add one day to match 00:00 as start of next day not prior day
-                    if mask_24.any():
-                        df.loc[mask_24, 'timestamp'] += pd.Timedelta(days=1)
-                    
-                    df = df.drop(columns=['date', 'time'])
-
-                    # Force it to be Israel Standard Time then convert to UTC
-                    df['timestamp'] = df['timestamp'].dt.tz_localize('Etc/GMT-2').dt.tz_convert('UTC').dt.tz_localize(None)
-                    
-                    initial_count = len(df)
-                    df = df.dropna(subset=['timestamp'])
-                    if len(df) < initial_count:
-                        print(f"   Dropped {initial_count - len(df)} rows due to invalid timestamps.")
-
-                elif 'timestamp' in df.columns:
-                    # API CSV Format (Single column)
-                    df['timestamp'] = pd.to_datetime(df['timestamp'], utc=True, errors='coerce')
-                    df['timestamp'] = df['timestamp'].dt.tz_localize(None)  # type: ignore
+                if 'timestamp' in df.columns:
+                    # API CSV Format — IMS always sends Israel standard time (UTC+2), offset in string is wrong
+                    # Strip tz offset, parse as naive Israel time, subtract 2h → naive UTC
+                    df['timestamp'] = pd.to_datetime(df['timestamp'].astype(str).str.replace(r'[+-]\d{2}:\d{2}$', '', regex=True), errors='coerce') - pd.Timedelta(hours=2)
                     df = df.dropna(subset=['timestamp'])
                 
                 garbage_cols = [

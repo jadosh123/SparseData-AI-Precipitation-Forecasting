@@ -61,7 +61,7 @@ def clean_station_data():
         print(f"Processing station {station_id} ({i + 1}/{len(station_ids)})...")
         df = pd.read_sql(f"SELECT * FROM {SOURCE_TABLE} WHERE station_id = {station_id}", engine)
 
-        df['timestamp'] = pd.to_datetime(df['timestamp'], utc=True)
+        df['timestamp'] = pd.to_datetime(df['timestamp'])
 
         cols_to_check = ['rain', 'ws', 'wd', 'td', 'rh', 'tdmax', 'tdmin']
         high_miss = [c for c in cols_to_check if c in df.columns and df[c].isna().mean() > 0.30]
