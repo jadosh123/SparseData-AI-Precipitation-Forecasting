@@ -13,6 +13,7 @@ import pandas as pd
 import xgboost as xgb
 from datetime import datetime, timedelta, timezone
 from sqlalchemy import text, types
+import re
 
 from weather_engine.database import engine
 from weather_engine.cell_interpolation import load_cell_features
@@ -111,19 +112,19 @@ def fetch_station_range(station_id: int, lat: float, lon: float, from_dt: dateti
                 data = resp.json()
                 rows = []
                 for obs in data.get('data', []):
-                    ts = pd.Timestamp(obs.get('datetime'))
-                    if ts.tzinfo is None:
-                        ts = ts.tz_localize('UTC')
-                    if ts < pd.Timestamp(from_dt) or ts > pd.Timestamp(to_dt):
-                        continue
                     rows.append(process_observation(obs, station_id, lat, lon))
                 return rows
             elif resp.status_code == 204:
+                print(f"  Station {station_id}: no data (204)")
                 return []
             elif resp.status_code in [429, 500, 502, 503, 504]:
-                time.sleep(30 + attempt * 30)
-        except requests.exceptions.RequestException:
-            time.sleep(30 + attempt * 30)
+                wait = 30 + attempt * 30
+                print(f"  Station {station_id}: status {resp.status_code}, retrying in {wait}s (attempt {attempt+1}/5)")
+                time.sleep(wait)
+        except requests.exceptions.RequestException as e:
+            wait = 30 + attempt * 30
+            print(f"  Station {station_id}: network error {e}, retrying in {wait}s (attempt {attempt+1}/5)")
+            time.sleep(wait)
 
     send_discord_alert(f"[inference_pipeline] Failed to fetch station {station_id} after 5 attempts.")
     return []
@@ -168,16 +169,22 @@ def fetch_and_store_raw(station_ids: set[int], from_dt: datetime, to_dt: datetim
         if lat is None or lon is None:
             print(f"  Skipping station {sid}: no coordinates in location map.")
             continue
+        print(f"  Fetching station {sid}...")
         rows = fetch_station_range(sid, float(lat), float(lon), from_dt, to_dt)
+        print(f"  Station {sid}: {len(rows)} rows")
         all_rows.extend(rows)
+        time.sleep(2)
 
     if not all_rows:
         print("No new rows fetched.")
         return
 
     df = pd.DataFrame(all_rows)
-    df['timestamp'] = pd.to_datetime(df['timestamp'], utc=True).dt.tz_localize(None)
+    df['timestamp'] = pd.to_datetime(df['timestamp'].astype(str).str.replace(r'[+-]\d{2}:\d{2}$', '', regex=True), errors='coerce') - pd.Timedelta(hours=2)
     df = df.drop(columns=['latitude', 'longitude', 'wsmax', 'wdmax', 'stdwd', 'ws1mm', 'ws10mm'], errors='ignore')
+    numeric_cols = [c for c in df.columns if c not in ('timestamp', 'station_id')]
+    for col in numeric_cols:
+        df[col] = pd.to_numeric(df[col], errors='coerce')
 
     df.to_sql('raw_station_data', engine, if_exists='append', index=False,
               dtype=DTYPE_RAW, method='multi')  # type: ignore[arg-type]
@@ -223,8 +230,10 @@ def clean_and_store(station_ids: set[int]) -> None:
         if df.empty:
             continue
 
-        df['timestamp'] = pd.to_datetime(df['timestamp'], utc=True)
+        df['timestamp'] = pd.to_datetime(df['timestamp'])
         df['rain'] = df['rain'].where(df['rain'] >= 0, other=np.nan)
+        df['ws'] = pd.to_numeric(df['ws'], errors='coerce')
+        df['wd'] = pd.to_numeric(df['wd'], errors='coerce')
         df['u_vec'], df['v_vec'] = get_wind_components(df['ws'], df['wd'])
         df = df.set_index('timestamp').sort_index()
 
