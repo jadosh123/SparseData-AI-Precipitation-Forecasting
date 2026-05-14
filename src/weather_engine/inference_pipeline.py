@@ -256,12 +256,9 @@ def load_interpolation_models() -> dict[str, xgb.Booster]:
 def interpolate_and_store(cell_neighbors: pd.DataFrame, station_frames: dict, models: dict) -> None:
     print("Interpolating cells...")
 
-    latest_interp = pd.read_sql(
-        "SELECT MAX(timestamp) as latest FROM cell_interpolated", engine
-    )['latest'].iloc[0]
-
     records = []
     for _, row in cell_neighbors.iterrows():
+        cell_id = int(row['cell_id'])
         X = load_cell_features(
             row['elevation'], row['dist_to_coast'],
             int(row['neighbor_1_id']), int(row['neighbor_2_id']), int(row['neighbor_3_id']),
@@ -269,15 +266,13 @@ def interpolate_and_store(cell_neighbors: pd.DataFrame, station_frames: dict, mo
             station_frames=station_frames
         )
         X = encode_time_features(X)
-
-        # Only new timestamps
-        if latest_interp is not None:
-            X = X[X.index > pd.Timestamp(latest_interp)]
+        current_hour = datetime.now(timezone.utc).replace(tzinfo=None, minute=0, second=0, microsecond=0)
+        X = X[X.index < current_hour]
 
         if X.empty:
             continue
 
-        record = {'cell_id': int(row['cell_id']), 'timestamp': X.index}
+        record = {'cell_id': cell_id, 'timestamp': X.index}
         for feature, model in models.items():
             preds = model.predict(xgb.DMatrix(X[model.feature_names]))
             if feature in ('rain', 'ws', 'rh'):
