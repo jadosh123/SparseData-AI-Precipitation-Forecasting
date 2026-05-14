@@ -13,6 +13,7 @@ import pandas as pd
 import xgboost as xgb
 from datetime import datetime, timedelta, timezone
 from sqlalchemy import text, types
+from sqlalchemy.dialects.sqlite import insert as sqlite_insert
 import re
 
 from weather_engine.database import engine
@@ -60,6 +61,10 @@ DTYPE_CLEAN = {
 # Helpers
 # ---------------------------------------------------------------------------
 
+def _insert_ignore(table, conn, keys, data_iter) -> None:  # type: ignore[no-untyped-def]
+    conn.execute(sqlite_insert(table.table).values(list(data_iter)).on_conflict_do_nothing())
+
+
 def get_required_station_ids(location_map: dict) -> set[int]:
     """Returns station IDs to fetch. Uses cell_neighbors if populated, else all known stations."""
     cn = pd.read_sql(
@@ -73,61 +78,43 @@ def get_required_station_ids(location_map: dict) -> set[int]:
     return neighbor_ids | UPSTREAM_STATION_IDS
 
 
-def now_utc_naive() -> datetime:
-    """Current UTC time as a naive datetime (matches how timestamps are stored in DB)."""
-    return datetime.now(timezone.utc).replace(tzinfo=None, minute=0, second=0, microsecond=0)
-
-
-def get_fetch_window() -> tuple[datetime, datetime]:
-    """
-    Returns (from_dt, to_dt) as naive UTC datetimes matching DB storage format.
-    If raw_station_data is empty, fetches the last WINDOW_HOURS.
-    Otherwise fetches from MAX(timestamp) forward.
-    """
-    row = pd.read_sql("SELECT MAX(timestamp) as latest FROM raw_station_data", engine)
-    latest = row['latest'].iloc[0]
-    now = now_utc_naive()
-
-    if latest is None:
-        from_dt = now - timedelta(hours=WINDOW_HOURS)
-    else:
-        from_dt = pd.Timestamp(latest).to_pydatetime()  # already naive UTC from DB
-
-    return from_dt, now
-
-
-def fetch_station_range(station_id: int, lat: float, lon: float, from_dt: datetime, to_dt: datetime) -> list[dict]:
-    """Fetches observations for one station between from_dt and to_dt."""
-    fmt = "%Y/%m/%d"
-    url = f"{BASE_URL}/{station_id}/data?from={from_dt.strftime(fmt)}&to={to_dt.strftime(fmt)}"
-    headers = {
-        "Authorization": f"ApiToken {API_KEY}",
-        "User-Agent": "MyWeatherApp/1.0 (Contact: jadosh2000@gmail.com)"
-    }
-
+def _fetch_daily(station_id: int, lat: float, lon: float, date_str: str, headers: dict) -> list[dict]:
+    """Fetches one day of observations from /data/daily/YYYY/MM/DD."""
+    url = f"{BASE_URL}/{station_id}/data/daily/{date_str}"
     for attempt in range(5):
         try:
             resp = requests.get(url, headers=headers, timeout=60)
             if resp.status_code == 200:
-                data = resp.json()
-                rows = []
-                for obs in data.get('data', []):
-                    rows.append(process_observation(obs, station_id, lat, lon))
-                return rows
+                return [process_observation(obs, station_id, lat, lon) for obs in resp.json().get('data', [])]
             elif resp.status_code == 204:
-                print(f"  Station {station_id}: no data (204)")
                 return []
             elif resp.status_code in [429, 500, 502, 503, 504]:
                 wait = 30 + attempt * 30
-                print(f"  Station {station_id}: status {resp.status_code}, retrying in {wait}s (attempt {attempt+1}/5)")
+                print(f"  Station {station_id} ({date_str}): status {resp.status_code}, retrying in {wait}s (attempt {attempt+1}/5)")
                 time.sleep(wait)
         except requests.exceptions.RequestException as e:
             wait = 30 + attempt * 30
-            print(f"  Station {station_id}: network error {e}, retrying in {wait}s (attempt {attempt+1}/5)")
+            print(f"  Station {station_id} ({date_str}): network error {e}, retrying in {wait}s (attempt {attempt+1}/5)")
             time.sleep(wait)
 
-    send_discord_alert(f"[inference_pipeline] Failed to fetch station {station_id} after 5 attempts.")
+    send_discord_alert(f"[inference_pipeline] Failed to fetch station {station_id} ({date_str}) after 5 attempts.")
     return []
+
+
+def fetch_station_range(station_id: int, lat: float, lon: float) -> list[dict]:
+    """Fetches yesterday + today observations using the daily endpoint (IMS date = UTC+2)."""
+    headers = {
+        "Authorization": f"ApiToken {API_KEY}",
+        "User-Agent": "MyWeatherApp/1.0 (Contact: jadosh2000@gmail.com)"
+    }
+    # IMS dates are always in UTC+2 regardless of season
+    ist_now = datetime.now(timezone.utc) + timedelta(hours=2)
+    today = ist_now.strftime("%Y/%m/%d")
+    yesterday = (ist_now - timedelta(days=1)).strftime("%Y/%m/%d")
+
+    rows = _fetch_daily(station_id, lat, lon, yesterday, headers)
+    rows += _fetch_daily(station_id, lat, lon, today, headers)
+    return rows
 
 
 # ---------------------------------------------------------------------------
@@ -158,8 +145,8 @@ def populate_station_metadata(location_map: dict) -> None:
 # Step 1: Fetch → raw_station_data
 # ---------------------------------------------------------------------------
 
-def fetch_and_store_raw(station_ids: set[int], from_dt: datetime, to_dt: datetime, location_map: dict) -> None:
-    print(f"Fetching {len(station_ids)} stations from {from_dt} to {to_dt}...")
+def fetch_and_store_raw(station_ids: set[int], location_map: dict) -> None:
+    print(f"Fetching {len(station_ids)} stations (yesterday + today)...")
 
     all_rows = []
     for sid in station_ids:
@@ -170,7 +157,7 @@ def fetch_and_store_raw(station_ids: set[int], from_dt: datetime, to_dt: datetim
             print(f"  Skipping station {sid}: no coordinates in location map.")
             continue
         print(f"  Fetching station {sid}...")
-        rows = fetch_station_range(sid, float(lat), float(lon), from_dt, to_dt)
+        rows = fetch_station_range(sid, float(lat), float(lon))
         print(f"  Station {sid}: {len(rows)} rows")
         all_rows.extend(rows)
         time.sleep(2)
@@ -180,14 +167,14 @@ def fetch_and_store_raw(station_ids: set[int], from_dt: datetime, to_dt: datetim
         return
 
     df = pd.DataFrame(all_rows)
-    df['timestamp'] = pd.to_datetime(df['timestamp'].astype(str).str.replace(r'[+-]\d{2}:\d{2}$', '', regex=True), errors='coerce') - pd.Timedelta(hours=2)
+    df['timestamp'] = pd.DatetimeIndex(pd.to_datetime(df['timestamp'].astype(str).str.replace(r'[+-]\d{2}:\d{2}$', '', regex=True), errors='coerce')) - pd.Timedelta(hours=2)
     df = df.drop(columns=['latitude', 'longitude', 'wsmax', 'wdmax', 'stdwd', 'ws1mm', 'ws10mm'], errors='ignore')
     numeric_cols = [c for c in df.columns if c not in ('timestamp', 'station_id')]
     for col in numeric_cols:
         df[col] = pd.to_numeric(df[col], errors='coerce')
 
     df.to_sql('raw_station_data', engine, if_exists='append', index=False,
-              dtype=DTYPE_RAW, method='multi')  # type: ignore[arg-type]
+              dtype=DTYPE_RAW, method=_insert_ignore)  # type: ignore[arg-type]
 
     # Trim to rolling window
     with engine.begin() as conn:
@@ -246,7 +233,7 @@ def clean_and_store(station_ids: set[int]) -> None:
 
         hourly.reset_index().to_sql(
             'clean_station_data', engine, if_exists='append',
-            index=False, dtype=DTYPE_CLEAN, chunksize=500  # type: ignore[arg-type]
+            index=False, dtype=DTYPE_CLEAN, chunksize=500, method=_insert_ignore  # type: ignore[arg-type]
         )
 
     # Trim to rolling window
@@ -309,7 +296,7 @@ def interpolate_and_store(cell_neighbors: pd.DataFrame, station_frames: dict, mo
         records.append(pd.DataFrame(record))
 
     if records:
-        pd.concat(records).to_sql('cell_interpolated', engine, if_exists='append', index=False)
+        pd.concat(records).to_sql('cell_interpolated', engine, if_exists='append', index=False, method=_insert_ignore)  # type: ignore[arg-type]
 
     # Trim to rolling window
     with engine.begin() as conn:
@@ -396,9 +383,8 @@ def main() -> None:
         populate_station_metadata(location_map)
 
     station_ids = get_required_station_ids(location_map)
-    from_dt, to_dt = get_fetch_window()
 
-    fetch_and_store_raw(station_ids, from_dt, to_dt, location_map)
+    fetch_and_store_raw(station_ids, location_map)
     clean_and_store(station_ids)
 
     # Bootstrap: populate cell_neighbors after clean data exists
