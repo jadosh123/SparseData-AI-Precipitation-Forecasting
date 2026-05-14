@@ -5,6 +5,7 @@ Checks MAX(timestamp) in raw_station_data to determine how far back to fetch,
 then runs the full chain: fetch → clean → interpolate → forecast → replace cell_forecasts.
 """
 
+import json
 import os
 import time
 import requests
@@ -14,21 +15,19 @@ import xgboost as xgb
 from datetime import datetime, timedelta, timezone
 from sqlalchemy import text, types
 from sqlalchemy.dialects.sqlite import insert as sqlite_insert
-import re
 
 from weather_engine.database import engine
 from weather_engine.cell_interpolation import load_cell_features
 from weather_engine.cell_forecasting import make_inference_features
-from weather_engine.utils import encode_time_features, get_project_root, get_elevation_from_hgt, get_distance_to_coast
-from weather_engine.fetch_ims_data import process_observation, fetch_location_data, send_discord_alert
-from weather_engine.cell_generation import populate_cell_neighbors
+from weather_engine.utils import encode_time_features, get_project_root
+from weather_engine.fetch_ims_data import process_observation, send_discord_alert
 
 from dotenv import load_dotenv
 load_dotenv(get_project_root() / '.env')
 
 API_KEY = os.getenv("API_KEY")
 BASE_URL = "https://api.ims.gov.il/v1/envista/stations"
-WINDOW_HOURS = 25
+WINDOW_HOURS = 27
 UPSTREAM_STATION_IDS = {178, 43}  # Tel Aviv, Haifa — hardcoded to match forecasting models
 
 DTYPE_RAW = {
@@ -65,15 +64,9 @@ def _insert_ignore(table, conn, keys, data_iter) -> None:  # type: ignore[no-unt
     conn.execute(sqlite_insert(table.table).values(list(data_iter)).on_conflict_do_nothing())
 
 
-def get_required_station_ids(location_map: dict) -> set[int]:
-    """Returns station IDs to fetch. Uses cell_neighbors if populated, else all known stations."""
-    cn = pd.read_sql(
-        "SELECT neighbor_1_id, neighbor_2_id, neighbor_3_id FROM cell_neighbors", engine
-    )
-    if cn.empty:
-        # Cold start — fetch all stations so cell_generation has data to work with
-        return set(int(sid) for sid in location_map.keys()) | UPSTREAM_STATION_IDS
-
+def get_required_station_ids() -> set[int]:
+    """Returns neighbor station IDs from cell_neighbors plus hardcoded upstream stations."""
+    cn = pd.read_sql("SELECT neighbor_1_id, neighbor_2_id, neighbor_3_id FROM cell_neighbors", engine)
     neighbor_ids = set(cn[['neighbor_1_id', 'neighbor_2_id', 'neighbor_3_id']].values.flatten().tolist())
     return neighbor_ids | UPSTREAM_STATION_IDS
 
@@ -121,43 +114,49 @@ def fetch_station_range(station_id: int, lat: float, lon: float) -> list[dict]:
 # Bootstrap helpers (run once on clean DB)
 # ---------------------------------------------------------------------------
 
-def populate_station_metadata(location_map: dict) -> None:
-    rows = []
-    for sid, meta in location_map.items():
-        lat = meta.get('lat')
-        lon = meta.get('lon')
-        if lat is None or lon is None:
-            continue
-        rows.append({
-            'station_id': int(sid),
-            'latitude': float(lat),
-            'longitude': float(lon),
-            'elevation': get_elevation_from_hgt(float(lat), float(lon)),
-            'dist_to_coast': get_distance_to_coast(float(lat), float(lon)),
-        })
+COLD_START_DIR = get_project_root() / "src" / "weather_engine" / "cold_start"
 
-    df = pd.DataFrame(rows)
-    df.to_sql('station_metadata', engine, if_exists='append', index=False)
-    print(f"Populated station_metadata with {len(df)} stations.")
+
+def load_cold_start_json(filename: str) -> list[dict]:
+    with open(COLD_START_DIR / filename) as f:
+        return json.load(f)
+
+
+def bootstrap_static_tables() -> None:
+    meta_count = pd.read_sql("SELECT COUNT(*) as n FROM station_metadata", engine)['n'].iloc[0]
+    if meta_count == 0:
+        records = load_cold_start_json("station_metadata.json")
+        pd.DataFrame(records).to_sql('station_metadata', engine, if_exists='append', index=False)
+        print(f"Bootstrapped station_metadata with {len(records)} rows.")
+
+    cell_count = pd.read_sql("SELECT COUNT(*) as n FROM cell_neighbors", engine)['n'].iloc[0]
+    if cell_count == 0:
+        records = load_cold_start_json("cell_neighbors.json")
+        pd.DataFrame(records).to_sql('cell_neighbors', engine, if_exists='append', index=False)
+        print(f"Bootstrapped cell_neighbors with {len(records)} rows.")
 
 
 # ---------------------------------------------------------------------------
 # Step 1: Fetch → raw_station_data
 # ---------------------------------------------------------------------------
 
-def fetch_and_store_raw(station_ids: set[int], location_map: dict) -> None:
+def fetch_and_store_raw(station_ids: set[int]) -> None:
     print(f"Fetching {len(station_ids)} stations (yesterday + today)...")
+
+    meta_df = pd.read_sql("SELECT station_id, latitude, longitude FROM station_metadata", engine)
+    coords: dict[int, tuple[float, float]] = {
+        int(r['station_id']): (float(r['latitude']), float(r['longitude']))
+        for _, r in meta_df.iterrows()
+    }
 
     all_rows = []
     for sid in station_ids:
-        meta = location_map.get(sid, {})
-        lat = meta.get('lat')
-        lon = meta.get('lon')
-        if lat is None or lon is None:
-            print(f"  Skipping station {sid}: no coordinates in location map.")
+        if sid not in coords:
+            print(f"  Skipping station {sid}: no coordinates in station_metadata.")
             continue
+        lat, lon = coords[sid]
         print(f"  Fetching station {sid}...")
-        rows = fetch_station_range(sid, float(lat), float(lon))
+        rows = fetch_station_range(sid, lat, lon)
         print(f"  Station {sid}: {len(rows)} rows")
         all_rows.extend(rows)
         time.sleep(2)
@@ -176,13 +175,7 @@ def fetch_and_store_raw(station_ids: set[int], location_map: dict) -> None:
     df.to_sql('raw_station_data', engine, if_exists='append', index=False,
               dtype=DTYPE_RAW, method=_insert_ignore)  # type: ignore[arg-type]
 
-    # Trim to rolling window
-    with engine.begin() as conn:
-        conn.execute(text(
-            "DELETE FROM raw_station_data WHERE timestamp < :cutoff"
-        ), {'cutoff': datetime.now(timezone.utc).replace(tzinfo=None) - timedelta(hours=WINDOW_HOURS)})
-
-    print(f"Stored {len(df)} raw rows, trimmed to {WINDOW_HOURS}h window.")
+    print(f"Stored {len(df)} raw rows.")
 
 
 # ---------------------------------------------------------------------------
@@ -291,6 +284,8 @@ def interpolate_and_store(cell_neighbors: pd.DataFrame, station_frames: dict, mo
                 preds = preds.clip(0)
             if feature == 'rh':
                 preds = preds.clip(0, 100)
+            if feature == 'rain':
+                preds[preds < 0.01] = 0.0
             record[feature] = preds
 
         records.append(pd.DataFrame(record))
@@ -350,7 +345,9 @@ def forecast_and_store(cell_neighbors: pd.DataFrame, station_frames: dict, model
 
         record = {'cell_id': cell_id, 'timestamp': X.index}
         for key, model in models.items():
-            record[key] = model.predict(xgb.DMatrix(X[model.feature_names])).clip(0)
+            pred = model.predict(xgb.DMatrix(X[model.feature_names])).clip(0)
+            pred[pred < 0.01] = 0.0
+            record[key] = pred
 
         records.append(pd.DataFrame(record))
 
@@ -374,24 +371,12 @@ def forecast_and_store(cell_neighbors: pd.DataFrame, station_frames: dict, model
 def main() -> None:
     print(f"[{datetime.now(timezone.utc).replace(tzinfo=None).isoformat()}] inference_pipeline starting...")
 
-    location_map = fetch_location_data()
+    bootstrap_static_tables()
 
-    # Bootstrap: populate static tables on first run
-    meta_count = pd.read_sql("SELECT COUNT(*) as n FROM station_metadata", engine)['n'].iloc[0]
-    if meta_count == 0:
-        print("station_metadata is empty — bootstrapping...")
-        populate_station_metadata(location_map)
+    station_ids = get_required_station_ids()
 
-    station_ids = get_required_station_ids(location_map)
-
-    fetch_and_store_raw(station_ids, location_map)
+    fetch_and_store_raw(station_ids)
     clean_and_store(station_ids)
-
-    # Bootstrap: populate cell_neighbors after clean data exists
-    cell_count = pd.read_sql("SELECT COUNT(*) as n FROM cell_neighbors", engine)['n'].iloc[0]
-    if cell_count == 0:
-        print("cell_neighbors is empty — running cell generation...")
-        populate_cell_neighbors()
 
     # Load station frames from clean_station_data for interpolation + upstream forcing
     all_clean = pd.read_sql("SELECT * FROM clean_station_data", engine)
