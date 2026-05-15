@@ -127,6 +127,7 @@ def compute_and_store_neighbors() -> None:
     ### VALIDATED ON REAL DATA MADE 7 FEATURES REGRESS IN PRECISION (NAZARETH HAS NO DATA OLDER THAN 2024)
     NAZARETH_ID = 500
     all_stations.pop(NAZARETH_ID)
+    all_stations.pop(16)
 
     print(f"Computing neighbors for {len(all_stations)} stations...")
     records = []
