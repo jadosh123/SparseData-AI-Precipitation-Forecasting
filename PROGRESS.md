@@ -200,38 +200,6 @@ After testing it seems the basic initialization I had of XGBoost outperformed ev
 
 Possible improvements to model performance will come from smarter feature engineering and deeper domain knowledge.
 
-### Goals for project improvement
-
-- [ ] Investigate the data of Haifa karmel and Haifa Port if they have more continuous rich data compared to Haifa Technion (its missing some blocks of wind vector data).
-- [x] Investigate the stations above Afula and Nazareth like the one near Sakhnin and Deir Hana to allow a proper interpolation environment for the RFSI or XGBoost with RFSI features.
-- [x] Investigate all coastal station data for continuity to add them later to the system (guarantees that no storm passes between haifa and telaviv and surprises our model).
-
-### Date: February 1, 2026
-
-stations for interpolation:
-
-- Tel Yosef: 380 (good fetched data from 2018 and up)
-- Galed: 263 (bad because its only measuring like 4-5 metrics which is insufficient)
-- En Hashofet: 67 (good data stretches back to 1998)
-
-new coastal stations:
-
-- Zikhron Yaaqov: 45 (good data stretches back beyond 2018)
-- Hadera Port: 46 (good data stretches back to 1990)
-- En Karmel: 44 (good data stretches back to 1992)
-
-Stations to inspect further in python against existing stations:
-
-FOR INTERPOLATION:
-
-- En Hashofet: 67
-- Tel Yosef: 380
-
-FOR COASTAL:
-
-- Zikhron Yaaqov: 45
-- Hadera Port: 46
-- En Karmel: 44
 
 ### Date: February 2, 2026
 
@@ -268,75 +236,6 @@ Subject: Multi-Horizon Forecasting Engine Refactor and Physical Shift Analysis
     - The operational safety bias remains intact. At t+12, the model sacrifices Precision (32%) to maintain a high Recall (57%), minimizing dangerous misses. The "Average Rain Missed" remains near ~1.0 mm/hr, proving the model catches severe events and only fails on minor drizzles.
 
 
-### Date: March 30, 2026
-
-Subject: RFSI Training Methodology & Implementation Plan
-
----
-
-**Objective:** Train a Random Forest Spatial Interpolation (RFSI) model on the full 84-station national IMS network to learn generalizable spatial interpolation of meteorological features, then deploy it to generate synthetic station data at each grid cell over the Jezreel Valley for downstream single-point precipitation forecasting.
-
----
-
-**1. Data Quality & Station Selection**
-
-- Computed per-station missingness report across all core features: `rain`, `ws`, `wd`, `wsmax`, `wdmax`, `stdwd`, `td`, `rh`, `tdmax`, `tdmin`
-- Excluded non-informative columns from quality assessment: `elevation`, `ws1mm`, `ws10mm`, `timestamp`, `station_id`, `latitude`, `longitude`
-- Applied 40% missingness threshold on core features — stations exceeding this on any core column are dropped from the RFSI training corpus
-- **Result: 66 stations retained out of 89**
-- Removed `ws1mm` and `ws10mm` from schema and ingestion pipeline entirely — instantaneous gust metrics with no forecasting value and widespread sensor absence
-
-**2. Temporal Window Strategy**
-
-- Stations have uneven temporal coverage (e.g. Nazareth City only available from 2023 onwards due to recent deployment)
-- Rather than forcing a fixed 6-year window, each station contributes its longest continuous segment ending at 2026
-- RFSI training samples at timestep `t` are only valid if **all K neighbors** have non-null core feature observations at that same `t`
-- This naturally excludes outage blocks and late-deployment stations from affected timesteps without explicit imputation or arbitrary decisions
-- Effective training corpus is the intersection of valid neighbor windows per sample, not a global fixed date range
-
-**3. RFSI Feature Construction**
-
-- For each target station at each valid timestep, identify K nearest neighbors by geographic distance (Haversine)
-- Extract per-neighbor features:
-  - Observed values of all core features at time `t`
-  - Distance to target cell
-  - Elevation difference between neighbor and target
-  - Bearing/direction from neighbor to target
-- Lag features: rolling lags at t-1h, t-2h, t-3h per neighbor
-- Target variable: observed feature value at the target station at time `t`
-- Apply Leave-Location-Out Cross Validation (LLOCV) — each fold holds out one station entirely as the target, trains on all remaining stations, ensuring the model learns to interpolate to **unseen locations** rather than memorizing training station patterns
-
-**4. Model Training**
-
-- One RFSI model trained per interpolated feature (rain, ws, wd, td, etc.) or a multi-output variant if feasible
-- Algorithm: Random Forest (or XGBoost for consistency with downstream forecaster)
-- Evaluation metric per feature: RMSE on held-out LLOCV folds
-- Primary validation: apply trained RFSI to Jezreel Valley grid, compare synthetic Afula cell output against real Afula station observations as geographic ground truth
-
-**5. Grid Generation & Deployment**
-
-- Define Jezreel Valley bounding box and generate a regular grid of synthetic station cells at chosen spatial resolution
-- For each grid cell at each timestep, identify K nearest real stations and extract neighbor features
-- Run trained RFSI models to generate full synthetic feature vectors per cell
-- Feed synthetic feature vectors into trained single-point XGBoost forecaster to produce per-cell precipitation forecasts
-- Cron-triggered inference pipeline writes output grid to storage for Streamlit frontend consumption
-
-**6. Frontend & Validation Display**
-
-- Streamlit frontend renders interpolated feature grid and forecast grid over Jezreel Valley using Folium or pydeck
-- Afula station displayed as labeled ground truth point with predicted vs observed values shown side by side
-- Multi-horizon forecast layers (t+1 to t+12) toggleable on the map
-- Confidence layer flagging low-reliability cells during upstream sensor outages (Master Time Index integration)
-
----
-
-**Open Questions / Next Steps**
-
-- [ ] Determine optimal K for neighbor selection via cross-validation
-- [ ] Decide whether to train one RFSI model per feature or a unified multi-output model
-- [ ] Investigate whether bearing/elevation features meaningfully improve interpolation over distance alone
-- [ ] Finalize Jezreel Valley bounding box and grid resolution
-- [ ] Assess whether coastal stations (Zikhron Yaaqov, Hadera Port, En Karmel) improve spatial coverage sufficiently to include despite later start dates
 
 ### Date: April 15, 2026
 
@@ -564,3 +463,59 @@ Comparing against May 3 LLOCV run, then RFSI vs IDW:
 | v_vec | **0.7532** | 0.7656 | **0.9757** | 1.0043 |
 
 **Assessment:** Adding neighbor distances is the strongest single improvement to date — ws dropped 25.9%, u_vec 9%, with broad gains across temperature and humidity. RFSI beats IDW on precipitation and wind, consistent with the original paper. IDW wins on temperature and humidity (td, rh, tdmax, tdmin) — these are spatially smooth fields where simple distance weighting suffices and the learned model adds complexity without benefit. IDW is the appropriate baseline given hardware constraints precluding kriging.
+
+
+### Date: May 15, 2026
+While walking through the reason for these final forecasting metrics in the full pipeline:
+
+| Horizon | MAE    | RMSE   | Bias   | Storm RMSE | Storm Bias | Persistence RMSE | Skill vs Persistence (%) |
+|---------|--------|--------|--------|------------|------------|------------------|--------------------------|
+| t+1h    | 0.0878 | 0.3971 | 0.0513 | 1.6278     | 0.0881     | 0.3979           | 0.2%                     |
+| t+3h    | 0.1174 | 0.4590 | 0.0714 | 1.7396     | -0.1117    | 0.4340           | -5.7%                    |
+| t+6h    | 0.1477 | 0.4770 | 0.1019 | 1.7133     | -0.1279    | 0.4569           | -4.4%                    |
+| t+12h   | 0.1826 | 0.5418 | 0.1367 | 1.7720     | -0.0731    | 0.4772           | -13.5%                   |
+
+
+Where we clearly see the persistence model (takes current observation as the forecast) beats the XGBoost forecaster, and here where we trained on the held out station's ground truths we see the XGBoost beating the persistence model by a big amount:
+
+| Horizon | XGBoost Global RMSE | XGBoost Storm RMSE | XGBoost Storm Bias | XGBoost Storm SI | Persistence Global RMSE | Persistence Storm RMSE | Persistence Storm Bias | Persistence Storm SI |
+|---------|--------------------|--------------------|--------------------|-----------------:|------------------------|------------------------|------------------------|---------------------:|
+| t+1     | 0.3385 mm          | 1.7388 mm          | -0.26 mm           | 163.4%           | 0.4137 mm              | 2.1601 mm              | -0.27 mm               | 203.0%               |
+| t+3     | 0.3857 mm          | 1.7962 mm          | -0.36 mm           | 168.3%           | 0.4703 mm              | 2.1655 mm              | -0.54 mm               | 202.9%               |
+| t+6     | 0.4149 mm          | 1.8240 mm          | -0.36 mm           | 170.3%           | 0.4688 mm              | 2.0503 mm              | -0.66 mm               | 191.5%               |
+| t+12    | 0.4626 mm          | 1.8704 mm          | -0.30 mm           | 174.7%           | 0.4891 mm              | 2.1352 mm              | -0.76 mm               | 199.4%               |
+
+
+These results point us into a specific direction as to why the addition of the XGBoost trained on the RFSI method between ground truths and forecaster inverted the performance gain, if the XGBoost trained on ground truths surpassed persistence by so much but lost to it when evaluated in the full pipeline its solely because of error propagation, the XGBoost that interpolates and is introducing errors into the data, then the XGBoost forecaster takes this data and forecasts with it and in the end we pick the cell closest to afula (the completely held out station) which is about 2 kilometers away from it which also adds some errors and compute the error metrics.
+
+So we described 3 error sources, lets investigate the first one since its the most noisy one and the one that got between the forecaster and the groundtruth and is a likely cause for the performance inversion between the two tables:
+
+### First Error Source
+These are the interpolation metrics measured against IDW (Inverse Distance Weighting) which takes 1/dist_to_neighbor as the weights for each neighbor then takes the average as the interpolated value:
+
+| Feature | RFSI MAE | RFSI RMSE | IDW MAE | IDW RMSE | RFSI Scaled MAE | RFSI Scaled RMSE | IDW Scaled MAE | IDW Scaled RMSE |
+|---------|----------|-----------|---------|----------|-----------------|------------------|----------------|-----------------|
+| rain    | 0.0468   | 0.3328    | 0.0479  | 0.3596   | 0.8699          | 6.1892           | 0.8912         | 6.6893          |
+| ws      | 0.9831   | 1.1567    | 1.1120  | 1.2957   | 0.4308          | 0.5069           | 0.4873         | 0.5678          |
+| td      | 1.3696   | 1.7806    | 1.0182  | 1.4103   | 0.0667          | 0.0867           | 0.0496         | 0.0686          |
+| rh      | 4.6062   | 6.1911    | 4.2571  | 5.8815   | 0.0671          | 0.0902           | 0.0620         | 0.0857          |
+| tdmax   | 1.2362   | 1.6466    | 0.9822  | 1.3671   | 0.0582          | 0.0775           | 0.0462         | 0.0643          |
+| tdmin   | 1.3099   | 1.7731    | 1.0904  | 1.5004   | 0.0660          | 0.0894           | 0.0550         | 0.0756          |
+| u_vec   | 0.7711   | 1.0464    | 0.9759  | 1.2183   | 0.4088          | 0.5547           | 0.5173         | 0.6458          |
+| v_vec   | 0.7532   | 0.9757    | 0.7656  | 1.0043   | 0.9189          | 1.1904           | 0.9340         | 1.2253          |
+
+
+We can see that IDW beats XGBoost interpolation trained on RFSI methodology on the features:
+1.  TD (Temperature Dewpoint)
+2.  TDMAX
+3.  TDMIN
+4.  RH (Relative Humidity)
+
+IDW wins on average by 16%, so swapping out RFSI method for IDW for these exact features reduces our error propagation downstream for free almost since its only a couple of code lines to add.
+
+Outside of switching to the better model on those features we can see a clear systematic bias on one of the features RFSI wins on which is WS (wind speed):
+
+![alt text](imgs/wind_speed_errors.png)
+
+
+We can visually see the predictions are above the minimums in the ground truth by a almost uniform amount so the proposed solution is to subtract the mean of the errors in hopes of pushing the prediction chart down towards the ground truths. The error in this feature is assumed as systematic since the RFSI method trains a model on all available stations for interpolation to make the model generalize as a physics/weather engine so it might have learned a pattern from all the other stations that is systematically above afula in the windspeed feature.

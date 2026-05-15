@@ -35,7 +35,7 @@ def load_cell_features(
     ).set_index('station_id')
 
     df_neighbors = [station_frames[nid].add_suffix(f'_n{i + 1}') for i, nid in enumerate(neighbor_ids)]
-    X = df_neighbors[0].join(df_neighbors[1:], how='inner').dropna()
+    X = df_neighbors[0].join(df_neighbors[1:], how='outer').dropna()
     
     X = X.copy()
     X['elevation_target'] = cell_elevation
