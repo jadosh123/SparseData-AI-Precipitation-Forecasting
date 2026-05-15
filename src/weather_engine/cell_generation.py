@@ -85,6 +85,7 @@ def main():
     
     # Pop nazareth since its insufficient in data and made all interpolation features regress in accuracy
     all_stations.pop(500, None)
+    all_stations.pop(16)
     cells = generate_grid_cells()
     records = []
     for cell in cells:
