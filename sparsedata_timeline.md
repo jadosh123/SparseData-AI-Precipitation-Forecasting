@@ -48,25 +48,25 @@
 ### `May 5 → May 18` (~2 weeks)
 
 **Feature engineering pipeline**
-- [ ] Package feature engineering, interpolation, and forecaster into a single callable inference pipeline
-- [ ] Accepts: raw IMS hourly data drop
-- [ ] Outputs: updated `cell_forecasts` rows
+- [x] Package feature engineering, interpolation, and forecaster into a single callable inference pipeline
+- [x] Accepts: raw IMS hourly data drop
+- [x] Outputs: updated `cell_forecasts` rows
 
 **FastAPI backend**
-- [ ] Single `/predict` endpoint reading from `cell_forecasts` table
-- [ ] Returns: JSON payload with lat/lon grid + precipitation forecasts per horizon
-- [ ] Basic error handling: missing data, stale forecasts
+- [x] Single `/predict` endpoint reading from `cell_forecasts` table
+- [x] Returns: JSON payload with lat/lon grid + precipitation forecasts per horizon
+- [x] Basic error handling: missing data, stale forecasts
 
 **Cronjob**
-- [ ] Cronjob triggers on IMS data drop completing a full hour
-- [ ] Fetches current hour + lagged hours needed for features
-- [ ] Runs clean → Silver → inference pipeline → stores outputs
-- [ ] Test: simulate IMS data drop end-to-end, verify `cell_forecasts` populates correctly
+- [x] Cronjob triggers on IMS data drop completing a full hour
+- [x] Fetches current hour + lagged hours needed for features
+- [x] Runs clean → Silver → inference pipeline → stores outputs
+- [x] Test: simulate IMS data drop end-to-end, verify `cell_forecasts` populates correctly
 
 **End-to-end test**
-- [ ] IMS data in → `cell_forecasts` populated → `/predict` returns correct payload
+- [x] IMS data in → `cell_forecasts` populated → `/predict` returns correct payload
 - [x] Fix `if_exists='replace'` in `clean_station_data` — downstream tables must not be wiped mid-pipeline
-- [ ] **Phase 2 milestone: backend locked, no open bugs ✓**
+- [x] **Phase 2 milestone: backend locked, no open bugs ✓**
 
 ---
 
@@ -84,7 +84,6 @@
 - [ ] Station overlay showing real IMS sensor locations
 
 **Demo stability**
-- [ ] Full walkthrough rehearsed: open app → select horizon → read forecast → explain methodology
 - [ ] App does not crash on missing data or empty forecast hours
 - [ ] Works on a clean machine with no local setup beyond `streamlit run`
 - [ ] Record 4-minute demo video (required by report template alongside live demo)

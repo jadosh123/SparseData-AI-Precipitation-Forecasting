@@ -259,6 +259,12 @@ def interpolate_and_store(cell_neighbors: pd.DataFrame, station_frames: dict, mo
     records = []
     for _, row in cell_neighbors.iterrows():
         cell_id = int(row['cell_id'])
+        neighbor_ids = [int(row['neighbor_1_id']), int(row['neighbor_2_id']), int(row['neighbor_3_id'])]
+
+        if not all(nid in station_frames for nid in neighbor_ids):
+            print(f"Cell {cell_id}: missing neighbor data, skipping.")
+            continue
+        
         X = load_cell_features(
             row['elevation'], row['dist_to_coast'],
             int(row['neighbor_1_id']), int(row['neighbor_2_id']), int(row['neighbor_3_id']),
