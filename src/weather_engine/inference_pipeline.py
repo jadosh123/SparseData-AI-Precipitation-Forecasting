@@ -56,10 +56,6 @@ DTYPE_CLEAN = {
 }
 
 
-# ---------------------------------------------------------------------------
-# Helpers
-# ---------------------------------------------------------------------------
-
 def _insert_ignore(table, conn, keys, data_iter) -> None:  # type: ignore[no-untyped-def]
     conn.execute(sqlite_insert(table.table).values(list(data_iter)).on_conflict_do_nothing())
 
@@ -110,10 +106,6 @@ def fetch_station_range(station_id: int, lat: float, lon: float) -> list[dict]:
     return rows
 
 
-# ---------------------------------------------------------------------------
-# Bootstrap helpers (run once on clean DB)
-# ---------------------------------------------------------------------------
-
 COLD_START_DIR = get_project_root() / "src" / "weather_engine" / "cold_start"
 
 
@@ -135,10 +127,6 @@ def bootstrap_static_tables() -> None:
         pd.DataFrame(records).to_sql('cell_neighbors', engine, if_exists='append', index=False)
         print(f"Bootstrapped cell_neighbors with {len(records)} rows.")
 
-
-# ---------------------------------------------------------------------------
-# Step 1: Fetch → raw_station_data
-# ---------------------------------------------------------------------------
 
 def fetch_and_store_raw(station_ids: set[int]) -> None:
     print(f"Fetching {len(station_ids)} stations (yesterday + today)...")
@@ -177,10 +165,6 @@ def fetch_and_store_raw(station_ids: set[int]) -> None:
 
     print(f"Stored {len(df)} raw rows.")
 
-
-# ---------------------------------------------------------------------------
-# Step 2: Clean → clean_station_data
-# ---------------------------------------------------------------------------
 
 def get_wind_components(ws, wd):
     wd_rad = np.deg2rad(wd)
@@ -237,10 +221,6 @@ def clean_and_store(station_ids: set[int]) -> None:
 
     print("Clean step complete.")
 
-
-# ---------------------------------------------------------------------------
-# Step 3: Interpolate → cell_interpolated
-# ---------------------------------------------------------------------------
 
 def load_interpolation_models() -> dict[str, xgb.Booster]:
     models_dir = get_project_root() / "models" / "spatial_interpolation"
@@ -303,10 +283,6 @@ def interpolate_and_store(cell_neighbors: pd.DataFrame, station_frames: dict, mo
     print("Interpolation complete.")
 
 
-# ---------------------------------------------------------------------------
-# Step 4: Forecast → replace cell_forecasts
-# ---------------------------------------------------------------------------
-
 def load_forecast_models() -> dict[str, xgb.Booster]:
     models_dir = get_project_root() / "models" / "single_point"
     models = {}
@@ -364,10 +340,6 @@ def forecast_and_store(cell_neighbors: pd.DataFrame, station_frames: dict, model
     forecasts.to_sql('cell_forecasts', engine, if_exists='append', index=False)
     print(f"Replaced cell_forecasts with {len(forecasts)} rows.")
 
-
-# ---------------------------------------------------------------------------
-# Orchestrator
-# ---------------------------------------------------------------------------
 
 def main() -> None:
     print(f"[{datetime.now(timezone.utc).replace(tzinfo=None).isoformat()}] inference_pipeline starting...")
