@@ -93,7 +93,7 @@ def interpolate_and_store(cell_neighbors: pd.DataFrame, station_frames: dict, mo
 
         total_rows = sum(len(r) for r in records)
         print(f"\nWriting {total_rows} interpolated rows to cell_interpolated...")
-        pd.concat(records).to_sql('cell_interpolated', engine, if_exists='append', index=False, method=_insert_ignore)
+        pd.concat(records).to_sql('cell_interpolated', engine, if_exists='append', index=False, method=_insert_ignore, chunksize=10_000)
 
     print("Interpolation complete.")
 
