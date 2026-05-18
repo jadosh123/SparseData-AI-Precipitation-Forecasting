@@ -10,6 +10,10 @@ from weather_engine.llocv import load_fold, temporal_split_fold
 from weather_engine.utils import encode_time_features, get_project_root
 
 FEATURES = ['rain', 'ws', 'td', 'rh', 'tdmax', 'tdmin', 'u_vec', 'v_vec']
+TERRAIN_FEATURES = {'rain', 'ws', 'rh'}
+TERRAIN_COLS = [f'{c}_{suffix}'
+                for c in ('tpi_local', 'tpi_regional', 'roughness_local', 'roughness_regional')
+                for suffix in ('target', 'n1', 'n2', 'n3')]
 # Station 500 (Nazareth) stays excluded — insufficient data, causes regression
 EXCLUDED_STATIONS = {500}
 
@@ -54,13 +58,17 @@ def train(all_X: pd.DataFrame, all_y: pd.DataFrame) -> dict:
     models = {}
     for i, feature in enumerate(FEATURES, 1):
         print(f"[{i}/{len(FEATURES)}] Training RFSI for '{feature}'...", end=' ', flush=True)
+        drop_cols = [] if feature in TERRAIN_FEATURES else [c for c in TERRAIN_COLS if c in X_train.columns]
+        X_tr = X_train.drop(columns=drop_cols)
+        X_vl = X_val.drop(columns=drop_cols)
+
         if feature == 'rain':
             model = xgb.XGBRegressor(n_jobs=-1, objective='reg:tweedie', tweedie_variance_power=1.5)
         else:
             model = xgb.XGBRegressor(n_jobs=-1, objective='reg:squarederror')
 
-        model.fit(X_train, y_train[feature])
-        preds = model.predict(X_val)
+        model.fit(X_tr, y_train[feature])
+        preds = model.predict(X_vl)
         mae = mean_absolute_error(y_val[feature], preds)
         rmse = root_mean_squared_error(y_val[feature], preds)
         print(f"MAE={mae:.4f}  RMSE={rmse:.4f}")

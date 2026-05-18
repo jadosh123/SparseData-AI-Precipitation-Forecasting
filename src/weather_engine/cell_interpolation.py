@@ -1,6 +1,9 @@
 import pandas as pd
 from weather_engine.database import engine
 
+TERRAIN_COLS = ('tpi_local', 'tpi_regional', 'roughness_local', 'roughness_regional')
+
+
 def load_cell_features(
     cell_elevation: float,
     cell_dist_to_coast: float,
@@ -11,12 +14,15 @@ def load_cell_features(
     neighbor_2_distance: float,
     neighbor_3_distance: float,
     station_frames: dict,
+    cell_terrain: dict | None = None,
 ) -> pd.DataFrame:
     """
     Builds the RFSI feature matrix for a single grid cell.
 
     Joins neighbor time-series from station_frames on inner timestamps, drops
     rows with any null, then appends static features for the cell and its neighbors.
+    When cell_terrain is provided, terrain cols are appended for the cell and each
+    neighbor — models that don't use them select their own feature_names subset.
 
     :param cell_elevation: Elevation of the grid cell in metres.
     :param cell_dist_to_coast: Signed distance to nearest coastline in km (negative = land side).
@@ -24,6 +30,7 @@ def load_cell_features(
     :param neighbor_2_id: Station ID of second neighbor.
     :param neighbor_3_id: Station ID of third neighbor.
     :param station_frames: Dict mapping station_id -> cleaned DataFrame indexed by timestamp.
+    :param cell_terrain: Dict with tpi_local/regional, roughness_local/regional for the cell.
     :returns: Feature matrix X with neighbor columns suffixed _n1/_n2/_n3 and static features.
     """
     neighbor_ids = [neighbor_1_id, neighbor_2_id, neighbor_3_id]
@@ -36,7 +43,7 @@ def load_cell_features(
 
     df_neighbors = [station_frames[nid].add_suffix(f'_n{i + 1}') for i, nid in enumerate(neighbor_ids)]
     X = df_neighbors[0].join(df_neighbors[1:], how='outer').dropna()
-    
+
     X = X.copy()
     X['elevation_target'] = cell_elevation
     X['dist_to_coast_target'] = cell_dist_to_coast
@@ -47,4 +54,12 @@ def load_cell_features(
     X['dist_n1'] = neighbor_1_distance
     X['dist_n2'] = neighbor_2_distance
     X['dist_n3'] = neighbor_3_distance
+
+    if cell_terrain is not None:
+        for col in TERRAIN_COLS:
+            X[f'{col}_target'] = cell_terrain[col]
+        for i, nid in enumerate(neighbor_ids):
+            for col in TERRAIN_COLS:
+                X[f'{col}_n{i+1}'] = metadata.loc[nid, col]
+
     return X

@@ -55,6 +55,7 @@ def interpolate_cells(
     records = []
 
     for _, row in cell_neighbors.iterrows():
+        cell_terrain = {col: row[col] for col in ('tpi_local', 'tpi_regional', 'roughness_local', 'roughness_regional')}
         X = load_cell_features(
             row['elevation'],
             row['dist_to_coast'],
@@ -64,7 +65,8 @@ def interpolate_cells(
             row['neighbor_1_distance'],
             row['neighbor_2_distance'],
             row['neighbor_3_distance'],
-            station_frames=station_frames
+            station_frames=station_frames,
+            cell_terrain=cell_terrain,
         )
         X = encode_time_features(X)
 
