@@ -5,6 +5,9 @@ from fastapi.templating import Jinja2Templates
 from weather_engine.database import SessionLocal
 from weather_engine.folium_map import build_forecast_map
 from sqlalchemy import text
+from datetime import datetime, timezone
+from zoneinfo import ZoneInfo
+from fastapi.staticfiles import StaticFiles
 import json
 from weather_engine.utils import get_project_root
 
@@ -14,6 +17,12 @@ _cached_demo_rows = None
 _timestamps = None
 _timestamp_idx = 0
 ROOT = get_project_root()
+
+
+def _to_israel_time(ts: str) -> str:
+    dt = datetime.fromisoformat(ts).replace(tzinfo=timezone.utc)
+    il = dt.astimezone(ZoneInfo("Asia/Jerusalem"))
+    return il.strftime("%Y-%m-%d %H:%M")
 
 
 def get_timestamps():
@@ -49,6 +58,7 @@ def get_demo_rows():
     
 
 app = FastAPI()
+app.mount("/static", StaticFiles(directory=ROOT / "static"))
 templates = Jinja2Templates(directory=Path(__file__).parent / "templates")
 
 
@@ -61,36 +71,43 @@ def index(request: Request):
 def get_map(horizon: str = 'precipitation_t1'):
     rows = get_forecast_rows()
     fol_map = build_forecast_map(rows, horizon=horizon)
-    return HTMLResponse(content=_map_section_html(fol_map._repr_html_(), horizon, mode="live"))
+    ts = rows[0]["timestamp"]
+    return HTMLResponse(content=_map_section_html(fol_map._repr_html_(), horizon, ts, mode="live"))
 
 
-def _map_section_html(map_html: str, horizon: str, mode: str = "live") -> str:
+def _map_section_html(map_html: str, horizon: str, timestamp: str, mode: str = "live") -> str:
     btn_cls = "px-4 py-2 bg-sky-200 text-black rounded shadow hover:bg-gray-600"
     small_btn_cls = "px-3 py-2 bg-sky-200 text-black rounded shadow hover:bg-gray-600 text-sm"
+    
+    timestamp = _to_israel_time(timestamp)
+    ts_html = f'<div class="text-sm text-black font-mono">{timestamp}</div>' if timestamp else ''
 
     if mode == "demo":
         left_right = f"""
-          <div class="flex gap-1">
+          <div class="flex gap-1 items-center">
             <button class="{btn_cls}" hx-get="/demo?direction=left&horizon={horizon}" hx-target="#map-section">←</button>
+            {ts_html}
             <button class="{btn_cls}" hx-get="/demo?direction=right&horizon={horizon}" hx-target="#map-section">→</button>
           </div>"""
         toggle = f'<button class="{small_btn_cls}" hx-get="/map?horizon={horizon}" hx-target="#map-section">→ Live</button>'
     else:
-        left_right = '<div class="w-16"></div>'
+        left_right = f'<div class="flex">{ts_html}</div>'
         toggle = f'<button class="{small_btn_cls}" hx-get="/demo" hx-target="#map-section">→ Demo</button>'
 
     horizons = [("precipitation_t1", "t+1h"), ("precipitation_t3", "t+3h"), ("precipitation_t6", "t+6h"), ("precipitation_t12", "t+12h")]
     endpoint = "/demo" if mode == "demo" else "/map"
+    active_cls = "px-4 py-2 bg-sky-400 text-black rounded shadow"
     horizon_btns = " ".join(
-        f'<button class="{btn_cls}" hx-get="{endpoint}?horizon={h}" hx-target="#map-section">{label}</button>'
+        f'<button class="{active_cls if h == horizon else btn_cls}" hx-get="{endpoint}?horizon={h}" hx-target="#map-section">{label}</button>'
         for h, label in horizons
     )
+
 
     return f"""
     <div id="map-section" class="mx-auto max-w-5xl">
       <div class="flex items-center justify-between mb-1 px-1">
         {left_right}
-        <div class="flex gap-2">{horizon_btns}</div>
+        <div class="absolute left-1/2 -translate-x-1/2 flex gap-2">{horizon_btns}</div>
         {toggle}
       </div>
       {map_html}
@@ -110,5 +127,5 @@ def get_demo_map(direction: str | None = None, horizon: str = 'precipitation_t1'
     current_ts = timestamps[_timestamp_idx]
     rows = [r for r in get_demo_rows() if r["timestamp"] == current_ts]
     fol_map = build_forecast_map(rows, horizon=horizon)
-    return HTMLResponse(content=_map_section_html(fol_map._repr_html_(), horizon, mode="demo"))
+    return HTMLResponse(content=_map_section_html(fol_map._repr_html_(), horizon, current_ts, mode="demo"))
     

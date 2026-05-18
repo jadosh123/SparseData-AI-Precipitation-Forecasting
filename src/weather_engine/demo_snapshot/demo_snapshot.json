@@ -1,56 +1,6 @@
 [
   {
     "cell_id": 1,
-    "timestamp": "2024-12-27 00:00:00.000000",
-    "precipitation_t1": 0.07486006617546082,
-    "precipitation_t3": 0.10987593978643417,
-    "precipitation_t6": 0.275777667760849,
-    "precipitation_t12": 0.2385265827178955,
-    "lat": 32.45,
-    "lon": 35.05
-  },
-  {
-    "cell_id": 1,
-    "timestamp": "2024-12-27 01:00:00.000000",
-    "precipitation_t1": 0.08783427625894547,
-    "precipitation_t3": 0.17774800956249237,
-    "precipitation_t6": 0.3847481310367584,
-    "precipitation_t12": 1.4842119216918945,
-    "lat": 32.45,
-    "lon": 35.05
-  },
-  {
-    "cell_id": 1,
-    "timestamp": "2024-12-27 02:00:00.000000",
-    "precipitation_t1": 0.060594525188207626,
-    "precipitation_t3": 0.3323497176170349,
-    "precipitation_t6": 0.6336954236030579,
-    "precipitation_t12": 1.3786664009094238,
-    "lat": 32.45,
-    "lon": 35.05
-  },
-  {
-    "cell_id": 1,
-    "timestamp": "2024-12-27 03:00:00.000000",
-    "precipitation_t1": 0.07043413072824478,
-    "precipitation_t3": 1.2681708335876465,
-    "precipitation_t6": 0.9038398265838623,
-    "precipitation_t12": 2.3221843242645264,
-    "lat": 32.45,
-    "lon": 35.05
-  },
-  {
-    "cell_id": 1,
-    "timestamp": "2024-12-27 04:00:00.000000",
-    "precipitation_t1": 0.04397476464509964,
-    "precipitation_t3": 0.28141120076179504,
-    "precipitation_t6": 0.603295624256134,
-    "precipitation_t12": 2.15789532661438,
-    "lat": 32.45,
-    "lon": 35.05
-  },
-  {
-    "cell_id": 1,
     "timestamp": "2024-12-27 05:00:00.000000",
     "precipitation_t1": 0.09182052314281464,
     "precipitation_t3": 0.06467260420322418,
@@ -228,56 +178,6 @@
     "precipitation_t12": 0.8894986510276794,
     "lat": 32.45,
     "lon": 35.05
-  },
-  {
-    "cell_id": 2,
-    "timestamp": "2024-12-27 00:00:00.000000",
-    "precipitation_t1": 0.024484900757670403,
-    "precipitation_t3": 0.10990261286497116,
-    "precipitation_t6": 0.22919584810733795,
-    "precipitation_t12": 0.22455139458179474,
-    "lat": 32.45,
-    "lon": 35.1
-  },
-  {
-    "cell_id": 2,
-    "timestamp": "2024-12-27 01:00:00.000000",
-    "precipitation_t1": 0.03185108304023743,
-    "precipitation_t3": 0.09515746682882309,
-    "precipitation_t6": 0.1305018812417984,
-    "precipitation_t12": 0.7407416701316833,
-    "lat": 32.45,
-    "lon": 35.1
-  },
-  {
-    "cell_id": 2,
-    "timestamp": "2024-12-27 02:00:00.000000",
-    "precipitation_t1": 0.04374178126454353,
-    "precipitation_t3": 0.16674306988716125,
-    "precipitation_t6": 0.17878837883472443,
-    "precipitation_t12": 0.8124449849128723,
-    "lat": 32.45,
-    "lon": 35.1
-  },
-  {
-    "cell_id": 2,
-    "timestamp": "2024-12-27 03:00:00.000000",
-    "precipitation_t1": 0.05685143172740936,
-    "precipitation_t3": 0.6941303014755249,
-    "precipitation_t6": 0.2680186927318573,
-    "precipitation_t12": 1.5427381992340088,
-    "lat": 32.45,
-    "lon": 35.1
-  },
-  {
-    "cell_id": 2,
-    "timestamp": "2024-12-27 04:00:00.000000",
-    "precipitation_t1": 0.04304147884249687,
-    "precipitation_t3": 0.19628147780895233,
-    "precipitation_t6": 0.5013129115104675,
-    "precipitation_t12": 1.2258901596069336,
-    "lat": 32.45,
-    "lon": 35.1
   },
   {
     "cell_id": 2,
@@ -461,56 +361,6 @@
   },
   {
     "cell_id": 3,
-    "timestamp": "2024-12-27 00:00:00.000000",
-    "precipitation_t1": 0.017031487077474594,
-    "precipitation_t3": 0.06828378140926361,
-    "precipitation_t6": 0.11649084091186523,
-    "precipitation_t12": 0.22566452622413635,
-    "lat": 32.45,
-    "lon": 35.15
-  },
-  {
-    "cell_id": 3,
-    "timestamp": "2024-12-27 01:00:00.000000",
-    "precipitation_t1": 0.02297232858836651,
-    "precipitation_t3": 0.06409541517496109,
-    "precipitation_t6": 0.125857874751091,
-    "precipitation_t12": 0.8000315427780151,
-    "lat": 32.45,
-    "lon": 35.15
-  },
-  {
-    "cell_id": 3,
-    "timestamp": "2024-12-27 02:00:00.000000",
-    "precipitation_t1": 0.02300412207841873,
-    "precipitation_t3": 0.06804076582193375,
-    "precipitation_t6": 0.12004884332418442,
-    "precipitation_t12": 0.8280071020126343,
-    "lat": 32.45,
-    "lon": 35.15
-  },
-  {
-    "cell_id": 3,
-    "timestamp": "2024-12-27 03:00:00.000000",
-    "precipitation_t1": 0.023167461156845093,
-    "precipitation_t3": 0.2270832508802414,
-    "precipitation_t6": 0.16704995930194855,
-    "precipitation_t12": 1.4863145351409912,
-    "lat": 32.45,
-    "lon": 35.15
-  },
-  {
-    "cell_id": 3,
-    "timestamp": "2024-12-27 04:00:00.000000",
-    "precipitation_t1": 0.013533876277506351,
-    "precipitation_t3": 0.07453923672437668,
-    "precipitation_t6": 0.45827943086624146,
-    "precipitation_t12": 0.7857041954994202,
-    "lat": 32.45,
-    "lon": 35.15
-  },
-  {
-    "cell_id": 3,
     "timestamp": "2024-12-27 05:00:00.000000",
     "precipitation_t1": 0.01476410124450922,
     "precipitation_t3": 0.021802855655550957,
@@ -688,56 +538,6 @@
     "precipitation_t12": 1.0399785041809082,
     "lat": 32.45,
     "lon": 35.15
-  },
-  {
-    "cell_id": 4,
-    "timestamp": "2024-12-27 00:00:00.000000",
-    "precipitation_t1": 0.015157092362642288,
-    "precipitation_t3": 0.04001085087656975,
-    "precipitation_t6": 0.055323462933301926,
-    "precipitation_t12": 0.1936286836862564,
-    "lat": 32.45,
-    "lon": 35.2
-  },
-  {
-    "cell_id": 4,
-    "timestamp": "2024-12-27 01:00:00.000000",
-    "precipitation_t1": 0.01630176603794098,
-    "precipitation_t3": 0.05265817791223526,
-    "precipitation_t6": 0.1080058142542839,
-    "precipitation_t12": 0.8577479124069214,
-    "lat": 32.45,
-    "lon": 35.2
-  },
-  {
-    "cell_id": 4,
-    "timestamp": "2024-12-27 02:00:00.000000",
-    "precipitation_t1": 0.01761207915842533,
-    "precipitation_t3": 0.06328146159648895,
-    "precipitation_t6": 0.08307205885648727,
-    "precipitation_t12": 0.7559719085693359,
-    "lat": 32.45,
-    "lon": 35.2
-  },
-  {
-    "cell_id": 4,
-    "timestamp": "2024-12-27 03:00:00.000000",
-    "precipitation_t1": 0.018077179789543152,
-    "precipitation_t3": 0.2222651094198227,
-    "precipitation_t6": 0.1611192226409912,
-    "precipitation_t12": 0.9354287981987,
-    "lat": 32.45,
-    "lon": 35.2
-  },
-  {
-    "cell_id": 4,
-    "timestamp": "2024-12-27 04:00:00.000000",
-    "precipitation_t1": 0.0,
-    "precipitation_t3": 0.04101703688502312,
-    "precipitation_t6": 0.3459009528160095,
-    "precipitation_t12": 0.5774203538894653,
-    "lat": 32.45,
-    "lon": 35.2
   },
   {
     "cell_id": 4,
@@ -921,56 +721,6 @@
   },
   {
     "cell_id": 5,
-    "timestamp": "2024-12-27 00:00:00.000000",
-    "precipitation_t1": 0.024106347933411598,
-    "precipitation_t3": 0.021528437733650208,
-    "precipitation_t6": 0.11177080124616623,
-    "precipitation_t12": 0.410584956407547,
-    "lat": 32.45,
-    "lon": 35.25
-  },
-  {
-    "cell_id": 5,
-    "timestamp": "2024-12-27 01:00:00.000000",
-    "precipitation_t1": 0.02925858087837696,
-    "precipitation_t3": 0.0305339265614748,
-    "precipitation_t6": 0.10790695250034332,
-    "precipitation_t12": 0.8198471665382385,
-    "lat": 32.45,
-    "lon": 35.25
-  },
-  {
-    "cell_id": 5,
-    "timestamp": "2024-12-27 02:00:00.000000",
-    "precipitation_t1": 0.018799543380737305,
-    "precipitation_t3": 0.06555439531803131,
-    "precipitation_t6": 0.2016759067773819,
-    "precipitation_t12": 0.8494632840156555,
-    "lat": 32.45,
-    "lon": 35.25
-  },
-  {
-    "cell_id": 5,
-    "timestamp": "2024-12-27 03:00:00.000000",
-    "precipitation_t1": 0.022121576592326164,
-    "precipitation_t3": 0.10306981950998306,
-    "precipitation_t6": 0.14692936837673187,
-    "precipitation_t12": 1.8165922164916992,
-    "lat": 32.45,
-    "lon": 35.25
-  },
-  {
-    "cell_id": 5,
-    "timestamp": "2024-12-27 04:00:00.000000",
-    "precipitation_t1": 0.0,
-    "precipitation_t3": 0.03924020007252693,
-    "precipitation_t6": 0.43644508719444275,
-    "precipitation_t12": 0.49586179852485657,
-    "lat": 32.45,
-    "lon": 35.25
-  },
-  {
-    "cell_id": 5,
     "timestamp": "2024-12-27 05:00:00.000000",
     "precipitation_t1": 0.010126043111085892,
     "precipitation_t3": 0.02133442461490631,
@@ -1148,56 +898,6 @@
     "precipitation_t12": 0.7698553204536438,
     "lat": 32.45,
     "lon": 35.25
-  },
-  {
-    "cell_id": 6,
-    "timestamp": "2024-12-27 00:00:00.000000",
-    "precipitation_t1": 0.01656278595328331,
-    "precipitation_t3": 0.019935349002480507,
-    "precipitation_t6": 0.11351220309734344,
-    "precipitation_t12": 0.40110188722610474,
-    "lat": 32.45,
-    "lon": 35.3
-  },
-  {
-    "cell_id": 6,
-    "timestamp": "2024-12-27 01:00:00.000000",
-    "precipitation_t1": 0.028193077072501183,
-    "precipitation_t3": 0.026511508971452713,
-    "precipitation_t6": 0.10790695250034332,
-    "precipitation_t12": 0.9640167951583862,
-    "lat": 32.45,
-    "lon": 35.3
-  },
-  {
-    "cell_id": 6,
-    "timestamp": "2024-12-27 02:00:00.000000",
-    "precipitation_t1": 0.021195514127612114,
-    "precipitation_t3": 0.06406701356172562,
-    "precipitation_t6": 0.21483874320983887,
-    "precipitation_t12": 0.8218430280685425,
-    "lat": 32.45,
-    "lon": 35.3
-  },
-  {
-    "cell_id": 6,
-    "timestamp": "2024-12-27 03:00:00.000000",
-    "precipitation_t1": 0.022154897451400757,
-    "precipitation_t3": 0.10846217721700668,
-    "precipitation_t6": 0.11531215906143188,
-    "precipitation_t12": 1.8165922164916992,
-    "lat": 32.45,
-    "lon": 35.3
-  },
-  {
-    "cell_id": 6,
-    "timestamp": "2024-12-27 04:00:00.000000",
-    "precipitation_t1": 0.0,
-    "precipitation_t3": 0.04135621339082718,
-    "precipitation_t6": 0.3454674780368805,
-    "precipitation_t12": 0.5271186828613281,
-    "lat": 32.45,
-    "lon": 35.3
   },
   {
     "cell_id": 6,
@@ -1381,56 +1081,6 @@
   },
   {
     "cell_id": 7,
-    "timestamp": "2024-12-27 00:00:00.000000",
-    "precipitation_t1": 0.013151002116501331,
-    "precipitation_t3": 0.02278994768857956,
-    "precipitation_t6": 0.08088989555835724,
-    "precipitation_t12": 0.2750639319419861,
-    "lat": 32.45,
-    "lon": 35.35
-  },
-  {
-    "cell_id": 7,
-    "timestamp": "2024-12-27 01:00:00.000000",
-    "precipitation_t1": 0.017382705584168434,
-    "precipitation_t3": 0.026638444513082504,
-    "precipitation_t6": 0.08416767418384552,
-    "precipitation_t12": 0.616445004940033,
-    "lat": 32.45,
-    "lon": 35.35
-  },
-  {
-    "cell_id": 7,
-    "timestamp": "2024-12-27 02:00:00.000000",
-    "precipitation_t1": 0.032568689435720444,
-    "precipitation_t3": 0.0741088017821312,
-    "precipitation_t6": 0.13192537426948547,
-    "precipitation_t12": 1.0589896440505981,
-    "lat": 32.45,
-    "lon": 35.35
-  },
-  {
-    "cell_id": 7,
-    "timestamp": "2024-12-27 03:00:00.000000",
-    "precipitation_t1": 0.018162250518798828,
-    "precipitation_t3": 0.2518289089202881,
-    "precipitation_t6": 0.1315646767616272,
-    "precipitation_t12": 0.9912737011909485,
-    "lat": 32.45,
-    "lon": 35.35
-  },
-  {
-    "cell_id": 7,
-    "timestamp": "2024-12-27 04:00:00.000000",
-    "precipitation_t1": 0.017671799287199974,
-    "precipitation_t3": 0.08449393510818481,
-    "precipitation_t6": 0.24535615742206573,
-    "precipitation_t12": 0.4989495873451233,
-    "lat": 32.45,
-    "lon": 35.35
-  },
-  {
-    "cell_id": 7,
     "timestamp": "2024-12-27 05:00:00.000000",
     "precipitation_t1": 0.012920644134283066,
     "precipitation_t3": 0.01647569052875042,
@@ -1608,56 +1258,6 @@
     "precipitation_t12": 0.8776530027389526,
     "lat": 32.45,
     "lon": 35.35
-  },
-  {
-    "cell_id": 8,
-    "timestamp": "2024-12-27 00:00:00.000000",
-    "precipitation_t1": 0.0,
-    "precipitation_t3": 0.0,
-    "precipitation_t6": 0.0919959545135498,
-    "precipitation_t12": 0.29582321643829346,
-    "lat": 32.45,
-    "lon": 35.4
-  },
-  {
-    "cell_id": 8,
-    "timestamp": "2024-12-27 01:00:00.000000",
-    "precipitation_t1": 0.0,
-    "precipitation_t3": 0.02345774881541729,
-    "precipitation_t6": 0.052252862602472305,
-    "precipitation_t12": 0.790851354598999,
-    "lat": 32.45,
-    "lon": 35.4
-  },
-  {
-    "cell_id": 8,
-    "timestamp": "2024-12-27 02:00:00.000000",
-    "precipitation_t1": 0.0,
-    "precipitation_t3": 0.05194688215851784,
-    "precipitation_t6": 0.07211747765541077,
-    "precipitation_t12": 0.9319334626197815,
-    "lat": 32.45,
-    "lon": 35.4
-  },
-  {
-    "cell_id": 8,
-    "timestamp": "2024-12-27 03:00:00.000000",
-    "precipitation_t1": 0.012484154663980007,
-    "precipitation_t3": 0.12550877034664154,
-    "precipitation_t6": 0.09990529716014862,
-    "precipitation_t12": 1.0457439422607422,
-    "lat": 32.45,
-    "lon": 35.4
-  },
-  {
-    "cell_id": 8,
-    "timestamp": "2024-12-27 04:00:00.000000",
-    "precipitation_t1": 0.0,
-    "precipitation_t3": 0.02830367721617222,
-    "precipitation_t6": 0.2611335217952728,
-    "precipitation_t12": 0.4617353081703186,
-    "lat": 32.45,
-    "lon": 35.4
   },
   {
     "cell_id": 8,
@@ -1841,56 +1441,6 @@
   },
   {
     "cell_id": 9,
-    "timestamp": "2024-12-27 00:00:00.000000",
-    "precipitation_t1": 0.0,
-    "precipitation_t3": 0.019225461408495903,
-    "precipitation_t6": 0.0987534150481224,
-    "precipitation_t12": 0.37682583928108215,
-    "lat": 32.45,
-    "lon": 35.45
-  },
-  {
-    "cell_id": 9,
-    "timestamp": "2024-12-27 01:00:00.000000",
-    "precipitation_t1": 0.0,
-    "precipitation_t3": 0.025973644107580185,
-    "precipitation_t6": 0.07313154637813568,
-    "precipitation_t12": 0.984606146812439,
-    "lat": 32.45,
-    "lon": 35.45
-  },
-  {
-    "cell_id": 9,
-    "timestamp": "2024-12-27 02:00:00.000000",
-    "precipitation_t1": 0.0,
-    "precipitation_t3": 0.016906708478927612,
-    "precipitation_t6": 0.11403217166662216,
-    "precipitation_t12": 1.192999005317688,
-    "lat": 32.45,
-    "lon": 35.45
-  },
-  {
-    "cell_id": 9,
-    "timestamp": "2024-12-27 03:00:00.000000",
-    "precipitation_t1": 0.0,
-    "precipitation_t3": 0.05109811946749687,
-    "precipitation_t6": 0.10132589936256409,
-    "precipitation_t12": 0.3847139775753021,
-    "lat": 32.45,
-    "lon": 35.45
-  },
-  {
-    "cell_id": 9,
-    "timestamp": "2024-12-27 04:00:00.000000",
-    "precipitation_t1": 0.0,
-    "precipitation_t3": 0.011712756007909775,
-    "precipitation_t6": 0.1582731306552887,
-    "precipitation_t12": 0.12281768769025803,
-    "lat": 32.45,
-    "lon": 35.45
-  },
-  {
-    "cell_id": 9,
     "timestamp": "2024-12-27 05:00:00.000000",
     "precipitation_t1": 0.0,
     "precipitation_t3": 0.0,
@@ -2068,56 +1618,6 @@
     "precipitation_t12": 0.5063124895095825,
     "lat": 32.45,
     "lon": 35.45
-  },
-  {
-    "cell_id": 10,
-    "timestamp": "2024-12-27 00:00:00.000000",
-    "precipitation_t1": 0.05916653200984001,
-    "precipitation_t3": 0.07471494376659393,
-    "precipitation_t6": 0.2094607949256897,
-    "precipitation_t12": 0.22718100249767303,
-    "lat": 32.5,
-    "lon": 35.05
-  },
-  {
-    "cell_id": 10,
-    "timestamp": "2024-12-27 01:00:00.000000",
-    "precipitation_t1": 0.05253147706389427,
-    "precipitation_t3": 0.15101437270641327,
-    "precipitation_t6": 0.24228724837303162,
-    "precipitation_t12": 0.7906069159507751,
-    "lat": 32.5,
-    "lon": 35.05
-  },
-  {
-    "cell_id": 10,
-    "timestamp": "2024-12-27 02:00:00.000000",
-    "precipitation_t1": 0.06660804152488708,
-    "precipitation_t3": 0.2235032021999359,
-    "precipitation_t6": 0.32680588960647583,
-    "precipitation_t12": 1.1353163719177246,
-    "lat": 32.5,
-    "lon": 35.05
-  },
-  {
-    "cell_id": 10,
-    "timestamp": "2024-12-27 03:00:00.000000",
-    "precipitation_t1": 0.055475715547800064,
-    "precipitation_t3": 0.993828296661377,
-    "precipitation_t6": 0.4771300256252289,
-    "precipitation_t12": 2.3992180824279785,
-    "lat": 32.5,
-    "lon": 35.05
-  },
-  {
-    "cell_id": 10,
-    "timestamp": "2024-12-27 04:00:00.000000",
-    "precipitation_t1": 0.043342895805835724,
-    "precipitation_t3": 0.17837128043174744,
-    "precipitation_t6": 0.7160964012145996,
-    "precipitation_t12": 2.193906784057617,
-    "lat": 32.5,
-    "lon": 35.05
   },
   {
     "cell_id": 10,
@@ -2301,56 +1801,6 @@
   },
   {
     "cell_id": 11,
-    "timestamp": "2024-12-27 00:00:00.000000",
-    "precipitation_t1": 0.031245537102222443,
-    "precipitation_t3": 0.08395633101463318,
-    "precipitation_t6": 0.11981168389320374,
-    "precipitation_t12": 0.30590003728866577,
-    "lat": 32.5,
-    "lon": 35.1
-  },
-  {
-    "cell_id": 11,
-    "timestamp": "2024-12-27 01:00:00.000000",
-    "precipitation_t1": 0.05423104763031006,
-    "precipitation_t3": 0.1341872662305832,
-    "precipitation_t6": 0.18812093138694763,
-    "precipitation_t12": 0.7033279538154602,
-    "lat": 32.5,
-    "lon": 35.1
-  },
-  {
-    "cell_id": 11,
-    "timestamp": "2024-12-27 02:00:00.000000",
-    "precipitation_t1": 0.047980453819036484,
-    "precipitation_t3": 0.18265342712402344,
-    "precipitation_t6": 0.40801212191581726,
-    "precipitation_t12": 1.0309028625488281,
-    "lat": 32.5,
-    "lon": 35.1
-  },
-  {
-    "cell_id": 11,
-    "timestamp": "2024-12-27 03:00:00.000000",
-    "precipitation_t1": 0.06067856401205063,
-    "precipitation_t3": 0.323314368724823,
-    "precipitation_t6": 0.29789742827415466,
-    "precipitation_t12": 1.7797847986221313,
-    "lat": 32.5,
-    "lon": 35.1
-  },
-  {
-    "cell_id": 11,
-    "timestamp": "2024-12-27 04:00:00.000000",
-    "precipitation_t1": 0.0203023049980402,
-    "precipitation_t3": 0.12433334439992905,
-    "precipitation_t6": 0.32761645317077637,
-    "precipitation_t12": 1.1499654054641724,
-    "lat": 32.5,
-    "lon": 35.1
-  },
-  {
-    "cell_id": 11,
     "timestamp": "2024-12-27 05:00:00.000000",
     "precipitation_t1": 0.018360724672675133,
     "precipitation_t3": 0.02117237076163292,
@@ -2528,56 +1978,6 @@
     "precipitation_t12": 0.9687584042549133,
     "lat": 32.5,
     "lon": 35.1
-  },
-  {
-    "cell_id": 12,
-    "timestamp": "2024-12-27 00:00:00.000000",
-    "precipitation_t1": 0.021073246374726295,
-    "precipitation_t3": 0.038576677441596985,
-    "precipitation_t6": 0.16893772780895233,
-    "precipitation_t12": 0.24002307653427124,
-    "lat": 32.5,
-    "lon": 35.15
-  },
-  {
-    "cell_id": 12,
-    "timestamp": "2024-12-27 01:00:00.000000",
-    "precipitation_t1": 0.045627202838659286,
-    "precipitation_t3": 0.06676746159791946,
-    "precipitation_t6": 0.14645136892795563,
-    "precipitation_t12": 0.6756439208984375,
-    "lat": 32.5,
-    "lon": 35.15
-  },
-  {
-    "cell_id": 12,
-    "timestamp": "2024-12-27 02:00:00.000000",
-    "precipitation_t1": 0.03295956924557686,
-    "precipitation_t3": 0.14338228106498718,
-    "precipitation_t6": 0.3182942569255829,
-    "precipitation_t12": 0.9202288389205933,
-    "lat": 32.5,
-    "lon": 35.15
-  },
-  {
-    "cell_id": 12,
-    "timestamp": "2024-12-27 03:00:00.000000",
-    "precipitation_t1": 0.03926924988627434,
-    "precipitation_t3": 0.181475430727005,
-    "precipitation_t6": 0.24563701450824738,
-    "precipitation_t12": 1.4708993434906006,
-    "lat": 32.5,
-    "lon": 35.15
-  },
-  {
-    "cell_id": 12,
-    "timestamp": "2024-12-27 04:00:00.000000",
-    "precipitation_t1": 0.013415773399174213,
-    "precipitation_t3": 0.10120496898889542,
-    "precipitation_t6": 0.5280857682228088,
-    "precipitation_t12": 1.0482267141342163,
-    "lat": 32.5,
-    "lon": 35.15
   },
   {
     "cell_id": 12,
@@ -2761,56 +2161,6 @@
   },
   {
     "cell_id": 13,
-    "timestamp": "2024-12-27 00:00:00.000000",
-    "precipitation_t1": 0.020442161709070206,
-    "precipitation_t3": 0.06955624371767044,
-    "precipitation_t6": 0.12245684862136841,
-    "precipitation_t12": 0.23413865268230438,
-    "lat": 32.5,
-    "lon": 35.2
-  },
-  {
-    "cell_id": 13,
-    "timestamp": "2024-12-27 01:00:00.000000",
-    "precipitation_t1": 0.02455812506377697,
-    "precipitation_t3": 0.06160018965601921,
-    "precipitation_t6": 0.10600870102643967,
-    "precipitation_t12": 0.7463399767875671,
-    "lat": 32.5,
-    "lon": 35.2
-  },
-  {
-    "cell_id": 13,
-    "timestamp": "2024-12-27 02:00:00.000000",
-    "precipitation_t1": 0.030436422675848007,
-    "precipitation_t3": 0.13821551203727722,
-    "precipitation_t6": 0.2595508098602295,
-    "precipitation_t12": 0.9888332486152649,
-    "lat": 32.5,
-    "lon": 35.2
-  },
-  {
-    "cell_id": 13,
-    "timestamp": "2024-12-27 03:00:00.000000",
-    "precipitation_t1": 0.04549051448702812,
-    "precipitation_t3": 0.3200802206993103,
-    "precipitation_t6": 0.31017956137657166,
-    "precipitation_t12": 1.6418039798736572,
-    "lat": 32.5,
-    "lon": 35.2
-  },
-  {
-    "cell_id": 13,
-    "timestamp": "2024-12-27 04:00:00.000000",
-    "precipitation_t1": 0.029981093481183052,
-    "precipitation_t3": 0.14195679128170013,
-    "precipitation_t6": 0.5392888784408569,
-    "precipitation_t12": 1.7749110460281372,
-    "lat": 32.5,
-    "lon": 35.2
-  },
-  {
-    "cell_id": 13,
     "timestamp": "2024-12-27 05:00:00.000000",
     "precipitation_t1": 0.031411219388246536,
     "precipitation_t3": 0.03084961511194706,
@@ -2988,56 +2338,6 @@
     "precipitation_t12": 0.9667187333106995,
     "lat": 32.5,
     "lon": 35.2
-  },
-  {
-    "cell_id": 14,
-    "timestamp": "2024-12-27 00:00:00.000000",
-    "precipitation_t1": 0.02194303087890148,
-    "precipitation_t3": 0.06477052718400955,
-    "precipitation_t6": 0.23045752942562103,
-    "precipitation_t12": 0.21516506373882294,
-    "lat": 32.5,
-    "lon": 35.25
-  },
-  {
-    "cell_id": 14,
-    "timestamp": "2024-12-27 01:00:00.000000",
-    "precipitation_t1": 0.021683866158127785,
-    "precipitation_t3": 0.0719919428229332,
-    "precipitation_t6": 0.19879132509231567,
-    "precipitation_t12": 0.3806585371494293,
-    "lat": 32.5,
-    "lon": 35.25
-  },
-  {
-    "cell_id": 14,
-    "timestamp": "2024-12-27 02:00:00.000000",
-    "precipitation_t1": 0.02426312305033207,
-    "precipitation_t3": 0.0867670476436615,
-    "precipitation_t6": 0.157617449760437,
-    "precipitation_t12": 0.9720374345779419,
-    "lat": 32.5,
-    "lon": 35.25
-  },
-  {
-    "cell_id": 14,
-    "timestamp": "2024-12-27 03:00:00.000000",
-    "precipitation_t1": 0.02731681987643242,
-    "precipitation_t3": 0.16706818342208862,
-    "precipitation_t6": 0.10033084452152252,
-    "precipitation_t12": 1.0745842456817627,
-    "lat": 32.5,
-    "lon": 35.25
-  },
-  {
-    "cell_id": 14,
-    "timestamp": "2024-12-27 04:00:00.000000",
-    "precipitation_t1": 0.0,
-    "precipitation_t3": 0.06974275410175323,
-    "precipitation_t6": 0.1610173135995865,
-    "precipitation_t12": 0.5262222290039062,
-    "lat": 32.5,
-    "lon": 35.25
   },
   {
     "cell_id": 14,
@@ -3221,56 +2521,6 @@
   },
   {
     "cell_id": 15,
-    "timestamp": "2024-12-27 00:00:00.000000",
-    "precipitation_t1": 0.0,
-    "precipitation_t3": 0.011043657548725605,
-    "precipitation_t6": 0.06433454155921936,
-    "precipitation_t12": 0.3739694654941559,
-    "lat": 32.5,
-    "lon": 35.3
-  },
-  {
-    "cell_id": 15,
-    "timestamp": "2024-12-27 01:00:00.000000",
-    "precipitation_t1": 0.01092899963259697,
-    "precipitation_t3": 0.014287276193499565,
-    "precipitation_t6": 0.04972100630402565,
-    "precipitation_t12": 0.4945029616355896,
-    "lat": 32.5,
-    "lon": 35.3
-  },
-  {
-    "cell_id": 15,
-    "timestamp": "2024-12-27 02:00:00.000000",
-    "precipitation_t1": 0.0,
-    "precipitation_t3": 0.04364616051316261,
-    "precipitation_t6": 0.05903017893433571,
-    "precipitation_t12": 0.9058523774147034,
-    "lat": 32.5,
-    "lon": 35.3
-  },
-  {
-    "cell_id": 15,
-    "timestamp": "2024-12-27 03:00:00.000000",
-    "precipitation_t1": 0.017513861879706383,
-    "precipitation_t3": 0.2212708443403244,
-    "precipitation_t6": 0.14301219582557678,
-    "precipitation_t12": 1.134734869003296,
-    "lat": 32.5,
-    "lon": 35.3
-  },
-  {
-    "cell_id": 15,
-    "timestamp": "2024-12-27 04:00:00.000000",
-    "precipitation_t1": 0.0,
-    "precipitation_t3": 0.05447303503751755,
-    "precipitation_t6": 0.2626044452190399,
-    "precipitation_t12": 1.0180221796035767,
-    "lat": 32.5,
-    "lon": 35.3
-  },
-  {
-    "cell_id": 15,
     "timestamp": "2024-12-27 05:00:00.000000",
     "precipitation_t1": 0.016816377639770508,
     "precipitation_t3": 0.02496023289859295,
@@ -3448,56 +2698,6 @@
     "precipitation_t12": 1.3020447492599487,
     "lat": 32.5,
     "lon": 35.3
-  },
-  {
-    "cell_id": 16,
-    "timestamp": "2024-12-27 00:00:00.000000",
-    "precipitation_t1": 0.016870317980647087,
-    "precipitation_t3": 0.01907871477305889,
-    "precipitation_t6": 0.11570801585912704,
-    "precipitation_t12": 0.35259661078453064,
-    "lat": 32.5,
-    "lon": 35.35
-  },
-  {
-    "cell_id": 16,
-    "timestamp": "2024-12-27 01:00:00.000000",
-    "precipitation_t1": 0.027961192652583122,
-    "precipitation_t3": 0.025191374123096466,
-    "precipitation_t6": 0.10838514566421509,
-    "precipitation_t12": 0.9475888609886169,
-    "lat": 32.5,
-    "lon": 35.35
-  },
-  {
-    "cell_id": 16,
-    "timestamp": "2024-12-27 02:00:00.000000",
-    "precipitation_t1": 0.024505650624632835,
-    "precipitation_t3": 0.06734541058540344,
-    "precipitation_t6": 0.2079034298658371,
-    "precipitation_t12": 1.0313472747802734,
-    "lat": 32.5,
-    "lon": 35.35
-  },
-  {
-    "cell_id": 16,
-    "timestamp": "2024-12-27 03:00:00.000000",
-    "precipitation_t1": 0.029971951618790627,
-    "precipitation_t3": 0.27296513319015503,
-    "precipitation_t6": 0.10438412427902222,
-    "precipitation_t12": 1.2116416692733765,
-    "lat": 32.5,
-    "lon": 35.35
-  },
-  {
-    "cell_id": 16,
-    "timestamp": "2024-12-27 04:00:00.000000",
-    "precipitation_t1": 0.010727404616773129,
-    "precipitation_t3": 0.04080123081803322,
-    "precipitation_t6": 0.3561784327030182,
-    "precipitation_t12": 0.42152857780456543,
-    "lat": 32.5,
-    "lon": 35.35
   },
   {
     "cell_id": 16,
@@ -3681,56 +2881,6 @@
   },
   {
     "cell_id": 17,
-    "timestamp": "2024-12-27 00:00:00.000000",
-    "precipitation_t1": 0.0,
-    "precipitation_t3": 0.0,
-    "precipitation_t6": 0.0438140407204628,
-    "precipitation_t12": 0.1414811760187149,
-    "lat": 32.5,
-    "lon": 35.4
-  },
-  {
-    "cell_id": 17,
-    "timestamp": "2024-12-27 01:00:00.000000",
-    "precipitation_t1": 0.0,
-    "precipitation_t3": 0.01435247901827097,
-    "precipitation_t6": 0.05392411723732948,
-    "precipitation_t12": 0.24866275489330292,
-    "lat": 32.5,
-    "lon": 35.4
-  },
-  {
-    "cell_id": 17,
-    "timestamp": "2024-12-27 02:00:00.000000",
-    "precipitation_t1": 0.0,
-    "precipitation_t3": 0.020046435296535492,
-    "precipitation_t6": 0.11224641650915146,
-    "precipitation_t12": 1.0299619436264038,
-    "lat": 32.5,
-    "lon": 35.4
-  },
-  {
-    "cell_id": 17,
-    "timestamp": "2024-12-27 03:00:00.000000",
-    "precipitation_t1": 0.0,
-    "precipitation_t3": 0.0861055999994278,
-    "precipitation_t6": 0.0990273579955101,
-    "precipitation_t12": 0.9078156352043152,
-    "lat": 32.5,
-    "lon": 35.4
-  },
-  {
-    "cell_id": 17,
-    "timestamp": "2024-12-27 04:00:00.000000",
-    "precipitation_t1": 0.0,
-    "precipitation_t3": 0.020020805299282074,
-    "precipitation_t6": 0.17307469248771667,
-    "precipitation_t12": 0.5063412189483643,
-    "lat": 32.5,
-    "lon": 35.4
-  },
-  {
-    "cell_id": 17,
     "timestamp": "2024-12-27 05:00:00.000000",
     "precipitation_t1": 0.0,
     "precipitation_t3": 0.0,
@@ -3908,56 +3058,6 @@
     "precipitation_t12": 1.3338931798934937,
     "lat": 32.5,
     "lon": 35.4
-  },
-  {
-    "cell_id": 18,
-    "timestamp": "2024-12-27 00:00:00.000000",
-    "precipitation_t1": 0.0,
-    "precipitation_t3": 0.03851306438446045,
-    "precipitation_t6": 0.0830395445227623,
-    "precipitation_t12": 0.16727310419082642,
-    "lat": 32.5,
-    "lon": 35.45
-  },
-  {
-    "cell_id": 18,
-    "timestamp": "2024-12-27 01:00:00.000000",
-    "precipitation_t1": 0.030376702547073364,
-    "precipitation_t3": 0.02979549951851368,
-    "precipitation_t6": 0.07710602134466171,
-    "precipitation_t12": 0.6125898957252502,
-    "lat": 32.5,
-    "lon": 35.45
-  },
-  {
-    "cell_id": 18,
-    "timestamp": "2024-12-27 02:00:00.000000",
-    "precipitation_t1": 0.010918780229985714,
-    "precipitation_t3": 0.01785123720765114,
-    "precipitation_t6": 0.10915115475654602,
-    "precipitation_t12": 1.3887290954589844,
-    "lat": 32.5,
-    "lon": 35.45
-  },
-  {
-    "cell_id": 18,
-    "timestamp": "2024-12-27 03:00:00.000000",
-    "precipitation_t1": 0.015457365661859512,
-    "precipitation_t3": 0.2246568650007248,
-    "precipitation_t6": 0.28202784061431885,
-    "precipitation_t12": 0.9073302149772644,
-    "lat": 32.5,
-    "lon": 35.45
-  },
-  {
-    "cell_id": 18,
-    "timestamp": "2024-12-27 04:00:00.000000",
-    "precipitation_t1": 0.016849655658006668,
-    "precipitation_t3": 0.04026460647583008,
-    "precipitation_t6": 0.3247026801109314,
-    "precipitation_t12": 0.7221027612686157,
-    "lat": 32.5,
-    "lon": 35.45
   },
   {
     "cell_id": 18,
@@ -4141,56 +3241,6 @@
   },
   {
     "cell_id": 19,
-    "timestamp": "2024-12-27 00:00:00.000000",
-    "precipitation_t1": 0.027575956657528877,
-    "precipitation_t3": 0.07175958901643753,
-    "precipitation_t6": 0.17230485379695892,
-    "precipitation_t12": 0.3701504170894623,
-    "lat": 32.55,
-    "lon": 35.05
-  },
-  {
-    "cell_id": 19,
-    "timestamp": "2024-12-27 01:00:00.000000",
-    "precipitation_t1": 0.07100924849510193,
-    "precipitation_t3": 0.061191823333501816,
-    "precipitation_t6": 0.1361904740333557,
-    "precipitation_t12": 0.7888046503067017,
-    "lat": 32.55,
-    "lon": 35.05
-  },
-  {
-    "cell_id": 19,
-    "timestamp": "2024-12-27 02:00:00.000000",
-    "precipitation_t1": 0.06708768010139465,
-    "precipitation_t3": 0.20093244314193726,
-    "precipitation_t6": 0.25757327675819397,
-    "precipitation_t12": 1.3615822792053223,
-    "lat": 32.55,
-    "lon": 35.05
-  },
-  {
-    "cell_id": 19,
-    "timestamp": "2024-12-27 03:00:00.000000",
-    "precipitation_t1": 0.06805278360843658,
-    "precipitation_t3": 0.7502759695053101,
-    "precipitation_t6": 0.42574766278266907,
-    "precipitation_t12": 2.239853858947754,
-    "lat": 32.55,
-    "lon": 35.05
-  },
-  {
-    "cell_id": 19,
-    "timestamp": "2024-12-27 04:00:00.000000",
-    "precipitation_t1": 0.030666809529066086,
-    "precipitation_t3": 0.2042304277420044,
-    "precipitation_t6": 0.6240031123161316,
-    "precipitation_t12": 1.4654827117919922,
-    "lat": 32.55,
-    "lon": 35.05
-  },
-  {
-    "cell_id": 19,
     "timestamp": "2024-12-27 05:00:00.000000",
     "precipitation_t1": 0.02911519818007946,
     "precipitation_t3": 0.05256292223930359,
@@ -4368,56 +3418,6 @@
     "precipitation_t12": 1.7039196491241455,
     "lat": 32.55,
     "lon": 35.05
-  },
-  {
-    "cell_id": 20,
-    "timestamp": "2024-12-27 00:00:00.000000",
-    "precipitation_t1": 0.023020680993795395,
-    "precipitation_t3": 0.04664976894855499,
-    "precipitation_t6": 0.13178318738937378,
-    "precipitation_t12": 0.2471376657485962,
-    "lat": 32.55,
-    "lon": 35.1
-  },
-  {
-    "cell_id": 20,
-    "timestamp": "2024-12-27 01:00:00.000000",
-    "precipitation_t1": 0.0373518243432045,
-    "precipitation_t3": 0.062481556087732315,
-    "precipitation_t6": 0.14357531070709229,
-    "precipitation_t12": 0.8785226345062256,
-    "lat": 32.55,
-    "lon": 35.1
-  },
-  {
-    "cell_id": 20,
-    "timestamp": "2024-12-27 02:00:00.000000",
-    "precipitation_t1": 0.0490567646920681,
-    "precipitation_t3": 0.12198074162006378,
-    "precipitation_t6": 0.3146810531616211,
-    "precipitation_t12": 1.0171308517456055,
-    "lat": 32.55,
-    "lon": 35.1
-  },
-  {
-    "cell_id": 20,
-    "timestamp": "2024-12-27 03:00:00.000000",
-    "precipitation_t1": 0.05142087861895561,
-    "precipitation_t3": 0.3143295347690582,
-    "precipitation_t6": 0.24202245473861694,
-    "precipitation_t12": 1.6323357820510864,
-    "lat": 32.55,
-    "lon": 35.1
-  },
-  {
-    "cell_id": 20,
-    "timestamp": "2024-12-27 04:00:00.000000",
-    "precipitation_t1": 0.017271101474761963,
-    "precipitation_t3": 0.09580310434103012,
-    "precipitation_t6": 0.44323113560676575,
-    "precipitation_t12": 1.1694812774658203,
-    "lat": 32.55,
-    "lon": 35.1
   },
   {
     "cell_id": 20,
@@ -4601,56 +3601,6 @@
   },
   {
     "cell_id": 21,
-    "timestamp": "2024-12-27 00:00:00.000000",
-    "precipitation_t1": 0.036948759108781815,
-    "precipitation_t3": 0.048134688287973404,
-    "precipitation_t6": 0.12175960093736649,
-    "precipitation_t12": 0.23923340439796448,
-    "lat": 32.55,
-    "lon": 35.15
-  },
-  {
-    "cell_id": 21,
-    "timestamp": "2024-12-27 01:00:00.000000",
-    "precipitation_t1": 0.04745228588581085,
-    "precipitation_t3": 0.07841295748949051,
-    "precipitation_t6": 0.13082194328308105,
-    "precipitation_t12": 0.7837564945220947,
-    "lat": 32.55,
-    "lon": 35.15
-  },
-  {
-    "cell_id": 21,
-    "timestamp": "2024-12-27 02:00:00.000000",
-    "precipitation_t1": 0.04347966983914375,
-    "precipitation_t3": 0.10931838303804398,
-    "precipitation_t6": 0.15471027791500092,
-    "precipitation_t12": 1.01260507106781,
-    "lat": 32.55,
-    "lon": 35.15
-  },
-  {
-    "cell_id": 21,
-    "timestamp": "2024-12-27 03:00:00.000000",
-    "precipitation_t1": 0.024097492918372154,
-    "precipitation_t3": 0.3381401598453522,
-    "precipitation_t6": 0.18481512367725372,
-    "precipitation_t12": 1.6501920223236084,
-    "lat": 32.55,
-    "lon": 35.15
-  },
-  {
-    "cell_id": 21,
-    "timestamp": "2024-12-27 04:00:00.000000",
-    "precipitation_t1": 0.015877408906817436,
-    "precipitation_t3": 0.08529504388570786,
-    "precipitation_t6": 0.17332608997821808,
-    "precipitation_t12": 0.629833459854126,
-    "lat": 32.55,
-    "lon": 35.15
-  },
-  {
-    "cell_id": 21,
     "timestamp": "2024-12-27 05:00:00.000000",
     "precipitation_t1": 0.032458219677209854,
     "precipitation_t3": 0.010421570390462875,
@@ -4828,56 +3778,6 @@
     "precipitation_t12": 0.952873170375824,
     "lat": 32.55,
     "lon": 35.15
-  },
-  {
-    "cell_id": 22,
-    "timestamp": "2024-12-27 00:00:00.000000",
-    "precipitation_t1": 0.02717040851712227,
-    "precipitation_t3": 0.07088641077280045,
-    "precipitation_t6": 0.12447340041399002,
-    "precipitation_t12": 0.21900978684425354,
-    "lat": 32.55,
-    "lon": 35.2
-  },
-  {
-    "cell_id": 22,
-    "timestamp": "2024-12-27 01:00:00.000000",
-    "precipitation_t1": 0.05226646736264229,
-    "precipitation_t3": 0.082948699593544,
-    "precipitation_t6": 0.13179869949817657,
-    "precipitation_t12": 0.8151072263717651,
-    "lat": 32.55,
-    "lon": 35.2
-  },
-  {
-    "cell_id": 22,
-    "timestamp": "2024-12-27 02:00:00.000000",
-    "precipitation_t1": 0.05873987823724747,
-    "precipitation_t3": 0.11791616678237915,
-    "precipitation_t6": 0.2194409966468811,
-    "precipitation_t12": 1.0012810230255127,
-    "lat": 32.55,
-    "lon": 35.2
-  },
-  {
-    "cell_id": 22,
-    "timestamp": "2024-12-27 03:00:00.000000",
-    "precipitation_t1": 0.052886780351400375,
-    "precipitation_t3": 0.8561172485351562,
-    "precipitation_t6": 0.347186416387558,
-    "precipitation_t12": 1.9460197687149048,
-    "lat": 32.55,
-    "lon": 35.2
-  },
-  {
-    "cell_id": 22,
-    "timestamp": "2024-12-27 04:00:00.000000",
-    "precipitation_t1": 0.03811156004667282,
-    "precipitation_t3": 0.18253301084041595,
-    "precipitation_t6": 0.5035459399223328,
-    "precipitation_t12": 1.7442387342453003,
-    "lat": 32.55,
-    "lon": 35.2
   },
   {
     "cell_id": 22,
@@ -5061,56 +3961,6 @@
   },
   {
     "cell_id": 23,
-    "timestamp": "2024-12-27 00:00:00.000000",
-    "precipitation_t1": 0.01286823395639658,
-    "precipitation_t3": 0.011670619249343872,
-    "precipitation_t6": 0.0971185490489006,
-    "precipitation_t12": 0.37055712938308716,
-    "lat": 32.55,
-    "lon": 35.25
-  },
-  {
-    "cell_id": 23,
-    "timestamp": "2024-12-27 01:00:00.000000",
-    "precipitation_t1": 0.011336558498442173,
-    "precipitation_t3": 0.024207253009080887,
-    "precipitation_t6": 0.09223020076751709,
-    "precipitation_t12": 0.5374435782432556,
-    "lat": 32.55,
-    "lon": 35.25
-  },
-  {
-    "cell_id": 23,
-    "timestamp": "2024-12-27 02:00:00.000000",
-    "precipitation_t1": 0.0,
-    "precipitation_t3": 0.054084766656160355,
-    "precipitation_t6": 0.08982423692941666,
-    "precipitation_t12": 1.2481597661972046,
-    "lat": 32.55,
-    "lon": 35.25
-  },
-  {
-    "cell_id": 23,
-    "timestamp": "2024-12-27 03:00:00.000000",
-    "precipitation_t1": 0.010380074381828308,
-    "precipitation_t3": 0.08744798600673676,
-    "precipitation_t6": 0.13444118201732635,
-    "precipitation_t12": 1.2897347211837769,
-    "lat": 32.55,
-    "lon": 35.25
-  },
-  {
-    "cell_id": 23,
-    "timestamp": "2024-12-27 04:00:00.000000",
-    "precipitation_t1": 0.0,
-    "precipitation_t3": 0.04993784427642822,
-    "precipitation_t6": 0.20646722614765167,
-    "precipitation_t12": 0.49161332845687866,
-    "lat": 32.55,
-    "lon": 35.25
-  },
-  {
-    "cell_id": 23,
     "timestamp": "2024-12-27 05:00:00.000000",
     "precipitation_t1": 0.0,
     "precipitation_t3": 0.0,
@@ -5288,56 +4138,6 @@
     "precipitation_t12": 1.152242660522461,
     "lat": 32.55,
     "lon": 35.25
-  },
-  {
-    "cell_id": 24,
-    "timestamp": "2024-12-27 00:00:00.000000",
-    "precipitation_t1": 0.0,
-    "precipitation_t3": 0.01509801484644413,
-    "precipitation_t6": 0.12111862748861313,
-    "precipitation_t12": 0.17028775811195374,
-    "lat": 32.55,
-    "lon": 35.3
-  },
-  {
-    "cell_id": 24,
-    "timestamp": "2024-12-27 01:00:00.000000",
-    "precipitation_t1": 0.0,
-    "precipitation_t3": 0.014567213132977486,
-    "precipitation_t6": 0.12252766638994217,
-    "precipitation_t12": 0.6521502137184143,
-    "lat": 32.55,
-    "lon": 35.3
-  },
-  {
-    "cell_id": 24,
-    "timestamp": "2024-12-27 02:00:00.000000",
-    "precipitation_t1": 0.011454367078840733,
-    "precipitation_t3": 0.041133251041173935,
-    "precipitation_t6": 0.09723490476608276,
-    "precipitation_t12": 0.7931426167488098,
-    "lat": 32.55,
-    "lon": 35.3
-  },
-  {
-    "cell_id": 24,
-    "timestamp": "2024-12-27 03:00:00.000000",
-    "precipitation_t1": 0.0,
-    "precipitation_t3": 0.12370758503675461,
-    "precipitation_t6": 0.08281180262565613,
-    "precipitation_t12": 1.014251708984375,
-    "lat": 32.55,
-    "lon": 35.3
-  },
-  {
-    "cell_id": 24,
-    "timestamp": "2024-12-27 04:00:00.000000",
-    "precipitation_t1": 0.0,
-    "precipitation_t3": 0.048597704619169235,
-    "precipitation_t6": 0.15508531033992767,
-    "precipitation_t12": 0.5332458019256592,
-    "lat": 32.55,
-    "lon": 35.3
   },
   {
     "cell_id": 24,
@@ -5521,56 +4321,6 @@
   },
   {
     "cell_id": 25,
-    "timestamp": "2024-12-27 00:00:00.000000",
-    "precipitation_t1": 0.0,
-    "precipitation_t3": 0.027956373989582062,
-    "precipitation_t6": 0.10660571604967117,
-    "precipitation_t12": 0.23265846073627472,
-    "lat": 32.55,
-    "lon": 35.35
-  },
-  {
-    "cell_id": 25,
-    "timestamp": "2024-12-27 01:00:00.000000",
-    "precipitation_t1": 0.0,
-    "precipitation_t3": 0.012521069496870041,
-    "precipitation_t6": 0.09014609456062317,
-    "precipitation_t12": 0.528545081615448,
-    "lat": 32.55,
-    "lon": 35.35
-  },
-  {
-    "cell_id": 25,
-    "timestamp": "2024-12-27 02:00:00.000000",
-    "precipitation_t1": 0.0,
-    "precipitation_t3": 0.01863986626267433,
-    "precipitation_t6": 0.06939877569675446,
-    "precipitation_t12": 0.8197811245918274,
-    "lat": 32.55,
-    "lon": 35.35
-  },
-  {
-    "cell_id": 25,
-    "timestamp": "2024-12-27 03:00:00.000000",
-    "precipitation_t1": 0.010491063818335533,
-    "precipitation_t3": 0.06225772947072983,
-    "precipitation_t6": 0.08986714482307434,
-    "precipitation_t12": 0.5190313458442688,
-    "lat": 32.55,
-    "lon": 35.35
-  },
-  {
-    "cell_id": 25,
-    "timestamp": "2024-12-27 04:00:00.000000",
-    "precipitation_t1": 0.0,
-    "precipitation_t3": 0.04269716888666153,
-    "precipitation_t6": 0.15901347994804382,
-    "precipitation_t12": 0.5344275832176208,
-    "lat": 32.55,
-    "lon": 35.35
-  },
-  {
-    "cell_id": 25,
     "timestamp": "2024-12-27 05:00:00.000000",
     "precipitation_t1": 0.0,
     "precipitation_t3": 0.0,
@@ -5748,56 +4498,6 @@
     "precipitation_t12": 1.2424757480621338,
     "lat": 32.55,
     "lon": 35.35
-  },
-  {
-    "cell_id": 26,
-    "timestamp": "2024-12-27 00:00:00.000000",
-    "precipitation_t1": 0.0,
-    "precipitation_t3": 0.0,
-    "precipitation_t6": 0.06658166646957397,
-    "precipitation_t12": 0.1632947027683258,
-    "lat": 32.55,
-    "lon": 35.4
-  },
-  {
-    "cell_id": 26,
-    "timestamp": "2024-12-27 01:00:00.000000",
-    "precipitation_t1": 0.0,
-    "precipitation_t3": 0.012529999017715454,
-    "precipitation_t6": 0.054904110729694366,
-    "precipitation_t12": 0.18011941015720367,
-    "lat": 32.55,
-    "lon": 35.4
-  },
-  {
-    "cell_id": 26,
-    "timestamp": "2024-12-27 02:00:00.000000",
-    "precipitation_t1": 0.0,
-    "precipitation_t3": 0.01258044969290495,
-    "precipitation_t6": 0.06558119505643845,
-    "precipitation_t12": 0.9053617715835571,
-    "lat": 32.55,
-    "lon": 35.4
-  },
-  {
-    "cell_id": 26,
-    "timestamp": "2024-12-27 03:00:00.000000",
-    "precipitation_t1": 0.0,
-    "precipitation_t3": 0.03384564816951752,
-    "precipitation_t6": 0.051385484635829926,
-    "precipitation_t12": 0.2591940760612488,
-    "lat": 32.55,
-    "lon": 35.4
-  },
-  {
-    "cell_id": 26,
-    "timestamp": "2024-12-27 04:00:00.000000",
-    "precipitation_t1": 0.0,
-    "precipitation_t3": 0.0,
-    "precipitation_t6": 0.0906105563044548,
-    "precipitation_t12": 0.21329273283481598,
-    "lat": 32.55,
-    "lon": 35.4
   },
   {
     "cell_id": 26,
@@ -5981,56 +4681,6 @@
   },
   {
     "cell_id": 27,
-    "timestamp": "2024-12-27 00:00:00.000000",
-    "precipitation_t1": 0.0,
-    "precipitation_t3": 0.028921136632561684,
-    "precipitation_t6": 0.08601746708154678,
-    "precipitation_t12": 0.1941097229719162,
-    "lat": 32.55,
-    "lon": 35.45
-  },
-  {
-    "cell_id": 27,
-    "timestamp": "2024-12-27 01:00:00.000000",
-    "precipitation_t1": 0.011629100888967514,
-    "precipitation_t3": 0.029145771637558937,
-    "precipitation_t6": 0.06361022591590881,
-    "precipitation_t12": 0.4781518280506134,
-    "lat": 32.55,
-    "lon": 35.45
-  },
-  {
-    "cell_id": 27,
-    "timestamp": "2024-12-27 02:00:00.000000",
-    "precipitation_t1": 0.010301269590854645,
-    "precipitation_t3": 0.05074074864387512,
-    "precipitation_t6": 0.09368269890546799,
-    "precipitation_t12": 0.8247601389884949,
-    "lat": 32.55,
-    "lon": 35.45
-  },
-  {
-    "cell_id": 27,
-    "timestamp": "2024-12-27 03:00:00.000000",
-    "precipitation_t1": 0.03171692416071892,
-    "precipitation_t3": 0.19449633359909058,
-    "precipitation_t6": 0.18931615352630615,
-    "precipitation_t12": 0.9485029578208923,
-    "lat": 32.55,
-    "lon": 35.45
-  },
-  {
-    "cell_id": 27,
-    "timestamp": "2024-12-27 04:00:00.000000",
-    "precipitation_t1": 0.016194863244891167,
-    "precipitation_t3": 0.05383465811610222,
-    "precipitation_t6": 0.17400577664375305,
-    "precipitation_t12": 0.8524588346481323,
-    "lat": 32.55,
-    "lon": 35.45
-  },
-  {
-    "cell_id": 27,
     "timestamp": "2024-12-27 05:00:00.000000",
     "precipitation_t1": 0.01387462392449379,
     "precipitation_t3": 0.08013410121202469,
@@ -6208,56 +4858,6 @@
     "precipitation_t12": 1.243849515914917,
     "lat": 32.55,
     "lon": 35.45
-  },
-  {
-    "cell_id": 28,
-    "timestamp": "2024-12-27 00:00:00.000000",
-    "precipitation_t1": 0.05949825420975685,
-    "precipitation_t3": 0.08845093846321106,
-    "precipitation_t6": 0.20584340393543243,
-    "precipitation_t12": 0.332689493894577,
-    "lat": 32.6,
-    "lon": 35.05
-  },
-  {
-    "cell_id": 28,
-    "timestamp": "2024-12-27 01:00:00.000000",
-    "precipitation_t1": 0.05102287232875824,
-    "precipitation_t3": 0.08197911083698273,
-    "precipitation_t6": 0.30434277653694153,
-    "precipitation_t12": 0.7431929111480713,
-    "lat": 32.6,
-    "lon": 35.05
-  },
-  {
-    "cell_id": 28,
-    "timestamp": "2024-12-27 02:00:00.000000",
-    "precipitation_t1": 0.08132895082235336,
-    "precipitation_t3": 0.24138575792312622,
-    "precipitation_t6": 0.31698372960090637,
-    "precipitation_t12": 1.3025423288345337,
-    "lat": 32.6,
-    "lon": 35.05
-  },
-  {
-    "cell_id": 28,
-    "timestamp": "2024-12-27 03:00:00.000000",
-    "precipitation_t1": 0.06826569885015488,
-    "precipitation_t3": 1.2190673351287842,
-    "precipitation_t6": 0.9469529390335083,
-    "precipitation_t12": 2.0573441982269287,
-    "lat": 32.6,
-    "lon": 35.05
-  },
-  {
-    "cell_id": 28,
-    "timestamp": "2024-12-27 04:00:00.000000",
-    "precipitation_t1": 0.03279324620962143,
-    "precipitation_t3": 0.21049068868160248,
-    "precipitation_t6": 0.5134075284004211,
-    "precipitation_t12": 2.1050243377685547,
-    "lat": 32.6,
-    "lon": 35.05
   },
   {
     "cell_id": 28,
@@ -6441,56 +5041,6 @@
   },
   {
     "cell_id": 29,
-    "timestamp": "2024-12-27 00:00:00.000000",
-    "precipitation_t1": 0.016398729756474495,
-    "precipitation_t3": 0.04293018952012062,
-    "precipitation_t6": 0.08524369448423386,
-    "precipitation_t12": 0.31265005469322205,
-    "lat": 32.6,
-    "lon": 35.1
-  },
-  {
-    "cell_id": 29,
-    "timestamp": "2024-12-27 01:00:00.000000",
-    "precipitation_t1": 0.02508825622498989,
-    "precipitation_t3": 0.04668208956718445,
-    "precipitation_t6": 0.09383173286914825,
-    "precipitation_t12": 0.7733754515647888,
-    "lat": 32.6,
-    "lon": 35.1
-  },
-  {
-    "cell_id": 29,
-    "timestamp": "2024-12-27 02:00:00.000000",
-    "precipitation_t1": 0.02691817656159401,
-    "precipitation_t3": 0.06930935382843018,
-    "precipitation_t6": 0.14211083948612213,
-    "precipitation_t12": 1.1386899948120117,
-    "lat": 32.6,
-    "lon": 35.1
-  },
-  {
-    "cell_id": 29,
-    "timestamp": "2024-12-27 03:00:00.000000",
-    "precipitation_t1": 0.050816841423511505,
-    "precipitation_t3": 0.19128255546092987,
-    "precipitation_t6": 0.2251664698123932,
-    "precipitation_t12": 2.424586772918701,
-    "lat": 32.6,
-    "lon": 35.1
-  },
-  {
-    "cell_id": 29,
-    "timestamp": "2024-12-27 04:00:00.000000",
-    "precipitation_t1": 0.013729814440011978,
-    "precipitation_t3": 0.12052792310714722,
-    "precipitation_t6": 0.3815422058105469,
-    "precipitation_t12": 1.3621914386749268,
-    "lat": 32.6,
-    "lon": 35.1
-  },
-  {
-    "cell_id": 29,
     "timestamp": "2024-12-27 05:00:00.000000",
     "precipitation_t1": 0.01876330003142357,
     "precipitation_t3": 0.023847147822380066,
@@ -6668,56 +5218,6 @@
     "precipitation_t12": 1.7557296752929688,
     "lat": 32.6,
     "lon": 35.1
-  },
-  {
-    "cell_id": 30,
-    "timestamp": "2024-12-27 00:00:00.000000",
-    "precipitation_t1": 0.01841844990849495,
-    "precipitation_t3": 0.0598912350833416,
-    "precipitation_t6": 0.12939128279685974,
-    "precipitation_t12": 0.2746901214122772,
-    "lat": 32.6,
-    "lon": 35.15
-  },
-  {
-    "cell_id": 30,
-    "timestamp": "2024-12-27 01:00:00.000000",
-    "precipitation_t1": 0.034280937165021896,
-    "precipitation_t3": 0.0483752079308033,
-    "precipitation_t6": 0.1271834820508957,
-    "precipitation_t12": 0.3985450863838196,
-    "lat": 32.6,
-    "lon": 35.15
-  },
-  {
-    "cell_id": 30,
-    "timestamp": "2024-12-27 02:00:00.000000",
-    "precipitation_t1": 0.0324741005897522,
-    "precipitation_t3": 0.09940626472234726,
-    "precipitation_t6": 0.17685960233211517,
-    "precipitation_t12": 1.1547889709472656,
-    "lat": 32.6,
-    "lon": 35.15
-  },
-  {
-    "cell_id": 30,
-    "timestamp": "2024-12-27 03:00:00.000000",
-    "precipitation_t1": 0.06290265172719955,
-    "precipitation_t3": 0.32899078726768494,
-    "precipitation_t6": 0.20905812084674835,
-    "precipitation_t12": 1.7077641487121582,
-    "lat": 32.6,
-    "lon": 35.15
-  },
-  {
-    "cell_id": 30,
-    "timestamp": "2024-12-27 04:00:00.000000",
-    "precipitation_t1": 0.03725118562579155,
-    "precipitation_t3": 0.1472390741109848,
-    "precipitation_t6": 0.30240875482559204,
-    "precipitation_t12": 1.4847464561462402,
-    "lat": 32.6,
-    "lon": 35.15
   },
   {
     "cell_id": 30,
@@ -6901,56 +5401,6 @@
   },
   {
     "cell_id": 31,
-    "timestamp": "2024-12-27 00:00:00.000000",
-    "precipitation_t1": 0.013759857974946499,
-    "precipitation_t3": 0.06659162044525146,
-    "precipitation_t6": 0.11150724440813065,
-    "precipitation_t12": 0.2427835911512375,
-    "lat": 32.6,
-    "lon": 35.2
-  },
-  {
-    "cell_id": 31,
-    "timestamp": "2024-12-27 01:00:00.000000",
-    "precipitation_t1": 0.03805401176214218,
-    "precipitation_t3": 0.05480940639972687,
-    "precipitation_t6": 0.10549251735210419,
-    "precipitation_t12": 0.5680960416793823,
-    "lat": 32.6,
-    "lon": 35.2
-  },
-  {
-    "cell_id": 31,
-    "timestamp": "2024-12-27 02:00:00.000000",
-    "precipitation_t1": 0.03435605764389038,
-    "precipitation_t3": 0.10749548673629761,
-    "precipitation_t6": 0.132037952542305,
-    "precipitation_t12": 1.3276023864746094,
-    "lat": 32.6,
-    "lon": 35.2
-  },
-  {
-    "cell_id": 31,
-    "timestamp": "2024-12-27 03:00:00.000000",
-    "precipitation_t1": 0.049315646290779114,
-    "precipitation_t3": 0.31733712553977966,
-    "precipitation_t6": 0.21040047705173492,
-    "precipitation_t12": 1.6333564519882202,
-    "lat": 32.6,
-    "lon": 35.2
-  },
-  {
-    "cell_id": 31,
-    "timestamp": "2024-12-27 04:00:00.000000",
-    "precipitation_t1": 0.03152574971318245,
-    "precipitation_t3": 0.11867807060480118,
-    "precipitation_t6": 0.3360336422920227,
-    "precipitation_t12": 1.3982571363449097,
-    "lat": 32.6,
-    "lon": 35.2
-  },
-  {
-    "cell_id": 31,
     "timestamp": "2024-12-27 05:00:00.000000",
     "precipitation_t1": 0.03002185747027397,
     "precipitation_t3": 0.02174166403710842,
@@ -7128,56 +5578,6 @@
     "precipitation_t12": 1.7139703035354614,
     "lat": 32.6,
     "lon": 35.2
-  },
-  {
-    "cell_id": 32,
-    "timestamp": "2024-12-27 00:00:00.000000",
-    "precipitation_t1": 0.0,
-    "precipitation_t3": 0.05600636824965477,
-    "precipitation_t6": 0.11197895556688309,
-    "precipitation_t12": 0.25547945499420166,
-    "lat": 32.6,
-    "lon": 35.25
-  },
-  {
-    "cell_id": 32,
-    "timestamp": "2024-12-27 01:00:00.000000",
-    "precipitation_t1": 0.02164696529507637,
-    "precipitation_t3": 0.042591776698827744,
-    "precipitation_t6": 0.12135102599859238,
-    "precipitation_t12": 0.44831618666648865,
-    "lat": 32.6,
-    "lon": 35.25
-  },
-  {
-    "cell_id": 32,
-    "timestamp": "2024-12-27 02:00:00.000000",
-    "precipitation_t1": 0.029378006234765053,
-    "precipitation_t3": 0.09501174837350845,
-    "precipitation_t6": 0.18013662099838257,
-    "precipitation_t12": 0.9362413287162781,
-    "lat": 32.6,
-    "lon": 35.25
-  },
-  {
-    "cell_id": 32,
-    "timestamp": "2024-12-27 03:00:00.000000",
-    "precipitation_t1": 0.02543707750737667,
-    "precipitation_t3": 0.3058002293109894,
-    "precipitation_t6": 0.15280026197433472,
-    "precipitation_t12": 1.0504549741744995,
-    "lat": 32.6,
-    "lon": 35.25
-  },
-  {
-    "cell_id": 32,
-    "timestamp": "2024-12-27 04:00:00.000000",
-    "precipitation_t1": 0.04437531158328056,
-    "precipitation_t3": 0.083297498524189,
-    "precipitation_t6": 0.31833216547966003,
-    "precipitation_t12": 1.287258505821228,
-    "lat": 32.6,
-    "lon": 35.25
   },
   {
     "cell_id": 32,
@@ -7361,56 +5761,6 @@
   },
   {
     "cell_id": 33,
-    "timestamp": "2024-12-27 00:00:00.000000",
-    "precipitation_t1": 0.010841607116162777,
-    "precipitation_t3": 0.019051190465688705,
-    "precipitation_t6": 0.13352076709270477,
-    "precipitation_t12": 0.21271905303001404,
-    "lat": 32.6,
-    "lon": 35.3
-  },
-  {
-    "cell_id": 33,
-    "timestamp": "2024-12-27 01:00:00.000000",
-    "precipitation_t1": 0.0,
-    "precipitation_t3": 0.02880779840052128,
-    "precipitation_t6": 0.08865784108638763,
-    "precipitation_t12": 0.3197896182537079,
-    "lat": 32.6,
-    "lon": 35.3
-  },
-  {
-    "cell_id": 33,
-    "timestamp": "2024-12-27 02:00:00.000000",
-    "precipitation_t1": 0.0,
-    "precipitation_t3": 0.04048026725649834,
-    "precipitation_t6": 0.12261621654033661,
-    "precipitation_t12": 0.9876192808151245,
-    "lat": 32.6,
-    "lon": 35.3
-  },
-  {
-    "cell_id": 33,
-    "timestamp": "2024-12-27 03:00:00.000000",
-    "precipitation_t1": 0.030557354912161827,
-    "precipitation_t3": 0.09979990124702454,
-    "precipitation_t6": 0.13736122846603394,
-    "precipitation_t12": 1.1754456758499146,
-    "lat": 32.6,
-    "lon": 35.3
-  },
-  {
-    "cell_id": 33,
-    "timestamp": "2024-12-27 04:00:00.000000",
-    "precipitation_t1": 0.0,
-    "precipitation_t3": 0.03942069038748741,
-    "precipitation_t6": 0.150018110871315,
-    "precipitation_t12": 0.5678132772445679,
-    "lat": 32.6,
-    "lon": 35.3
-  },
-  {
-    "cell_id": 33,
     "timestamp": "2024-12-27 05:00:00.000000",
     "precipitation_t1": 0.014277319423854351,
     "precipitation_t3": 0.03447243571281433,
@@ -7588,56 +5938,6 @@
     "precipitation_t12": 1.8489956855773926,
     "lat": 32.6,
     "lon": 35.3
-  },
-  {
-    "cell_id": 34,
-    "timestamp": "2024-12-27 00:00:00.000000",
-    "precipitation_t1": 0.011007345281541348,
-    "precipitation_t3": 0.01248200610280037,
-    "precipitation_t6": 0.04929209128022194,
-    "precipitation_t12": 0.33453449606895447,
-    "lat": 32.6,
-    "lon": 35.35
-  },
-  {
-    "cell_id": 34,
-    "timestamp": "2024-12-27 01:00:00.000000",
-    "precipitation_t1": 0.0,
-    "precipitation_t3": 0.014821759425103664,
-    "precipitation_t6": 0.15299832820892334,
-    "precipitation_t12": 0.21619665622711182,
-    "lat": 32.6,
-    "lon": 35.35
-  },
-  {
-    "cell_id": 34,
-    "timestamp": "2024-12-27 02:00:00.000000",
-    "precipitation_t1": 0.0,
-    "precipitation_t3": 0.01573171280324459,
-    "precipitation_t6": 0.11458607017993927,
-    "precipitation_t12": 0.5043424963951111,
-    "lat": 32.6,
-    "lon": 35.35
-  },
-  {
-    "cell_id": 34,
-    "timestamp": "2024-12-27 03:00:00.000000",
-    "precipitation_t1": 0.026589548215270042,
-    "precipitation_t3": 0.07026326656341553,
-    "precipitation_t6": 0.15553250908851624,
-    "precipitation_t12": 0.5587801337242126,
-    "lat": 32.6,
-    "lon": 35.35
-  },
-  {
-    "cell_id": 34,
-    "timestamp": "2024-12-27 04:00:00.000000",
-    "precipitation_t1": 0.0,
-    "precipitation_t3": 0.10352595895528793,
-    "precipitation_t6": 0.24945509433746338,
-    "precipitation_t12": 0.7663826942443848,
-    "lat": 32.6,
-    "lon": 35.35
   },
   {
     "cell_id": 34,
@@ -7821,56 +6121,6 @@
   },
   {
     "cell_id": 35,
-    "timestamp": "2024-12-27 00:00:00.000000",
-    "precipitation_t1": 0.0,
-    "precipitation_t3": 0.027216836810112,
-    "precipitation_t6": 0.0668606385588646,
-    "precipitation_t12": 0.13186465203762054,
-    "lat": 32.6,
-    "lon": 35.4
-  },
-  {
-    "cell_id": 35,
-    "timestamp": "2024-12-27 01:00:00.000000",
-    "precipitation_t1": 0.0,
-    "precipitation_t3": 0.021102899685502052,
-    "precipitation_t6": 0.06628929823637009,
-    "precipitation_t12": 0.1897388994693756,
-    "lat": 32.6,
-    "lon": 35.4
-  },
-  {
-    "cell_id": 35,
-    "timestamp": "2024-12-27 02:00:00.000000",
-    "precipitation_t1": 0.0,
-    "precipitation_t3": 0.016573933884501457,
-    "precipitation_t6": 0.1309720128774643,
-    "precipitation_t12": 0.8045915365219116,
-    "lat": 32.6,
-    "lon": 35.4
-  },
-  {
-    "cell_id": 35,
-    "timestamp": "2024-12-27 03:00:00.000000",
-    "precipitation_t1": 0.038547735661268234,
-    "precipitation_t3": 0.08083551377058029,
-    "precipitation_t6": 0.12416783720254898,
-    "precipitation_t12": 0.43386319279670715,
-    "lat": 32.6,
-    "lon": 35.4
-  },
-  {
-    "cell_id": 35,
-    "timestamp": "2024-12-27 04:00:00.000000",
-    "precipitation_t1": 0.010232911445200443,
-    "precipitation_t3": 0.037225306034088135,
-    "precipitation_t6": 0.251485675573349,
-    "precipitation_t12": 0.2715994715690613,
-    "lat": 32.6,
-    "lon": 35.4
-  },
-  {
-    "cell_id": 35,
     "timestamp": "2024-12-27 05:00:00.000000",
     "precipitation_t1": 0.0,
     "precipitation_t3": 0.036424554884433746,
@@ -8048,56 +6298,6 @@
     "precipitation_t12": 2.057915210723877,
     "lat": 32.6,
     "lon": 35.4
-  },
-  {
-    "cell_id": 36,
-    "timestamp": "2024-12-27 00:00:00.000000",
-    "precipitation_t1": 0.012760849669575691,
-    "precipitation_t3": 0.02687177062034607,
-    "precipitation_t6": 0.12375617027282715,
-    "precipitation_t12": 0.2551077902317047,
-    "lat": 32.6,
-    "lon": 35.45
-  },
-  {
-    "cell_id": 36,
-    "timestamp": "2024-12-27 01:00:00.000000",
-    "precipitation_t1": 0.010364637710154057,
-    "precipitation_t3": 0.01930188573896885,
-    "precipitation_t6": 0.11000445485115051,
-    "precipitation_t12": 0.5090135931968689,
-    "lat": 32.6,
-    "lon": 35.45
-  },
-  {
-    "cell_id": 36,
-    "timestamp": "2024-12-27 02:00:00.000000",
-    "precipitation_t1": 0.013360545970499516,
-    "precipitation_t3": 0.04471205919981003,
-    "precipitation_t6": 0.10620840638875961,
-    "precipitation_t12": 0.9780601263046265,
-    "lat": 32.6,
-    "lon": 35.45
-  },
-  {
-    "cell_id": 36,
-    "timestamp": "2024-12-27 03:00:00.000000",
-    "precipitation_t1": 0.024571573361754417,
-    "precipitation_t3": 0.08478540927171707,
-    "precipitation_t6": 0.16140420734882355,
-    "precipitation_t12": 0.7875915765762329,
-    "lat": 32.6,
-    "lon": 35.45
-  },
-  {
-    "cell_id": 36,
-    "timestamp": "2024-12-27 04:00:00.000000",
-    "precipitation_t1": 0.0,
-    "precipitation_t3": 0.041409265249967575,
-    "precipitation_t6": 0.1926993876695633,
-    "precipitation_t12": 0.40201687812805176,
-    "lat": 32.6,
-    "lon": 35.45
   },
   {
     "cell_id": 36,
@@ -8281,56 +6481,6 @@
   },
   {
     "cell_id": 37,
-    "timestamp": "2024-12-27 00:00:00.000000",
-    "precipitation_t1": 0.03487406298518181,
-    "precipitation_t3": 0.04038557410240173,
-    "precipitation_t6": 0.09121466428041458,
-    "precipitation_t12": 0.16076460480690002,
-    "lat": 32.65,
-    "lon": 35.05
-  },
-  {
-    "cell_id": 37,
-    "timestamp": "2024-12-27 01:00:00.000000",
-    "precipitation_t1": 0.012622324749827385,
-    "precipitation_t3": 0.03345794603228569,
-    "precipitation_t6": 0.10008825361728668,
-    "precipitation_t12": 0.4582998752593994,
-    "lat": 32.65,
-    "lon": 35.05
-  },
-  {
-    "cell_id": 37,
-    "timestamp": "2024-12-27 02:00:00.000000",
-    "precipitation_t1": 0.022237861528992653,
-    "precipitation_t3": 0.05702817067503929,
-    "precipitation_t6": 0.13698191940784454,
-    "precipitation_t12": 0.8654078245162964,
-    "lat": 32.65,
-    "lon": 35.05
-  },
-  {
-    "cell_id": 37,
-    "timestamp": "2024-12-27 03:00:00.000000",
-    "precipitation_t1": 0.0279551949352026,
-    "precipitation_t3": 0.26370787620544434,
-    "precipitation_t6": 0.21259474754333496,
-    "precipitation_t12": 1.2132211923599243,
-    "lat": 32.65,
-    "lon": 35.05
-  },
-  {
-    "cell_id": 37,
-    "timestamp": "2024-12-27 04:00:00.000000",
-    "precipitation_t1": 0.0166888777166605,
-    "precipitation_t3": 0.07280328869819641,
-    "precipitation_t6": 0.4131569266319275,
-    "precipitation_t12": 0.6279821991920471,
-    "lat": 32.65,
-    "lon": 35.05
-  },
-  {
-    "cell_id": 37,
     "timestamp": "2024-12-27 05:00:00.000000",
     "precipitation_t1": 0.02735675312578678,
     "precipitation_t3": 0.026462657377123833,
@@ -8508,56 +6658,6 @@
     "precipitation_t12": 1.576751947402954,
     "lat": 32.65,
     "lon": 35.05
-  },
-  {
-    "cell_id": 38,
-    "timestamp": "2024-12-27 00:00:00.000000",
-    "precipitation_t1": 0.016889924183487892,
-    "precipitation_t3": 0.12203589826822281,
-    "precipitation_t6": 0.27205345034599304,
-    "precipitation_t12": 0.2189069241285324,
-    "lat": 32.65,
-    "lon": 35.1
-  },
-  {
-    "cell_id": 38,
-    "timestamp": "2024-12-27 01:00:00.000000",
-    "precipitation_t1": 0.025288473814725876,
-    "precipitation_t3": 0.13312901556491852,
-    "precipitation_t6": 0.20602558553218842,
-    "precipitation_t12": 0.4266127049922943,
-    "lat": 32.65,
-    "lon": 35.1
-  },
-  {
-    "cell_id": 38,
-    "timestamp": "2024-12-27 02:00:00.000000",
-    "precipitation_t1": 0.053567007184028625,
-    "precipitation_t3": 0.12324400991201401,
-    "precipitation_t6": 0.18854565918445587,
-    "precipitation_t12": 0.6640355587005615,
-    "lat": 32.65,
-    "lon": 35.1
-  },
-  {
-    "cell_id": 38,
-    "timestamp": "2024-12-27 03:00:00.000000",
-    "precipitation_t1": 0.0667894035577774,
-    "precipitation_t3": 0.6907225251197815,
-    "precipitation_t6": 0.18066468834877014,
-    "precipitation_t12": 1.4120769500732422,
-    "lat": 32.65,
-    "lon": 35.1
-  },
-  {
-    "cell_id": 38,
-    "timestamp": "2024-12-27 04:00:00.000000",
-    "precipitation_t1": 0.01854688860476017,
-    "precipitation_t3": 0.20774269104003906,
-    "precipitation_t6": 0.4614849388599396,
-    "precipitation_t12": 0.8794057965278625,
-    "lat": 32.65,
-    "lon": 35.1
   },
   {
     "cell_id": 38,
@@ -8741,56 +6841,6 @@
   },
   {
     "cell_id": 39,
-    "timestamp": "2024-12-27 00:00:00.000000",
-    "precipitation_t1": 0.0,
-    "precipitation_t3": 0.030353831127285957,
-    "precipitation_t6": 0.09918160736560822,
-    "precipitation_t12": 0.22261780500411987,
-    "lat": 32.65,
-    "lon": 35.15
-  },
-  {
-    "cell_id": 39,
-    "timestamp": "2024-12-27 01:00:00.000000",
-    "precipitation_t1": 0.016502337530255318,
-    "precipitation_t3": 0.038847483694553375,
-    "precipitation_t6": 0.08494476974010468,
-    "precipitation_t12": 0.5883880853652954,
-    "lat": 32.65,
-    "lon": 35.15
-  },
-  {
-    "cell_id": 39,
-    "timestamp": "2024-12-27 02:00:00.000000",
-    "precipitation_t1": 0.020546805113554,
-    "precipitation_t3": 0.07775675505399704,
-    "precipitation_t6": 0.19502027332782745,
-    "precipitation_t12": 0.8337328433990479,
-    "lat": 32.65,
-    "lon": 35.15
-  },
-  {
-    "cell_id": 39,
-    "timestamp": "2024-12-27 03:00:00.000000",
-    "precipitation_t1": 0.03448687121272087,
-    "precipitation_t3": 0.1813187450170517,
-    "precipitation_t6": 0.22936709225177765,
-    "precipitation_t12": 1.237831473350525,
-    "lat": 32.65,
-    "lon": 35.15
-  },
-  {
-    "cell_id": 39,
-    "timestamp": "2024-12-27 04:00:00.000000",
-    "precipitation_t1": 0.02731998637318611,
-    "precipitation_t3": 0.15679390728473663,
-    "precipitation_t6": 0.3883954584598541,
-    "precipitation_t12": 0.7921985387802124,
-    "lat": 32.65,
-    "lon": 35.15
-  },
-  {
-    "cell_id": 39,
     "timestamp": "2024-12-27 05:00:00.000000",
     "precipitation_t1": 0.03200365975499153,
     "precipitation_t3": 0.09513773024082184,
@@ -8968,56 +7018,6 @@
     "precipitation_t12": 2.623584508895874,
     "lat": 32.65,
     "lon": 35.15
-  },
-  {
-    "cell_id": 40,
-    "timestamp": "2024-12-27 00:00:00.000000",
-    "precipitation_t1": 0.011457535438239574,
-    "precipitation_t3": 0.02439461275935173,
-    "precipitation_t6": 0.0569366030395031,
-    "precipitation_t12": 0.19548876583576202,
-    "lat": 32.65,
-    "lon": 35.2
-  },
-  {
-    "cell_id": 40,
-    "timestamp": "2024-12-27 01:00:00.000000",
-    "precipitation_t1": 0.027548396959900856,
-    "precipitation_t3": 0.07345091551542282,
-    "precipitation_t6": 0.10610395669937134,
-    "precipitation_t12": 0.4529149532318115,
-    "lat": 32.65,
-    "lon": 35.2
-  },
-  {
-    "cell_id": 40,
-    "timestamp": "2024-12-27 02:00:00.000000",
-    "precipitation_t1": 0.01949242874979973,
-    "precipitation_t3": 0.07433075457811356,
-    "precipitation_t6": 0.20775891840457916,
-    "precipitation_t12": 0.7741434574127197,
-    "lat": 32.65,
-    "lon": 35.2
-  },
-  {
-    "cell_id": 40,
-    "timestamp": "2024-12-27 03:00:00.000000",
-    "precipitation_t1": 0.03465894237160683,
-    "precipitation_t3": 0.17870259284973145,
-    "precipitation_t6": 0.26148292422294617,
-    "precipitation_t12": 1.2880855798721313,
-    "lat": 32.65,
-    "lon": 35.2
-  },
-  {
-    "cell_id": 40,
-    "timestamp": "2024-12-27 04:00:00.000000",
-    "precipitation_t1": 0.028352873399853706,
-    "precipitation_t3": 0.14780955016613007,
-    "precipitation_t6": 0.4237726330757141,
-    "precipitation_t12": 1.052381157875061,
-    "lat": 32.65,
-    "lon": 35.2
   },
   {
     "cell_id": 40,
@@ -9201,56 +7201,6 @@
   },
   {
     "cell_id": 41,
-    "timestamp": "2024-12-27 00:00:00.000000",
-    "precipitation_t1": 0.0,
-    "precipitation_t3": 0.03315281495451927,
-    "precipitation_t6": 0.10069906711578369,
-    "precipitation_t12": 0.27045443654060364,
-    "lat": 32.65,
-    "lon": 35.25
-  },
-  {
-    "cell_id": 41,
-    "timestamp": "2024-12-27 01:00:00.000000",
-    "precipitation_t1": 0.03995448723435402,
-    "precipitation_t3": 0.04658658057451248,
-    "precipitation_t6": 0.12237679213285446,
-    "precipitation_t12": 0.5238184928894043,
-    "lat": 32.65,
-    "lon": 35.25
-  },
-  {
-    "cell_id": 41,
-    "timestamp": "2024-12-27 02:00:00.000000",
-    "precipitation_t1": 0.033954374492168427,
-    "precipitation_t3": 0.10089673101902008,
-    "precipitation_t6": 0.17408613860607147,
-    "precipitation_t12": 1.4952892065048218,
-    "lat": 32.65,
-    "lon": 35.25
-  },
-  {
-    "cell_id": 41,
-    "timestamp": "2024-12-27 03:00:00.000000",
-    "precipitation_t1": 0.04591752961277962,
-    "precipitation_t3": 0.3598780333995819,
-    "precipitation_t6": 0.3050045073032379,
-    "precipitation_t12": 1.0565013885498047,
-    "lat": 32.65,
-    "lon": 35.25
-  },
-  {
-    "cell_id": 41,
-    "timestamp": "2024-12-27 04:00:00.000000",
-    "precipitation_t1": 0.043924134224653244,
-    "precipitation_t3": 0.16189312934875488,
-    "precipitation_t6": 0.39149871468544006,
-    "precipitation_t12": 1.4094125032424927,
-    "lat": 32.65,
-    "lon": 35.25
-  },
-  {
-    "cell_id": 41,
     "timestamp": "2024-12-27 05:00:00.000000",
     "precipitation_t1": 0.037768326699733734,
     "precipitation_t3": 0.033071864396333694,
@@ -9428,56 +7378,6 @@
     "precipitation_t12": 1.8936847448349,
     "lat": 32.65,
     "lon": 35.25
-  },
-  {
-    "cell_id": 42,
-    "timestamp": "2024-12-27 00:00:00.000000",
-    "precipitation_t1": 0.015624232590198517,
-    "precipitation_t3": 0.04845219850540161,
-    "precipitation_t6": 0.1284850388765335,
-    "precipitation_t12": 0.3249097168445587,
-    "lat": 32.65,
-    "lon": 35.3
-  },
-  {
-    "cell_id": 42,
-    "timestamp": "2024-12-27 01:00:00.000000",
-    "precipitation_t1": 0.010563131421804428,
-    "precipitation_t3": 0.03305668756365776,
-    "precipitation_t6": 0.041481468826532364,
-    "precipitation_t12": 0.5079496502876282,
-    "lat": 32.65,
-    "lon": 35.3
-  },
-  {
-    "cell_id": 42,
-    "timestamp": "2024-12-27 02:00:00.000000",
-    "precipitation_t1": 0.02833220176398754,
-    "precipitation_t3": 0.09902139008045197,
-    "precipitation_t6": 0.24936515092849731,
-    "precipitation_t12": 0.8764899969100952,
-    "lat": 32.65,
-    "lon": 35.3
-  },
-  {
-    "cell_id": 42,
-    "timestamp": "2024-12-27 03:00:00.000000",
-    "precipitation_t1": 0.03265750780701637,
-    "precipitation_t3": 0.22597335278987885,
-    "precipitation_t6": 0.314014732837677,
-    "precipitation_t12": 0.8927323222160339,
-    "lat": 32.65,
-    "lon": 35.3
-  },
-  {
-    "cell_id": 42,
-    "timestamp": "2024-12-27 04:00:00.000000",
-    "precipitation_t1": 0.03193343058228493,
-    "precipitation_t3": 0.09888803958892822,
-    "precipitation_t6": 0.22136519849300385,
-    "precipitation_t12": 0.7371441125869751,
-    "lat": 32.65,
-    "lon": 35.3
   },
   {
     "cell_id": 42,
@@ -9661,56 +7561,6 @@
   },
   {
     "cell_id": 43,
-    "timestamp": "2024-12-27 00:00:00.000000",
-    "precipitation_t1": 0.0,
-    "precipitation_t3": 0.0,
-    "precipitation_t6": 0.030038991943001747,
-    "precipitation_t12": 0.2140771746635437,
-    "lat": 32.65,
-    "lon": 35.35
-  },
-  {
-    "cell_id": 43,
-    "timestamp": "2024-12-27 01:00:00.000000",
-    "precipitation_t1": 0.0,
-    "precipitation_t3": 0.0,
-    "precipitation_t6": 0.04852768033742905,
-    "precipitation_t12": 0.17645420134067535,
-    "lat": 32.65,
-    "lon": 35.35
-  },
-  {
-    "cell_id": 43,
-    "timestamp": "2024-12-27 02:00:00.000000",
-    "precipitation_t1": 0.0,
-    "precipitation_t3": 0.010012581013143063,
-    "precipitation_t6": 0.07655099034309387,
-    "precipitation_t12": 0.2774691879749298,
-    "lat": 32.65,
-    "lon": 35.35
-  },
-  {
-    "cell_id": 43,
-    "timestamp": "2024-12-27 03:00:00.000000",
-    "precipitation_t1": 0.020242957398295403,
-    "precipitation_t3": 0.030399980023503304,
-    "precipitation_t6": 0.03741027042269707,
-    "precipitation_t12": 0.8808864951133728,
-    "lat": 32.65,
-    "lon": 35.35
-  },
-  {
-    "cell_id": 43,
-    "timestamp": "2024-12-27 04:00:00.000000",
-    "precipitation_t1": 0.010645243339240551,
-    "precipitation_t3": 0.04760512709617615,
-    "precipitation_t6": 0.1267199069261551,
-    "precipitation_t12": 0.3226146996021271,
-    "lat": 32.65,
-    "lon": 35.35
-  },
-  {
-    "cell_id": 43,
     "timestamp": "2024-12-27 05:00:00.000000",
     "precipitation_t1": 0.0,
     "precipitation_t3": 0.02841213159263134,
@@ -9888,56 +7738,6 @@
     "precipitation_t12": 1.6164880990982056,
     "lat": 32.65,
     "lon": 35.35
-  },
-  {
-    "cell_id": 44,
-    "timestamp": "2024-12-27 00:00:00.000000",
-    "precipitation_t1": 0.0,
-    "precipitation_t3": 0.0,
-    "precipitation_t6": 0.04577238857746124,
-    "precipitation_t12": 0.22225260734558105,
-    "lat": 32.65,
-    "lon": 35.4
-  },
-  {
-    "cell_id": 44,
-    "timestamp": "2024-12-27 01:00:00.000000",
-    "precipitation_t1": 0.0,
-    "precipitation_t3": 0.0,
-    "precipitation_t6": 0.03236394375562668,
-    "precipitation_t12": 0.2424919158220291,
-    "lat": 32.65,
-    "lon": 35.4
-  },
-  {
-    "cell_id": 44,
-    "timestamp": "2024-12-27 02:00:00.000000",
-    "precipitation_t1": 0.0,
-    "precipitation_t3": 0.0,
-    "precipitation_t6": 0.06972841173410416,
-    "precipitation_t12": 0.3423999845981598,
-    "lat": 32.65,
-    "lon": 35.4
-  },
-  {
-    "cell_id": 44,
-    "timestamp": "2024-12-27 03:00:00.000000",
-    "precipitation_t1": 0.024019530043005943,
-    "precipitation_t3": 0.038782186806201935,
-    "precipitation_t6": 0.03741027042269707,
-    "precipitation_t12": 0.35555726289749146,
-    "lat": 32.65,
-    "lon": 35.4
-  },
-  {
-    "cell_id": 44,
-    "timestamp": "2024-12-27 04:00:00.000000",
-    "precipitation_t1": 0.011776896193623543,
-    "precipitation_t3": 0.05750586465001106,
-    "precipitation_t6": 0.16039282083511353,
-    "precipitation_t12": 0.7994384169578552,
-    "lat": 32.65,
-    "lon": 35.4
   },
   {
     "cell_id": 44,
@@ -10121,56 +7921,6 @@
   },
   {
     "cell_id": 45,
-    "timestamp": "2024-12-27 00:00:00.000000",
-    "precipitation_t1": 0.012986487708985806,
-    "precipitation_t3": 0.021914448589086533,
-    "precipitation_t6": 0.05175071209669113,
-    "precipitation_t12": 0.21463167667388916,
-    "lat": 32.65,
-    "lon": 35.45
-  },
-  {
-    "cell_id": 45,
-    "timestamp": "2024-12-27 01:00:00.000000",
-    "precipitation_t1": 0.016326285898685455,
-    "precipitation_t3": 0.012046569027006626,
-    "precipitation_t6": 0.07944479584693909,
-    "precipitation_t12": 0.5281519293785095,
-    "lat": 32.65,
-    "lon": 35.45
-  },
-  {
-    "cell_id": 45,
-    "timestamp": "2024-12-27 02:00:00.000000",
-    "precipitation_t1": 0.023388171568512917,
-    "precipitation_t3": 0.039468660950660706,
-    "precipitation_t6": 0.07813902944326401,
-    "precipitation_t12": 0.48885518312454224,
-    "lat": 32.65,
-    "lon": 35.45
-  },
-  {
-    "cell_id": 45,
-    "timestamp": "2024-12-27 03:00:00.000000",
-    "precipitation_t1": 0.026866063475608826,
-    "precipitation_t3": 0.07380940765142441,
-    "precipitation_t6": 0.07911895960569382,
-    "precipitation_t12": 0.27677538990974426,
-    "lat": 32.65,
-    "lon": 35.45
-  },
-  {
-    "cell_id": 45,
-    "timestamp": "2024-12-27 04:00:00.000000",
-    "precipitation_t1": 0.0125672472640872,
-    "precipitation_t3": 0.05589858070015907,
-    "precipitation_t6": 0.16059352457523346,
-    "precipitation_t12": 0.5600217580795288,
-    "lat": 32.65,
-    "lon": 35.45
-  },
-  {
-    "cell_id": 45,
     "timestamp": "2024-12-27 05:00:00.000000",
     "precipitation_t1": 0.0,
     "precipitation_t3": 0.03109089657664299,
@@ -10348,56 +8098,6 @@
     "precipitation_t12": 1.3604072332382202,
     "lat": 32.65,
     "lon": 35.45
-  },
-  {
-    "cell_id": 46,
-    "timestamp": "2024-12-27 00:00:00.000000",
-    "precipitation_t1": 0.0,
-    "precipitation_t3": 0.010025355964899063,
-    "precipitation_t6": 0.08527259528636932,
-    "precipitation_t12": 0.10356449335813522,
-    "lat": 32.7,
-    "lon": 35.05
-  },
-  {
-    "cell_id": 46,
-    "timestamp": "2024-12-27 01:00:00.000000",
-    "precipitation_t1": 0.0,
-    "precipitation_t3": 0.010812767781317234,
-    "precipitation_t6": 0.1347806602716446,
-    "precipitation_t12": 0.2356089949607849,
-    "lat": 32.7,
-    "lon": 35.05
-  },
-  {
-    "cell_id": 46,
-    "timestamp": "2024-12-27 02:00:00.000000",
-    "precipitation_t1": 0.0,
-    "precipitation_t3": 0.010633083060383797,
-    "precipitation_t6": 0.11958631873130798,
-    "precipitation_t12": 0.2238268405199051,
-    "lat": 32.7,
-    "lon": 35.05
-  },
-  {
-    "cell_id": 46,
-    "timestamp": "2024-12-27 03:00:00.000000",
-    "precipitation_t1": 0.0,
-    "precipitation_t3": 0.04284153878688812,
-    "precipitation_t6": 0.14347165822982788,
-    "precipitation_t12": 0.45219722390174866,
-    "lat": 32.7,
-    "lon": 35.05
-  },
-  {
-    "cell_id": 46,
-    "timestamp": "2024-12-27 04:00:00.000000",
-    "precipitation_t1": 0.0,
-    "precipitation_t3": 0.01129817869514227,
-    "precipitation_t6": 0.21757587790489197,
-    "precipitation_t12": 0.2624436318874359,
-    "lat": 32.7,
-    "lon": 35.05
   },
   {
     "cell_id": 46,
@@ -10581,56 +8281,6 @@
   },
   {
     "cell_id": 47,
-    "timestamp": "2024-12-27 00:00:00.000000",
-    "precipitation_t1": 0.02183539979159832,
-    "precipitation_t3": 0.05377114936709404,
-    "precipitation_t6": 0.27671417593955994,
-    "precipitation_t12": 0.14718975126743317,
-    "lat": 32.7,
-    "lon": 35.1
-  },
-  {
-    "cell_id": 47,
-    "timestamp": "2024-12-27 01:00:00.000000",
-    "precipitation_t1": 0.04626823216676712,
-    "precipitation_t3": 0.10239259153604507,
-    "precipitation_t6": 0.17519117891788483,
-    "precipitation_t12": 0.5122147798538208,
-    "lat": 32.7,
-    "lon": 35.1
-  },
-  {
-    "cell_id": 47,
-    "timestamp": "2024-12-27 02:00:00.000000",
-    "precipitation_t1": 0.05626596137881279,
-    "precipitation_t3": 0.24091872572898865,
-    "precipitation_t6": 0.29234275221824646,
-    "precipitation_t12": 0.6883784532546997,
-    "lat": 32.7,
-    "lon": 35.1
-  },
-  {
-    "cell_id": 47,
-    "timestamp": "2024-12-27 03:00:00.000000",
-    "precipitation_t1": 0.0470745675265789,
-    "precipitation_t3": 0.9156175851821899,
-    "precipitation_t6": 0.3819652795791626,
-    "precipitation_t12": 1.9918228387832642,
-    "lat": 32.7,
-    "lon": 35.1
-  },
-  {
-    "cell_id": 47,
-    "timestamp": "2024-12-27 04:00:00.000000",
-    "precipitation_t1": 0.026245607063174248,
-    "precipitation_t3": 0.20536209642887115,
-    "precipitation_t6": 0.46266284584999084,
-    "precipitation_t12": 1.0063194036483765,
-    "lat": 32.7,
-    "lon": 35.1
-  },
-  {
-    "cell_id": 47,
     "timestamp": "2024-12-27 05:00:00.000000",
     "precipitation_t1": 0.03045075014233589,
     "precipitation_t3": 0.05189963057637215,
@@ -10808,56 +8458,6 @@
     "precipitation_t12": 1.8539628982543945,
     "lat": 32.7,
     "lon": 35.1
-  },
-  {
-    "cell_id": 48,
-    "timestamp": "2024-12-27 00:00:00.000000",
-    "precipitation_t1": 0.012061076238751411,
-    "precipitation_t3": 0.03183012455701828,
-    "precipitation_t6": 0.11719552427530289,
-    "precipitation_t12": 0.2268715500831604,
-    "lat": 32.7,
-    "lon": 35.15
-  },
-  {
-    "cell_id": 48,
-    "timestamp": "2024-12-27 01:00:00.000000",
-    "precipitation_t1": 0.022870812565088272,
-    "precipitation_t3": 0.05773966386914253,
-    "precipitation_t6": 0.1250070333480835,
-    "precipitation_t12": 0.582699716091156,
-    "lat": 32.7,
-    "lon": 35.15
-  },
-  {
-    "cell_id": 48,
-    "timestamp": "2024-12-27 02:00:00.000000",
-    "precipitation_t1": 0.02623366378247738,
-    "precipitation_t3": 0.1074596419930458,
-    "precipitation_t6": 0.197229266166687,
-    "precipitation_t12": 1.208838701248169,
-    "lat": 32.7,
-    "lon": 35.15
-  },
-  {
-    "cell_id": 48,
-    "timestamp": "2024-12-27 03:00:00.000000",
-    "precipitation_t1": 0.051955800503492355,
-    "precipitation_t3": 0.2811473608016968,
-    "precipitation_t6": 0.18741551041603088,
-    "precipitation_t12": 1.9530723094940186,
-    "lat": 32.7,
-    "lon": 35.15
-  },
-  {
-    "cell_id": 48,
-    "timestamp": "2024-12-27 04:00:00.000000",
-    "precipitation_t1": 0.013674127869307995,
-    "precipitation_t3": 0.08534613996744156,
-    "precipitation_t6": 0.36191901564598083,
-    "precipitation_t12": 1.0418123006820679,
-    "lat": 32.7,
-    "lon": 35.15
   },
   {
     "cell_id": 48,
@@ -11041,56 +8641,6 @@
   },
   {
     "cell_id": 49,
-    "timestamp": "2024-12-27 00:00:00.000000",
-    "precipitation_t1": 0.0,
-    "precipitation_t3": 0.0,
-    "precipitation_t6": 0.045853935182094574,
-    "precipitation_t12": 0.16224069893360138,
-    "lat": 32.7,
-    "lon": 35.2
-  },
-  {
-    "cell_id": 49,
-    "timestamp": "2024-12-27 01:00:00.000000",
-    "precipitation_t1": 0.0,
-    "precipitation_t3": 0.0,
-    "precipitation_t6": 0.04147888720035553,
-    "precipitation_t12": 0.20552435517311096,
-    "lat": 32.7,
-    "lon": 35.2
-  },
-  {
-    "cell_id": 49,
-    "timestamp": "2024-12-27 02:00:00.000000",
-    "precipitation_t1": 0.0,
-    "precipitation_t3": 0.0,
-    "precipitation_t6": 0.05631287768483162,
-    "precipitation_t12": 0.3743296265602112,
-    "lat": 32.7,
-    "lon": 35.2
-  },
-  {
-    "cell_id": 49,
-    "timestamp": "2024-12-27 03:00:00.000000",
-    "precipitation_t1": 0.021224457770586014,
-    "precipitation_t3": 0.02994086965918541,
-    "precipitation_t6": 0.08626877516508102,
-    "precipitation_t12": 1.1703470945358276,
-    "lat": 32.7,
-    "lon": 35.2
-  },
-  {
-    "cell_id": 49,
-    "timestamp": "2024-12-27 04:00:00.000000",
-    "precipitation_t1": 0.0,
-    "precipitation_t3": 0.03539903834462166,
-    "precipitation_t6": 0.18310852348804474,
-    "precipitation_t12": 0.44688066840171814,
-    "lat": 32.7,
-    "lon": 35.2
-  },
-  {
-    "cell_id": 49,
     "timestamp": "2024-12-27 05:00:00.000000",
     "precipitation_t1": 0.016874324530363083,
     "precipitation_t3": 0.0277211032807827,
@@ -11268,56 +8818,6 @@
     "precipitation_t12": 2.453346014022827,
     "lat": 32.7,
     "lon": 35.2
-  },
-  {
-    "cell_id": 50,
-    "timestamp": "2024-12-27 00:00:00.000000",
-    "precipitation_t1": 0.010983385145664215,
-    "precipitation_t3": 0.030871717259287834,
-    "precipitation_t6": 0.056618448346853256,
-    "precipitation_t12": 0.18780842423439026,
-    "lat": 32.7,
-    "lon": 35.25
-  },
-  {
-    "cell_id": 50,
-    "timestamp": "2024-12-27 01:00:00.000000",
-    "precipitation_t1": 0.030981509014964104,
-    "precipitation_t3": 0.05229402706027031,
-    "precipitation_t6": 0.213901087641716,
-    "precipitation_t12": 0.3583509922027588,
-    "lat": 32.7,
-    "lon": 35.25
-  },
-  {
-    "cell_id": 50,
-    "timestamp": "2024-12-27 02:00:00.000000",
-    "precipitation_t1": 0.02778160385787487,
-    "precipitation_t3": 0.11951204389333725,
-    "precipitation_t6": 0.26458024978637695,
-    "precipitation_t12": 0.7330307960510254,
-    "lat": 32.7,
-    "lon": 35.25
-  },
-  {
-    "cell_id": 50,
-    "timestamp": "2024-12-27 03:00:00.000000",
-    "precipitation_t1": 0.04354529827833176,
-    "precipitation_t3": 0.699283242225647,
-    "precipitation_t6": 0.3329882323741913,
-    "precipitation_t12": 1.0848976373672485,
-    "lat": 32.7,
-    "lon": 35.25
-  },
-  {
-    "cell_id": 50,
-    "timestamp": "2024-12-27 04:00:00.000000",
-    "precipitation_t1": 0.027474723756313324,
-    "precipitation_t3": 0.07934713363647461,
-    "precipitation_t6": 0.176022469997406,
-    "precipitation_t12": 0.3245229721069336,
-    "lat": 32.7,
-    "lon": 35.25
   },
   {
     "cell_id": 50,
@@ -11501,56 +9001,6 @@
   },
   {
     "cell_id": 51,
-    "timestamp": "2024-12-27 00:00:00.000000",
-    "precipitation_t1": 0.014421045780181885,
-    "precipitation_t3": 0.031108418479561806,
-    "precipitation_t6": 0.07141276448965073,
-    "precipitation_t12": 0.20742018520832062,
-    "lat": 32.7,
-    "lon": 35.3
-  },
-  {
-    "cell_id": 51,
-    "timestamp": "2024-12-27 01:00:00.000000",
-    "precipitation_t1": 0.02264372445642948,
-    "precipitation_t3": 0.04719573259353638,
-    "precipitation_t6": 0.03868245333433151,
-    "precipitation_t12": 0.2887206971645355,
-    "lat": 32.7,
-    "lon": 35.3
-  },
-  {
-    "cell_id": 51,
-    "timestamp": "2024-12-27 02:00:00.000000",
-    "precipitation_t1": 0.03739655390381813,
-    "precipitation_t3": 0.1095893606543541,
-    "precipitation_t6": 0.22295504808425903,
-    "precipitation_t12": 0.8113289475440979,
-    "lat": 32.7,
-    "lon": 35.3
-  },
-  {
-    "cell_id": 51,
-    "timestamp": "2024-12-27 03:00:00.000000",
-    "precipitation_t1": 0.03194235637784004,
-    "precipitation_t3": 0.21996979415416718,
-    "precipitation_t6": 0.1543203741312027,
-    "precipitation_t12": 0.9455016851425171,
-    "lat": 32.7,
-    "lon": 35.3
-  },
-  {
-    "cell_id": 51,
-    "timestamp": "2024-12-27 04:00:00.000000",
-    "precipitation_t1": 0.03125733137130737,
-    "precipitation_t3": 0.1432023048400879,
-    "precipitation_t6": 0.4585617184638977,
-    "precipitation_t12": 1.1170997619628906,
-    "lat": 32.7,
-    "lon": 35.3
-  },
-  {
-    "cell_id": 51,
     "timestamp": "2024-12-27 05:00:00.000000",
     "precipitation_t1": 0.04297120124101639,
     "precipitation_t3": 0.10315338522195816,
@@ -11728,56 +9178,6 @@
     "precipitation_t12": 2.3725228309631348,
     "lat": 32.7,
     "lon": 35.3
-  },
-  {
-    "cell_id": 52,
-    "timestamp": "2024-12-27 00:00:00.000000",
-    "precipitation_t1": 0.013786299154162407,
-    "precipitation_t3": 0.07332690060138702,
-    "precipitation_t6": 0.12802468240261078,
-    "precipitation_t12": 0.28841444849967957,
-    "lat": 32.7,
-    "lon": 35.35
-  },
-  {
-    "cell_id": 52,
-    "timestamp": "2024-12-27 01:00:00.000000",
-    "precipitation_t1": 0.013012963347136974,
-    "precipitation_t3": 0.11298604309558868,
-    "precipitation_t6": 0.20369240641593933,
-    "precipitation_t12": 0.6284363269805908,
-    "lat": 32.7,
-    "lon": 35.35
-  },
-  {
-    "cell_id": 52,
-    "timestamp": "2024-12-27 02:00:00.000000",
-    "precipitation_t1": 0.028943318873643875,
-    "precipitation_t3": 0.11746745556592941,
-    "precipitation_t6": 0.39833152294158936,
-    "precipitation_t12": 1.048229694366455,
-    "lat": 32.7,
-    "lon": 35.35
-  },
-  {
-    "cell_id": 52,
-    "timestamp": "2024-12-27 03:00:00.000000",
-    "precipitation_t1": 0.05374433472752571,
-    "precipitation_t3": 0.38240131735801697,
-    "precipitation_t6": 0.3001239001750946,
-    "precipitation_t12": 1.0402311086654663,
-    "lat": 32.7,
-    "lon": 35.35
-  },
-  {
-    "cell_id": 52,
-    "timestamp": "2024-12-27 04:00:00.000000",
-    "precipitation_t1": 0.02235296554863453,
-    "precipitation_t3": 0.17779171466827393,
-    "precipitation_t6": 0.3390449583530426,
-    "precipitation_t12": 0.8130677938461304,
-    "lat": 32.7,
-    "lon": 35.35
   },
   {
     "cell_id": 52,
@@ -11961,56 +9361,6 @@
   },
   {
     "cell_id": 53,
-    "timestamp": "2024-12-27 00:00:00.000000",
-    "precipitation_t1": 0.0,
-    "precipitation_t3": 0.0,
-    "precipitation_t6": 0.03622317686676979,
-    "precipitation_t12": 0.13554467260837555,
-    "lat": 32.7,
-    "lon": 35.4
-  },
-  {
-    "cell_id": 53,
-    "timestamp": "2024-12-27 01:00:00.000000",
-    "precipitation_t1": 0.0,
-    "precipitation_t3": 0.0,
-    "precipitation_t6": 0.01981440745294094,
-    "precipitation_t12": 0.20497219264507294,
-    "lat": 32.7,
-    "lon": 35.4
-  },
-  {
-    "cell_id": 53,
-    "timestamp": "2024-12-27 02:00:00.000000",
-    "precipitation_t1": 0.0,
-    "precipitation_t3": 0.0,
-    "precipitation_t6": 0.0699169710278511,
-    "precipitation_t12": 0.12754760682582855,
-    "lat": 32.7,
-    "lon": 35.4
-  },
-  {
-    "cell_id": 53,
-    "timestamp": "2024-12-27 03:00:00.000000",
-    "precipitation_t1": 0.0,
-    "precipitation_t3": 0.0,
-    "precipitation_t6": 0.042987626045942307,
-    "precipitation_t12": 0.3793533444404602,
-    "lat": 32.7,
-    "lon": 35.4
-  },
-  {
-    "cell_id": 53,
-    "timestamp": "2024-12-27 04:00:00.000000",
-    "precipitation_t1": 0.0,
-    "precipitation_t3": 0.017259633168578148,
-    "precipitation_t6": 0.11492086201906204,
-    "precipitation_t12": 0.3065454065799713,
-    "lat": 32.7,
-    "lon": 35.4
-  },
-  {
-    "cell_id": 53,
     "timestamp": "2024-12-27 05:00:00.000000",
     "precipitation_t1": 0.010526536963880062,
     "precipitation_t3": 0.01489200722426176,
@@ -12188,56 +9538,6 @@
     "precipitation_t12": 1.545125126838684,
     "lat": 32.7,
     "lon": 35.4
-  },
-  {
-    "cell_id": 54,
-    "timestamp": "2024-12-27 00:00:00.000000",
-    "precipitation_t1": 0.011300387792289257,
-    "precipitation_t3": 0.02675771713256836,
-    "precipitation_t6": 0.11337432265281677,
-    "precipitation_t12": 0.29991570115089417,
-    "lat": 32.7,
-    "lon": 35.45
-  },
-  {
-    "cell_id": 54,
-    "timestamp": "2024-12-27 01:00:00.000000",
-    "precipitation_t1": 0.0,
-    "precipitation_t3": 0.0287467148154974,
-    "precipitation_t6": 0.04531548544764519,
-    "precipitation_t12": 0.7487199306488037,
-    "lat": 32.7,
-    "lon": 35.45
-  },
-  {
-    "cell_id": 54,
-    "timestamp": "2024-12-27 02:00:00.000000",
-    "precipitation_t1": 0.0,
-    "precipitation_t3": 0.04320140928030014,
-    "precipitation_t6": 0.13161268830299377,
-    "precipitation_t12": 0.41111186146736145,
-    "lat": 32.7,
-    "lon": 35.45
-  },
-  {
-    "cell_id": 54,
-    "timestamp": "2024-12-27 03:00:00.000000",
-    "precipitation_t1": 0.0,
-    "precipitation_t3": 0.01623815856873989,
-    "precipitation_t6": 0.10656152665615082,
-    "precipitation_t12": 0.3014819025993347,
-    "lat": 32.7,
-    "lon": 35.45
-  },
-  {
-    "cell_id": 54,
-    "timestamp": "2024-12-27 04:00:00.000000",
-    "precipitation_t1": 0.026797931641340256,
-    "precipitation_t3": 0.12044987082481384,
-    "precipitation_t6": 0.3187018632888794,
-    "precipitation_t12": 0.9146444201469421,
-    "lat": 32.7,
-    "lon": 35.45
   },
   {
     "cell_id": 54,
@@ -12421,56 +9721,6 @@
   },
   {
     "cell_id": 55,
-    "timestamp": "2024-12-27 00:00:00.000000",
-    "precipitation_t1": 0.0,
-    "precipitation_t3": 0.011281194165349007,
-    "precipitation_t6": 0.07699020206928253,
-    "precipitation_t12": 0.08349435776472092,
-    "lat": 32.75,
-    "lon": 35.05
-  },
-  {
-    "cell_id": 55,
-    "timestamp": "2024-12-27 01:00:00.000000",
-    "precipitation_t1": 0.0,
-    "precipitation_t3": 0.0,
-    "precipitation_t6": 0.10815808176994324,
-    "precipitation_t12": 0.17715631425380707,
-    "lat": 32.75,
-    "lon": 35.05
-  },
-  {
-    "cell_id": 55,
-    "timestamp": "2024-12-27 02:00:00.000000",
-    "precipitation_t1": 0.0,
-    "precipitation_t3": 0.0,
-    "precipitation_t6": 0.12160810083150864,
-    "precipitation_t12": 0.16362209618091583,
-    "lat": 32.75,
-    "lon": 35.05
-  },
-  {
-    "cell_id": 55,
-    "timestamp": "2024-12-27 03:00:00.000000",
-    "precipitation_t1": 0.0,
-    "precipitation_t3": 0.013796952553093433,
-    "precipitation_t6": 0.08978737145662308,
-    "precipitation_t12": 0.2571849822998047,
-    "lat": 32.75,
-    "lon": 35.05
-  },
-  {
-    "cell_id": 55,
-    "timestamp": "2024-12-27 04:00:00.000000",
-    "precipitation_t1": 0.0,
-    "precipitation_t3": 0.0,
-    "precipitation_t6": 0.22591955959796906,
-    "precipitation_t12": 0.30534353852272034,
-    "lat": 32.75,
-    "lon": 35.05
-  },
-  {
-    "cell_id": 55,
     "timestamp": "2024-12-27 05:00:00.000000",
     "precipitation_t1": 0.0,
     "precipitation_t3": 0.0,
@@ -12648,56 +9898,6 @@
     "precipitation_t12": 1.8045599460601807,
     "lat": 32.75,
     "lon": 35.05
-  },
-  {
-    "cell_id": 56,
-    "timestamp": "2024-12-27 00:00:00.000000",
-    "precipitation_t1": 0.056051865220069885,
-    "precipitation_t3": 0.10762915015220642,
-    "precipitation_t6": 0.28656336665153503,
-    "precipitation_t12": 0.37306082248687744,
-    "lat": 32.75,
-    "lon": 35.1
-  },
-  {
-    "cell_id": 56,
-    "timestamp": "2024-12-27 01:00:00.000000",
-    "precipitation_t1": 0.06006251648068428,
-    "precipitation_t3": 0.1909853219985962,
-    "precipitation_t6": 0.3567606508731842,
-    "precipitation_t12": 0.9156918525695801,
-    "lat": 32.75,
-    "lon": 35.1
-  },
-  {
-    "cell_id": 56,
-    "timestamp": "2024-12-27 02:00:00.000000",
-    "precipitation_t1": 0.09063190221786499,
-    "precipitation_t3": 0.3036051094532013,
-    "precipitation_t6": 0.32018008828163147,
-    "precipitation_t12": 1.0391454696655273,
-    "lat": 32.75,
-    "lon": 35.1
-  },
-  {
-    "cell_id": 56,
-    "timestamp": "2024-12-27 03:00:00.000000",
-    "precipitation_t1": 0.06895560771226883,
-    "precipitation_t3": 1.1348179578781128,
-    "precipitation_t6": 0.6430357098579407,
-    "precipitation_t12": 2.3536441326141357,
-    "lat": 32.75,
-    "lon": 35.1
-  },
-  {
-    "cell_id": 56,
-    "timestamp": "2024-12-27 04:00:00.000000",
-    "precipitation_t1": 0.0493156723678112,
-    "precipitation_t3": 0.3109857738018036,
-    "precipitation_t6": 0.9222310185432434,
-    "precipitation_t12": 1.5572540760040283,
-    "lat": 32.75,
-    "lon": 35.1
   },
   {
     "cell_id": 56,
@@ -12881,56 +10081,6 @@
   },
   {
     "cell_id": 57,
-    "timestamp": "2024-12-27 00:00:00.000000",
-    "precipitation_t1": 0.03369605168700218,
-    "precipitation_t3": 0.046749819070100784,
-    "precipitation_t6": 0.20412708818912506,
-    "precipitation_t12": 0.2647898495197296,
-    "lat": 32.75,
-    "lon": 35.15
-  },
-  {
-    "cell_id": 57,
-    "timestamp": "2024-12-27 01:00:00.000000",
-    "precipitation_t1": 0.06349629908800125,
-    "precipitation_t3": 0.1695059835910797,
-    "precipitation_t6": 0.2852024734020233,
-    "precipitation_t12": 1.020451545715332,
-    "lat": 32.75,
-    "lon": 35.15
-  },
-  {
-    "cell_id": 57,
-    "timestamp": "2024-12-27 02:00:00.000000",
-    "precipitation_t1": 0.06448435038328171,
-    "precipitation_t3": 0.131408229470253,
-    "precipitation_t6": 0.3181754946708679,
-    "precipitation_t12": 1.0218509435653687,
-    "lat": 32.75,
-    "lon": 35.15
-  },
-  {
-    "cell_id": 57,
-    "timestamp": "2024-12-27 03:00:00.000000",
-    "precipitation_t1": 0.05472470074892044,
-    "precipitation_t3": 0.7003718614578247,
-    "precipitation_t6": 0.34131506085395813,
-    "precipitation_t12": 0.8750028014183044,
-    "lat": 32.75,
-    "lon": 35.15
-  },
-  {
-    "cell_id": 57,
-    "timestamp": "2024-12-27 04:00:00.000000",
-    "precipitation_t1": 0.043940622359514236,
-    "precipitation_t3": 0.2055525779724121,
-    "precipitation_t6": 0.680323600769043,
-    "precipitation_t12": 1.9881364107131958,
-    "lat": 32.75,
-    "lon": 35.15
-  },
-  {
-    "cell_id": 57,
     "timestamp": "2024-12-27 05:00:00.000000",
     "precipitation_t1": 0.033938176929950714,
     "precipitation_t3": 0.04644891247153282,
@@ -13108,56 +10258,6 @@
     "precipitation_t12": 1.9893367290496826,
     "lat": 32.75,
     "lon": 35.15
-  },
-  {
-    "cell_id": 58,
-    "timestamp": "2024-12-27 00:00:00.000000",
-    "precipitation_t1": 0.0,
-    "precipitation_t3": 0.017563078552484512,
-    "precipitation_t6": 0.0630832239985466,
-    "precipitation_t12": 0.23080681264400482,
-    "lat": 32.75,
-    "lon": 35.2
-  },
-  {
-    "cell_id": 58,
-    "timestamp": "2024-12-27 01:00:00.000000",
-    "precipitation_t1": 0.0189357940107584,
-    "precipitation_t3": 0.04847973585128784,
-    "precipitation_t6": 0.06551066786050797,
-    "precipitation_t12": 0.5540538430213928,
-    "lat": 32.75,
-    "lon": 35.2
-  },
-  {
-    "cell_id": 58,
-    "timestamp": "2024-12-27 02:00:00.000000",
-    "precipitation_t1": 0.04662509635090828,
-    "precipitation_t3": 0.11204686760902405,
-    "precipitation_t6": 0.29856160283088684,
-    "precipitation_t12": 0.7343852519989014,
-    "lat": 32.75,
-    "lon": 35.2
-  },
-  {
-    "cell_id": 58,
-    "timestamp": "2024-12-27 03:00:00.000000",
-    "precipitation_t1": 0.04116886481642723,
-    "precipitation_t3": 0.2724376618862152,
-    "precipitation_t6": 0.19359973073005676,
-    "precipitation_t12": 1.2785667181015015,
-    "lat": 32.75,
-    "lon": 35.2
-  },
-  {
-    "cell_id": 58,
-    "timestamp": "2024-12-27 04:00:00.000000",
-    "precipitation_t1": 0.03446967527270317,
-    "precipitation_t3": 0.18066081404685974,
-    "precipitation_t6": 0.4535963833332062,
-    "precipitation_t12": 0.8359934091567993,
-    "lat": 32.75,
-    "lon": 35.2
   },
   {
     "cell_id": 58,
@@ -13341,56 +10441,6 @@
   },
   {
     "cell_id": 59,
-    "timestamp": "2024-12-27 00:00:00.000000",
-    "precipitation_t1": 0.0,
-    "precipitation_t3": 0.020595556125044823,
-    "precipitation_t6": 0.05450282618403435,
-    "precipitation_t12": 0.2768046259880066,
-    "lat": 32.75,
-    "lon": 35.25
-  },
-  {
-    "cell_id": 59,
-    "timestamp": "2024-12-27 01:00:00.000000",
-    "precipitation_t1": 0.013598104938864708,
-    "precipitation_t3": 0.023794319480657578,
-    "precipitation_t6": 0.06084427610039711,
-    "precipitation_t12": 0.434442937374115,
-    "lat": 32.75,
-    "lon": 35.25
-  },
-  {
-    "cell_id": 59,
-    "timestamp": "2024-12-27 02:00:00.000000",
-    "precipitation_t1": 0.02158384397625923,
-    "precipitation_t3": 0.05697036162018776,
-    "precipitation_t6": 0.16986604034900665,
-    "precipitation_t12": 0.7969271540641785,
-    "lat": 32.75,
-    "lon": 35.25
-  },
-  {
-    "cell_id": 59,
-    "timestamp": "2024-12-27 03:00:00.000000",
-    "precipitation_t1": 0.032354556024074554,
-    "precipitation_t3": 0.3215971887111664,
-    "precipitation_t6": 0.3841158449649811,
-    "precipitation_t12": 0.894757866859436,
-    "lat": 32.75,
-    "lon": 35.25
-  },
-  {
-    "cell_id": 59,
-    "timestamp": "2024-12-27 04:00:00.000000",
-    "precipitation_t1": 0.01637408696115017,
-    "precipitation_t3": 0.08083333820104599,
-    "precipitation_t6": 0.1338212937116623,
-    "precipitation_t12": 0.5463940501213074,
-    "lat": 32.75,
-    "lon": 35.25
-  },
-  {
-    "cell_id": 59,
     "timestamp": "2024-12-27 05:00:00.000000",
     "precipitation_t1": 0.03393955156207085,
     "precipitation_t3": 0.08513535559177399,
@@ -13568,56 +10618,6 @@
     "precipitation_t12": 2.593388319015503,
     "lat": 32.75,
     "lon": 35.25
-  },
-  {
-    "cell_id": 60,
-    "timestamp": "2024-12-27 00:00:00.000000",
-    "precipitation_t1": 0.02051958069205284,
-    "precipitation_t3": 0.018175853416323662,
-    "precipitation_t6": 0.05331244319677353,
-    "precipitation_t12": 0.20638896524906158,
-    "lat": 32.75,
-    "lon": 35.3
-  },
-  {
-    "cell_id": 60,
-    "timestamp": "2024-12-27 01:00:00.000000",
-    "precipitation_t1": 0.0,
-    "precipitation_t3": 0.040431633591651917,
-    "precipitation_t6": 0.08926461637020111,
-    "precipitation_t12": 0.5282385349273682,
-    "lat": 32.75,
-    "lon": 35.3
-  },
-  {
-    "cell_id": 60,
-    "timestamp": "2024-12-27 02:00:00.000000",
-    "precipitation_t1": 0.017290621995925903,
-    "precipitation_t3": 0.09009429067373276,
-    "precipitation_t6": 0.16956451535224915,
-    "precipitation_t12": 0.6545985341072083,
-    "lat": 32.75,
-    "lon": 35.3
-  },
-  {
-    "cell_id": 60,
-    "timestamp": "2024-12-27 03:00:00.000000",
-    "precipitation_t1": 0.03041311725974083,
-    "precipitation_t3": 0.18559718132019043,
-    "precipitation_t6": 0.17010252177715302,
-    "precipitation_t12": 0.8126055002212524,
-    "lat": 32.75,
-    "lon": 35.3
-  },
-  {
-    "cell_id": 60,
-    "timestamp": "2024-12-27 04:00:00.000000",
-    "precipitation_t1": 0.01578524336218834,
-    "precipitation_t3": 0.0584779717028141,
-    "precipitation_t6": 0.12137631326913834,
-    "precipitation_t12": 0.5366252064704895,
-    "lat": 32.75,
-    "lon": 35.3
   },
   {
     "cell_id": 60,
@@ -13801,56 +10801,6 @@
   },
   {
     "cell_id": 61,
-    "timestamp": "2024-12-27 00:00:00.000000",
-    "precipitation_t1": 0.0,
-    "precipitation_t3": 0.0,
-    "precipitation_t6": 0.02199782244861126,
-    "precipitation_t12": 0.23870949447155,
-    "lat": 32.75,
-    "lon": 35.35
-  },
-  {
-    "cell_id": 61,
-    "timestamp": "2024-12-27 01:00:00.000000",
-    "precipitation_t1": 0.0,
-    "precipitation_t3": 0.016388138756155968,
-    "precipitation_t6": 0.05663579702377319,
-    "precipitation_t12": 0.19379109144210815,
-    "lat": 32.75,
-    "lon": 35.35
-  },
-  {
-    "cell_id": 61,
-    "timestamp": "2024-12-27 02:00:00.000000",
-    "precipitation_t1": 0.01640249229967594,
-    "precipitation_t3": 0.024394473060965538,
-    "precipitation_t6": 0.07565393298864365,
-    "precipitation_t12": 0.42881548404693604,
-    "lat": 32.75,
-    "lon": 35.35
-  },
-  {
-    "cell_id": 61,
-    "timestamp": "2024-12-27 03:00:00.000000",
-    "precipitation_t1": 0.02909865416586399,
-    "precipitation_t3": 0.06688067317008972,
-    "precipitation_t6": 0.08250197023153305,
-    "precipitation_t12": 1.272857427597046,
-    "lat": 32.75,
-    "lon": 35.35
-  },
-  {
-    "cell_id": 61,
-    "timestamp": "2024-12-27 04:00:00.000000",
-    "precipitation_t1": 0.01963791623711586,
-    "precipitation_t3": 0.10227462649345398,
-    "precipitation_t6": 0.3127342164516449,
-    "precipitation_t12": 0.2743118107318878,
-    "lat": 32.75,
-    "lon": 35.35
-  },
-  {
-    "cell_id": 61,
     "timestamp": "2024-12-27 05:00:00.000000",
     "precipitation_t1": 0.026852428913116455,
     "precipitation_t3": 0.08673166483640671,
@@ -14031,56 +10981,6 @@
   },
   {
     "cell_id": 62,
-    "timestamp": "2024-12-27 00:00:00.000000",
-    "precipitation_t1": 0.012244709767401218,
-    "precipitation_t3": 0.027417145669460297,
-    "precipitation_t6": 0.03650343045592308,
-    "precipitation_t12": 0.21205481886863708,
-    "lat": 32.75,
-    "lon": 35.4
-  },
-  {
-    "cell_id": 62,
-    "timestamp": "2024-12-27 01:00:00.000000",
-    "precipitation_t1": 0.01384529285132885,
-    "precipitation_t3": 0.0410909466445446,
-    "precipitation_t6": 0.04521360993385315,
-    "precipitation_t12": 0.6105432510375977,
-    "lat": 32.75,
-    "lon": 35.4
-  },
-  {
-    "cell_id": 62,
-    "timestamp": "2024-12-27 02:00:00.000000",
-    "precipitation_t1": 0.0,
-    "precipitation_t3": 0.04332420602440834,
-    "precipitation_t6": 0.09946290403604507,
-    "precipitation_t12": 0.4411408007144928,
-    "lat": 32.75,
-    "lon": 35.4
-  },
-  {
-    "cell_id": 62,
-    "timestamp": "2024-12-27 03:00:00.000000",
-    "precipitation_t1": 0.032628029584884644,
-    "precipitation_t3": 0.14541007578372955,
-    "precipitation_t6": 0.12865664064884186,
-    "precipitation_t12": 0.7583728432655334,
-    "lat": 32.75,
-    "lon": 35.4
-  },
-  {
-    "cell_id": 62,
-    "timestamp": "2024-12-27 04:00:00.000000",
-    "precipitation_t1": 0.02262851595878601,
-    "precipitation_t3": 0.11934544146060944,
-    "precipitation_t6": 0.3119514584541321,
-    "precipitation_t12": 0.6461479067802429,
-    "lat": 32.75,
-    "lon": 35.4
-  },
-  {
-    "cell_id": 62,
     "timestamp": "2024-12-27 05:00:00.000000",
     "precipitation_t1": 0.027369678020477295,
     "precipitation_t3": 0.03585685044527054,
@@ -14258,56 +11158,6 @@
     "precipitation_t12": 1.8680579662322998,
     "lat": 32.75,
     "lon": 35.4
-  },
-  {
-    "cell_id": 63,
-    "timestamp": "2024-12-27 00:00:00.000000",
-    "precipitation_t1": 0.0,
-    "precipitation_t3": 0.0,
-    "precipitation_t6": 0.028760597109794617,
-    "precipitation_t12": 0.23073574900627136,
-    "lat": 32.75,
-    "lon": 35.45
-  },
-  {
-    "cell_id": 63,
-    "timestamp": "2024-12-27 01:00:00.000000",
-    "precipitation_t1": 0.01443543191999197,
-    "precipitation_t3": 0.030350735411047935,
-    "precipitation_t6": 0.050956521183252335,
-    "precipitation_t12": 0.20907488465309143,
-    "lat": 32.75,
-    "lon": 35.45
-  },
-  {
-    "cell_id": 63,
-    "timestamp": "2024-12-27 02:00:00.000000",
-    "precipitation_t1": 0.0,
-    "precipitation_t3": 0.03692396730184555,
-    "precipitation_t6": 0.08701388537883759,
-    "precipitation_t12": 0.4285602867603302,
-    "lat": 32.75,
-    "lon": 35.45
-  },
-  {
-    "cell_id": 63,
-    "timestamp": "2024-12-27 03:00:00.000000",
-    "precipitation_t1": 0.02927526645362377,
-    "precipitation_t3": 0.16571436822414398,
-    "precipitation_t6": 0.12592875957489014,
-    "precipitation_t12": 0.7188202738761902,
-    "lat": 32.75,
-    "lon": 35.45
-  },
-  {
-    "cell_id": 63,
-    "timestamp": "2024-12-27 04:00:00.000000",
-    "precipitation_t1": 0.021563610062003136,
-    "precipitation_t3": 0.0595683716237545,
-    "precipitation_t6": 0.2615372836589813,
-    "precipitation_t12": 0.5998333692550659,
-    "lat": 32.75,
-    "lon": 35.45
   },
   {
     "cell_id": 63,

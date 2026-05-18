@@ -74,20 +74,20 @@
 ### `May 19 → Jun 1` (~2 weeks)
 
 **Heatmap**
-- [ ] Interactive heatmap over Jezreel Valley grid cells
-- [ ] Coarser cell resolution — prioritize visual clarity over granularity
-- [ ] Color scale maps to precipitation probability or intensity
+- [x] Interactive heatmap over Jezreel Valley grid cells
+- [x] Coarser cell resolution — prioritize visual clarity over granularity
+- [x] Color scale maps to precipitation probability or intensity
 
 **Controls**
-- [ ] Forecast horizon toggle: t+1 / t+3 / t+6 / t+12
-- [ ] Hour selector for browsing historical forecasts
-- [ ] Station overlay showing real IMS sensor locations
+- [x] Forecast horizon toggle: t+1 / t+3 / t+6 / t+12
+- [x] Hour selector for browsing historical forecasts
+- [x] Station overlay showing real IMS sensor locations
 
 **Demo stability**
-- [ ] App does not crash on missing data or empty forecast hours
-- [ ] Works on a clean machine with no local setup beyond `streamlit run`
-- [ ] Record 4-minute demo video (required by report template alongside live demo)
-- [ ] **Phase 3 milestone: demoable, stable, rehearsed ✓**
+- [x] App does not crash on missing data or empty forecast hours
+- [x] Works on a clean machine with no local setup beyond `streamlit run`
+- [x] Record 4-minute demo video (required by report template alongside live demo)
+- [x] **Phase 3 milestone: demoable, stable, rehearsed ✓**
 
 ---
 
