@@ -104,10 +104,10 @@ def ingest_data():
                         terrain = meta_df.apply(
                             lambda row: ut.get_elevation_from_hgt(row['latitude'], row['longitude']), axis=1
                         )
-                        meta_df['elevation']          = terrain.apply(lambda d: d['elevation'])
-                        meta_df['tpi_local']          = terrain.apply(lambda d: d['tpi_local'])
-                        meta_df['tpi_regional']       = terrain.apply(lambda d: d['tpi_regional'])
-                        meta_df['roughness_local']    = terrain.apply(lambda d: d['roughness_local'])
+                        meta_df['elevation'] = terrain.apply(lambda d: d['elevation'])
+                        meta_df['tpi_local'] = terrain.apply(lambda d: d['tpi_local'])
+                        meta_df['tpi_regional'] = terrain.apply(lambda d: d['tpi_regional'])
+                        meta_df['roughness_local'] = terrain.apply(lambda d: d['roughness_local'])
                         meta_df['roughness_regional'] = terrain.apply(lambda d: d['roughness_regional'])
                         for col in ['elevation', 'tpi_local', 'tpi_regional', 'roughness_local', 'roughness_regional']:
                             if col not in meta_cols_present:
