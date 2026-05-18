@@ -91,7 +91,12 @@ def main():
     for cell in cells:
         res = get_k_neighbors_for_cell(*cell, all_stations)
         res['is_boundary'] = int(res['is_boundary'])
-        res['elevation'] = get_elevation_from_hgt(*cell)
+        terrain = get_elevation_from_hgt(*cell)
+        res['elevation'] = terrain['elevation']
+        res['tpi_local'] = terrain['tpi_local']
+        res['tpi_regional'] = terrain['tpi_regional']
+        res['roughness_local'] = terrain['roughness_local']
+        res['roughness_regional'] = terrain['roughness_regional']
         res['dist_to_coast'] = get_distance_to_coast(*cell)
         records.append(res)
         

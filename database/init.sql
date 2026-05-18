@@ -1,16 +1,20 @@
 DROP TABLE IF EXISTS cell_forecasts;
 DROP TABLE IF EXISTS cell_interpolated;
 DROP TABLE IF EXISTS cell_neighbors;
-DROP TABLE IF EXISTS station_neighbors;
+-- DROP TABLE IF EXISTS station_neighbors;
 -- DROP TABLE IF EXISTS clean_station_data;
 -- DROP TABLE IF EXISTS raw_station_data;
--- DROP TABLE IF EXISTS station_metadata;
+DROP TABLE IF EXISTS station_metadata;
 
 CREATE TABLE IF NOT EXISTS station_metadata (
     station_id INTEGER PRIMARY KEY,
     latitude NUMERIC,
     longitude NUMERIC,
     elevation NUMERIC,
+    tpi_local NUMERIC,
+    tpi_regional NUMERIC,
+    roughness_local NUMERIC,
+    roughness_regional NUMERIC,
     dist_to_coast REAL
 );
 
@@ -41,6 +45,10 @@ CREATE TABLE IF NOT EXISTS cell_neighbors (
     neighbor_3_distance REAL NOT NULL,
     elevation REAL,
     dist_to_coast REAL,
+    tpi_local NUMERIC,
+    tpi_regional NUMERIC,
+    roughness_local NUMERIC,
+    roughness_regional NUMERIC,
     CONSTRAINT unique_cell_lat_lon UNIQUE (lat, lon)
 );
 

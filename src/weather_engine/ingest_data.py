@@ -101,9 +101,17 @@ def ingest_data():
                     meta_df = df[['station_id'] + meta_cols_present].drop_duplicates(subset=['station_id']).copy()
                     
                     if 'latitude' in meta_df.columns and 'longitude' in meta_df.columns:
-                        meta_df['elevation'] = meta_df.apply(lambda row: ut.get_elevation_from_hgt(row['latitude'], row['longitude']), axis=1)
-                        if 'elevation' not in meta_cols_present:
-                            meta_cols_present.append('elevation')
+                        terrain = meta_df.apply(
+                            lambda row: ut.get_elevation_from_hgt(row['latitude'], row['longitude']), axis=1
+                        )
+                        meta_df['elevation']          = terrain.apply(lambda d: d['elevation'])
+                        meta_df['tpi_local']          = terrain.apply(lambda d: d['tpi_local'])
+                        meta_df['tpi_regional']       = terrain.apply(lambda d: d['tpi_regional'])
+                        meta_df['roughness_local']    = terrain.apply(lambda d: d['roughness_local'])
+                        meta_df['roughness_regional'] = terrain.apply(lambda d: d['roughness_regional'])
+                        for col in ['elevation', 'tpi_local', 'tpi_regional', 'roughness_local', 'roughness_regional']:
+                            if col not in meta_cols_present:
+                                meta_cols_present.append(col)
                         meta_df['dist_to_coast'] = meta_df.apply(lambda row: ut.get_distance_to_coast(row['latitude'], row['longitude']), axis=1)
                         if 'dist_to_coast' not in meta_cols_present:
                             meta_cols_present.append('dist_to_coast')

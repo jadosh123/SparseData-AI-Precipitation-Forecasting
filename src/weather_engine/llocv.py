@@ -60,12 +60,14 @@ def load_fold(
     y = combined[[c for c in combined.columns if not c.endswith(('_n1', '_n2', '_n3'))]]
     X = combined[[c for c in combined.columns if c.endswith(('_n1', '_n2', '_n3'))]]
 
+    TERRAIN_COLS = ['elevation', 'tpi_local', 'tpi_regional', 'roughness_local', 'roughness_regional', 'dist_to_coast']
+
     X = X.copy()
-    X['elevation_target'] = metadata.loc[target_id, 'elevation']
-    X['dist_to_coast_target'] = metadata.loc[target_id, 'dist_to_coast']
+    for col in TERRAIN_COLS:
+        X[f'{col}_target'] = metadata.loc[target_id, col]
     for i, nid in enumerate(neighbor_ids):
-        X[f'elevation_n{i+1}'] = metadata.loc[nid, 'elevation']
-        X[f'dist_to_coast_n{i+1}'] = metadata.loc[nid, 'dist_to_coast']
+        for col in TERRAIN_COLS:
+            X[f'{col}_n{i+1}'] = metadata.loc[nid, col]
 
     X['dist_n1'] = neighbor_row['neighbor_1_distance']
     X['dist_n2'] = neighbor_row['neighbor_2_distance']
