@@ -245,11 +245,13 @@ def interpolate_and_store(cell_neighbors: pd.DataFrame, station_frames: dict, mo
             print(f"Cell {cell_id}: missing neighbor data, skipping.")
             continue
         
+        cell_terrain = {col: row[col] for col in ('tpi_local', 'tpi_regional', 'roughness_local', 'roughness_regional')}
         X = load_cell_features(
             row['elevation'], row['dist_to_coast'],
             int(row['neighbor_1_id']), int(row['neighbor_2_id']), int(row['neighbor_3_id']),
             row['neighbor_1_distance'], row['neighbor_2_distance'], row['neighbor_3_distance'],
-            station_frames=station_frames
+            station_frames=station_frames,
+            cell_terrain=cell_terrain,
         )
         X = encode_time_features(X)
         current_hour = datetime.now(timezone.utc).replace(tzinfo=None, minute=0, second=0, microsecond=0)

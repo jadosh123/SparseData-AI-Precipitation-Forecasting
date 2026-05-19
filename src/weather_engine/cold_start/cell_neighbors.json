@@ -11,7 +11,11 @@
     "neighbor_3_id": 20,
     "neighbor_3_distance": 30.85931929934389,
     "elevation": 75.0,
-    "dist_to_coast": 15.672103881835938
+    "dist_to_coast": 15.672103881835938,
+    "tpi_local": -14.841407006346586,
+    "tpi_regional": -17.676907997326794,
+    "roughness_local": 27.893630613833817,
+    "roughness_regional": 47.30465477279026
   },
   {
     "cell_id": 2,
@@ -20,12 +24,16 @@
     "is_boundary": 0,
     "neighbor_1_id": 67,
     "neighbor_1_distance": 16.993936733350086,
-    "neighbor_2_id": 16,
-    "neighbor_2_distance": 23.20859791773609,
+    "neighbor_2_id": 186,
+    "neighbor_2_distance": 29.592321428139186,
     "neighbor_3_id": 20,
     "neighbor_3_distance": 30.55879495988236,
     "elevation": 196.0,
-    "dist_to_coast": 20.27678680419922
+    "dist_to_coast": 20.27678680419922,
+    "tpi_local": 9.315572447918527,
+    "tpi_regional": -3.293668968589884,
+    "roughness_local": 54.01426487405999,
+    "roughness_regional": 91.15627166401003
   },
   {
     "cell_id": 3,
@@ -34,26 +42,34 @@
     "is_boundary": 0,
     "neighbor_1_id": 67,
     "neighbor_1_distance": 17.71813609414222,
-    "neighbor_2_id": 16,
-    "neighbor_2_distance": 20.127439681252554,
+    "neighbor_2_id": 224,
+    "neighbor_2_distance": 25.099275882565617,
     "neighbor_3_id": 20,
     "neighbor_3_distance": 30.9764320130636,
     "elevation": 235.0,
-    "dist_to_coast": 24.864103317260742
+    "dist_to_coast": 24.864103317260742,
+    "tpi_local": -62.49657571085373,
+    "tpi_regional": -53.84812653152147,
+    "roughness_local": 52.54318400459938,
+    "roughness_regional": 67.990979147472
   },
   {
     "cell_id": 4,
     "lat": 32.45,
     "lon": 35.2,
     "is_boundary": 0,
-    "neighbor_1_id": 16,
-    "neighbor_1_distance": 17.76345398374436,
-    "neighbor_2_id": 67,
-    "neighbor_2_distance": 19.570875312026438,
+    "neighbor_1_id": 67,
+    "neighbor_1_distance": 19.570875312026438,
+    "neighbor_2_id": 224,
+    "neighbor_2_distance": 20.4630300627605,
     "neighbor_3_id": 20,
     "neighbor_3_distance": 32.08419789563365,
     "elevation": 359.0,
-    "dist_to_coast": 29.42784881591797
+    "dist_to_coast": 29.42784881591797,
+    "tpi_local": 58.4336835311413,
+    "tpi_regional": 80.47656939184674,
+    "roughness_local": 57.52359222971196,
+    "roughness_regional": 64.25155956176549
   },
   {
     "cell_id": 5,
@@ -62,12 +78,16 @@
     "is_boundary": 0,
     "neighbor_1_id": 224,
     "neighbor_1_distance": 15.858922518727244,
-    "neighbor_2_id": 16,
-    "neighbor_2_distance": 16.429194896746637,
-    "neighbor_3_id": 20,
-    "neighbor_3_distance": 33.814333902032836,
+    "neighbor_2_id": 67,
+    "neighbor_2_distance": 22.272276757693746,
+    "neighbor_3_id": 90,
+    "neighbor_3_distance": 33.64392775315284,
     "elevation": 248.0,
-    "dist_to_coast": 34.028682708740234
+    "dist_to_coast": 34.028682708740234,
+    "tpi_local": -4.4485998063752845,
+    "tpi_regional": 12.163991980396531,
+    "roughness_local": 35.3305828300191,
+    "roughness_regional": 72.85220294675737
   },
   {
     "cell_id": 6,
@@ -81,7 +101,11 @@
     "neighbor_3_id": 90,
     "neighbor_3_distance": 32.626964792223674,
     "elevation": 230.0,
-    "dist_to_coast": 38.623653411865234
+    "dist_to_coast": 38.623653411865234,
+    "tpi_local": 8.923518232995093,
+    "tpi_regional": 2.886567164179098,
+    "roughness_local": 64.32274954491272,
+    "roughness_regional": 90.98521467455042
   },
   {
     "cell_id": 7,
@@ -90,12 +114,16 @@
     "is_boundary": 0,
     "neighbor_1_id": 224,
     "neighbor_1_distance": 7.004914885288948,
-    "neighbor_2_id": 16,
-    "neighbor_2_distance": 17.621855893573237,
-    "neighbor_3_id": 90,
-    "neighbor_3_distance": 32.26899901256953,
+    "neighbor_2_id": 380,
+    "neighbor_2_distance": 11.482225602695515,
+    "neighbor_3_id": 20,
+    "neighbor_3_distance": 38.78023902085004,
     "elevation": 212.0,
-    "dist_to_coast": 43.21562957763672
+    "dist_to_coast": 43.21562957763672,
+    "tpi_local": -26.101473699307974,
+    "tpi_regional": -46.60881265315214,
+    "roughness_local": 63.84183368160165,
+    "roughness_regional": 89.24803922768312
   },
   {
     "cell_id": 8,
@@ -109,7 +137,11 @@
     "neighbor_3_id": 90,
     "neighbor_3_distance": 32.591751669291774,
     "elevation": 330.0,
-    "dist_to_coast": 47.807613372802734
+    "dist_to_coast": 47.807613372802734,
+    "tpi_local": -17.440532109433832,
+    "tpi_regional": 47.578694586767654,
+    "roughness_local": 64.01445232588783,
+    "roughness_regional": 112.39055965421409
   },
   {
     "cell_id": 9,
@@ -123,7 +155,11 @@
     "neighbor_3_id": 90,
     "neighbor_3_distance": 33.57559777276428,
     "elevation": 96.0,
-    "dist_to_coast": 52.40886306762695
+    "dist_to_coast": 52.40886306762695,
+    "tpi_local": 29.37226146509377,
+    "tpi_regional": 18.316025840944533,
+    "roughness_local": 155.1563932650644,
+    "roughness_regional": 209.85055442184654
   },
   {
     "cell_id": 10,
@@ -132,12 +168,16 @@
     "is_boundary": 0,
     "neighbor_1_id": 45,
     "neighbor_1_distance": 12.032854516041958,
-    "neighbor_2_id": 46,
-    "neighbor_2_distance": 16.082922632765268,
-    "neighbor_3_id": 380,
-    "neighbor_3_distance": 32.70517238819243,
+    "neighbor_2_id": 67,
+    "neighbor_2_distance": 12.230182320187215,
+    "neighbor_3_id": 20,
+    "neighbor_3_distance": 36.372645625871314,
     "elevation": 121.0,
-    "dist_to_coast": 14.478286743164062
+    "dist_to_coast": 14.478286743164062,
+    "tpi_local": 13.94115959697372,
+    "tpi_regional": 3.8949253731343276,
+    "roughness_local": 26.239221994445113,
+    "roughness_regional": 46.296584441909495
   },
   {
     "cell_id": 11,
@@ -151,7 +191,11 @@
     "neighbor_3_id": 224,
     "neighbor_3_distance": 29.619520341852052,
     "elevation": 149.0,
-    "dist_to_coast": 19.08260726928711
+    "dist_to_coast": 19.08260726928711,
+    "tpi_local": -76.73523611459714,
+    "tpi_regional": -80.60738694586769,
+    "roughness_local": 74.60128374133626,
+    "roughness_regional": 91.68927595067645
   },
   {
     "cell_id": 12,
@@ -165,35 +209,47 @@
     "neighbor_3_id": 46,
     "neighbor_3_distance": 25.359603042347235,
     "elevation": 428.0,
-    "dist_to_coast": 23.668258666992188
+    "dist_to_coast": 23.668258666992188,
+    "tpi_local": 43.03772096525512,
+    "tpi_regional": 112.16122076186235,
+    "roughness_local": 57.42194527457202,
+    "roughness_regional": 71.76629951992298
   },
   {
     "cell_id": 13,
     "lat": 32.5,
     "lon": 35.2,
     "is_boundary": 0,
-    "neighbor_1_id": 16,
-    "neighbor_1_distance": 12.880342773532838,
+    "neighbor_1_id": 67,
+    "neighbor_1_distance": 14.998360340456792,
     "neighbor_2_id": 224,
     "neighbor_2_distance": 20.27538139069077,
     "neighbor_3_id": 46,
     "neighbor_3_distance": 30.021905708327225,
     "elevation": 218.0,
-    "dist_to_coast": 28.27591323852539
+    "dist_to_coast": 28.27591323852539,
+    "tpi_local": 5.178887733515012,
+    "tpi_regional": -22.649516596123846,
+    "roughness_local": 58.89734292347757,
+    "roughness_regional": 105.6970898372132
   },
   {
     "cell_id": 14,
     "lat": 32.5,
     "lon": 35.25,
-    "is_boundary": 1,
-    "neighbor_1_id": 16,
-    "neighbor_1_distance": 10.968442800153976,
-    "neighbor_2_id": 380,
-    "neighbor_2_distance": 14.489137316418082,
-    "neighbor_3_id": 224,
-    "neighbor_3_distance": 15.61901968682716,
+    "is_boundary": 0,
+    "neighbor_1_id": 380,
+    "neighbor_1_distance": 14.489137316418082,
+    "neighbor_2_id": 224,
+    "neighbor_2_distance": 15.61901968682716,
+    "neighbor_3_id": 46,
+    "neighbor_3_distance": 34.69160303425074,
     "elevation": 98.0,
-    "dist_to_coast": 32.85345458984375
+    "dist_to_coast": 32.85345458984375,
+    "tpi_local": -15.054501774893325,
+    "tpi_regional": -42.79067052795722,
+    "roughness_local": 33.371129707307155,
+    "roughness_regional": 76.485006600223
   },
   {
     "cell_id": 15,
@@ -202,26 +258,34 @@
     "is_boundary": 1,
     "neighbor_1_id": 380,
     "neighbor_1_distance": 10.241616240479521,
-    "neighbor_2_id": 16,
-    "neighbor_2_distance": 10.892084356902332,
-    "neighbor_3_id": 224,
-    "neighbor_3_distance": 10.990902396125856,
+    "neighbor_2_id": 224,
+    "neighbor_2_distance": 10.990902396125856,
+    "neighbor_3_id": 206,
+    "neighbor_3_distance": 18.065113028599413,
     "elevation": 86.0,
-    "dist_to_coast": 37.45415496826172
+    "dist_to_coast": 37.45415496826172,
+    "tpi_local": -12.655778263831621,
+    "tpi_regional": -32.838743595455554,
+    "roughness_local": 16.31968172464033,
+    "roughness_regional": 46.29329384916551
   },
   {
     "cell_id": 16,
     "lat": 32.5,
     "lon": 35.35,
-    "is_boundary": 1,
+    "is_boundary": 0,
     "neighbor_1_id": 224,
     "neighbor_1_distance": 6.452100131770952,
-    "neighbor_2_id": 380,
-    "neighbor_2_distance": 6.618000325921161,
-    "neighbor_3_id": 16,
-    "neighbor_3_distance": 12.684459896445645,
+    "neighbor_2_id": 67,
+    "neighbor_2_distance": 26.374976128939526,
+    "neighbor_3_id": 90,
+    "neighbor_3_distance": 37.82871124099399,
     "elevation": 173.0,
-    "dist_to_coast": 42.07331848144531
+    "dist_to_coast": 42.07331848144531,
+    "tpi_local": -11.406468500125499,
+    "tpi_regional": -0.5188861661840178,
+    "roughness_local": 53.912724731287824,
+    "roughness_regional": 88.79331484997849
   },
   {
     "cell_id": 17,
@@ -232,10 +296,14 @@
     "neighbor_1_distance": 2.5382622523745497,
     "neighbor_2_id": 380,
     "neighbor_2_distance": 5.163021296901191,
-    "neighbor_3_id": 16,
-    "neighbor_3_distance": 15.718803765723143,
+    "neighbor_3_id": 67,
+    "neighbor_3_distance": 30.665668281976675,
     "elevation": 344.0,
-    "dist_to_coast": 46.70803451538086
+    "dist_to_coast": 46.70803451538086,
+    "tpi_local": 19.010649359962713,
+    "tpi_regional": 158.95753174426375,
+    "roughness_local": 93.8715988908012,
+    "roughness_regional": 170.62535369008015
   },
   {
     "cell_id": 18,
@@ -249,7 +317,11 @@
     "neighbor_3_id": 380,
     "neighbor_3_distance": 7.312132984676923,
     "elevation": -102.0,
-    "dist_to_coast": 51.354095458984375
+    "dist_to_coast": 51.354095458984375,
+    "tpi_local": -42.379253469109685,
+    "tpi_regional": -117.40985520160392,
+    "roughness_local": 96.16840545945828,
+    "roughness_regional": 184.17595547031365
   },
   {
     "cell_id": 19,
@@ -260,10 +332,14 @@
     "neighbor_1_distance": 7.305647471852726,
     "neighbor_2_id": 46,
     "neighbor_2_distance": 17.960196011859757,
-    "neighbor_3_id": 16,
-    "neighbor_3_distance": 21.868189016261432,
+    "neighbor_3_id": 380,
+    "neighbor_3_distance": 32.29296305727695,
     "elevation": 143.0,
-    "dist_to_coast": 13.368867874145508
+    "dist_to_coast": 13.368867874145508,
+    "tpi_local": 13.762594571336365,
+    "tpi_regional": 6.029423034083322,
+    "roughness_local": 25.147176333725763,
+    "roughness_regional": 42.04125596241421
   },
   {
     "cell_id": 20,
@@ -272,12 +348,16 @@
     "is_boundary": 0,
     "neighbor_1_id": 67,
     "neighbor_1_distance": 5.880774625815642,
-    "neighbor_2_id": 16,
-    "neighbor_2_distance": 17.347572512456285,
-    "neighbor_3_id": 46,
-    "neighbor_3_distance": 22.19695678822538,
+    "neighbor_2_id": 45,
+    "neighbor_2_distance": 13.852219813193251,
+    "neighbor_3_id": 224,
+    "neighbor_3_distance": 30.51611963115231,
     "elevation": 227.0,
-    "dist_to_coast": 18.024499893188477
+    "dist_to_coast": 18.024499893188477,
+    "tpi_local": 6.123489547850397,
+    "tpi_regional": 2.480463354867453,
+    "roughness_local": 38.001617610518515,
+    "roughness_regional": 67.68682469077739
   },
   {
     "cell_id": 21,
@@ -291,49 +371,65 @@
     "neighbor_3_id": 224,
     "neighbor_3_distance": 26.005216397998385,
     "elevation": 338.0,
-    "dist_to_coast": 22.675954818725586
+    "dist_to_coast": 22.675954818725586,
+    "tpi_local": 41.05274480978164,
+    "tpi_regional": 77.77729561149476,
+    "roughness_local": 48.7090144451786,
+    "roughness_regional": 80.60117462727338
   },
   {
     "cell_id": 22,
     "lat": 32.55,
     "lon": 35.2,
     "is_boundary": 0,
-    "neighbor_1_id": 16,
-    "neighbor_1_distance": 8.836724206611878,
+    "neighbor_1_id": 67,
+    "neighbor_1_distance": 11.344777479911567,
     "neighbor_2_id": 224,
     "neighbor_2_distance": 21.57007032434803,
     "neighbor_3_id": 45,
     "neighbor_3_distance": 23.132627010023064,
     "elevation": 125.0,
-    "dist_to_coast": 27.306001663208008
+    "dist_to_coast": 27.306001663208008,
+    "tpi_local": -8.305568503711129,
+    "tpi_regional": -32.58196480285142,
+    "roughness_local": 44.71214619378634,
+    "roughness_regional": 97.55868812130801
   },
   {
     "cell_id": 23,
     "lat": 32.55,
     "lon": 35.25,
     "is_boundary": 0,
-    "neighbor_1_id": 16,
-    "neighbor_1_distance": 5.702331566872801,
+    "neighbor_1_id": 380,
+    "neighbor_1_distance": 13.550668932613139,
     "neighbor_2_id": 67,
     "neighbor_2_distance": 15.543918294367625,
     "neighbor_3_id": 224,
     "neighbor_3_distance": 17.269150686805432,
     "elevation": 65.0,
-    "dist_to_coast": 31.947786331176758
+    "dist_to_coast": 31.947786331176758,
+    "tpi_local": -2.5273046720929386,
+    "tpi_regional": -12.204473156605033,
+    "roughness_local": 7.492225182362952,
+    "roughness_regional": 24.89758374988502
   },
   {
     "cell_id": 24,
     "lat": 32.55,
     "lon": 35.3,
     "is_boundary": 0,
-    "neighbor_1_id": 16,
-    "neighbor_1_distance": 5.554122678020363,
+    "neighbor_1_id": 380,
+    "neighbor_1_distance": 8.867619871205356,
     "neighbor_2_id": 224,
     "neighbor_2_distance": 13.233979431814358,
     "neighbor_3_id": 67,
     "neighbor_3_distance": 19.960517121774913,
     "elevation": 67.0,
-    "dist_to_coast": 36.57411193847656
+    "dist_to_coast": 36.57411193847656,
+    "tpi_local": -4.469253110545381,
+    "tpi_regional": -7.124687012697706,
+    "roughness_local": 10.482845989668547,
+    "roughness_regional": 33.90527397132924
   },
   {
     "cell_id": 25,
@@ -342,12 +438,16 @@
     "is_boundary": 0,
     "neighbor_1_id": 380,
     "neighbor_1_distance": 4.192362288863401,
-    "neighbor_2_id": 16,
-    "neighbor_2_distance": 8.548846433514527,
-    "neighbor_3_id": 224,
-    "neighbor_3_distance": 9.798566188736334,
+    "neighbor_2_id": 224,
+    "neighbor_2_distance": 9.798566188736334,
+    "neighbor_3_id": 186,
+    "neighbor_3_distance": 23.793196762143943,
     "elevation": 71.0,
-    "dist_to_coast": 41.2159423828125
+    "dist_to_coast": 41.2159423828125,
+    "tpi_local": 5.713435404639824,
+    "tpi_regional": -25.07353976386723,
+    "roughness_local": 84.47703083971527,
+    "roughness_regional": 99.29738517400871
   },
   {
     "cell_id": 26,
@@ -361,7 +461,11 @@
     "neighbor_3_id": 13,
     "neighbor_3_distance": 17.28065724826738,
     "elevation": -51.0,
-    "dist_to_coast": 44.923282623291016
+    "dist_to_coast": 44.923282623291016,
+    "tpi_local": -21.360357130051273,
+    "tpi_regional": -108.52106928046337,
+    "roughness_local": 54.64640226721448,
+    "roughness_regional": 135.41374139380588
   },
   {
     "cell_id": 27,
@@ -375,7 +479,11 @@
     "neighbor_3_id": 11,
     "neighbor_3_distance": 17.371696349847998,
     "elevation": 11.0,
-    "dist_to_coast": 48.60480499267578
+    "dist_to_coast": 48.60480499267578,
+    "tpi_local": 37.50876689734304,
+    "tpi_regional": 13.329436400089106,
+    "roughness_local": 55.151104972949554,
+    "roughness_regional": 97.46246985904696
   },
   {
     "cell_id": 28,
@@ -389,7 +497,11 @@
     "neighbor_3_id": 44,
     "neighbor_3_distance": 12.356687794763014,
     "elevation": 132.0,
-    "dist_to_coast": 12.550561904907227
+    "dist_to_coast": 12.550561904907227,
+    "tpi_local": -24.727311843379113,
+    "tpi_regional": -31.189547783470715,
+    "roughness_local": 34.90090015770197,
+    "roughness_regional": 46.961780713226624
   },
   {
     "cell_id": 29,
@@ -400,10 +512,14 @@
     "neighbor_1_distance": 0.4589773419841493,
     "neighbor_2_id": 45,
     "neighbor_2_distance": 13.96406885624655,
-    "neighbor_3_id": 16,
-    "neighbor_3_distance": 16.577696708192047,
+    "neighbor_3_id": 380,
+    "neighbor_3_distance": 28.236957910182884,
     "elevation": 258.0,
-    "dist_to_coast": 17.180683135986328
+    "dist_to_coast": 17.180683135986328,
+    "tpi_local": 36.562838395066166,
+    "tpi_regional": 58.80277121853419,
+    "roughness_local": 27.922022858777776,
+    "roughness_regional": 63.337110882589606
   },
   {
     "cell_id": 30,
@@ -412,68 +528,88 @@
     "is_boundary": 0,
     "neighbor_1_id": 67,
     "neighbor_1_distance": 5.030622121263188,
-    "neighbor_2_id": 16,
-    "neighbor_2_distance": 11.896121698580306,
-    "neighbor_3_id": 45,
-    "neighbor_3_distance": 18.56264734888519,
+    "neighbor_2_id": 186,
+    "neighbor_2_distance": 12.278149225029829,
+    "neighbor_3_id": 380,
+    "neighbor_3_distance": 23.678903396559104,
     "elevation": 145.0,
-    "dist_to_coast": 21.775022506713867
+    "dist_to_coast": 21.775022506713867,
+    "tpi_local": -15.514324644124912,
+    "tpi_regional": -11.977322343506358,
+    "roughness_local": 80.52360527666364,
+    "roughness_regional": 91.25075048155615
   },
   {
     "cell_id": 31,
     "lat": 32.6,
     "lon": 35.2,
     "is_boundary": 0,
-    "neighbor_1_id": 16,
-    "neighbor_1_distance": 7.217595974608806,
-    "neighbor_2_id": 67,
-    "neighbor_2_distance": 9.70971935632,
-    "neighbor_3_id": 186,
-    "neighbor_3_distance": 12.156189731124945,
+    "neighbor_1_id": 67,
+    "neighbor_1_distance": 9.70971935632,
+    "neighbor_2_id": 186,
+    "neighbor_2_distance": 12.156189731124945,
+    "neighbor_3_id": 380,
+    "neighbor_3_distance": 19.18222428809262,
     "elevation": 74.0,
-    "dist_to_coast": 26.399921417236328
+    "dist_to_coast": 26.399921417236328,
+    "tpi_local": -7.651869912868875,
+    "tpi_regional": -12.326709734907553,
+    "roughness_local": 23.810713723594375,
+    "roughness_regional": 54.951308622604934
   },
   {
     "cell_id": 32,
     "lat": 32.6,
     "lon": 35.25,
     "is_boundary": 0,
-    "neighbor_1_id": 16,
-    "neighbor_1_distance": 2.5589037633726077,
-    "neighbor_2_id": 186,
-    "neighbor_2_distance": 13.733771207596133,
-    "neighbor_3_id": 67,
-    "neighbor_3_distance": 14.391842067898585,
+    "neighbor_1_id": 186,
+    "neighbor_1_distance": 13.733771207596133,
+    "neighbor_2_id": 67,
+    "neighbor_2_distance": 14.391842067898585,
+    "neighbor_3_id": 380,
+    "neighbor_3_distance": 14.802959916493377,
     "elevation": 56.0,
-    "dist_to_coast": 30.95519256591797
+    "dist_to_coast": 30.95519256591797,
+    "tpi_local": 2.1337444870737556,
+    "tpi_regional": -6.069431944753845,
+    "roughness_local": 2.6196433374201376,
+    "roughness_regional": 10.645066162532352
   },
   {
     "cell_id": 33,
     "lat": 32.6,
     "lon": 35.3,
     "is_boundary": 0,
-    "neighbor_1_id": 16,
-    "neighbor_1_distance": 2.209210715849824,
-    "neighbor_2_id": 380,
-    "neighbor_2_distance": 10.68644842157831,
-    "neighbor_3_id": 13,
-    "neighbor_3_distance": 15.403214756034869,
+    "neighbor_1_id": 380,
+    "neighbor_1_distance": 10.68644842157831,
+    "neighbor_2_id": 186,
+    "neighbor_2_distance": 16.531288750344327,
+    "neighbor_3_id": 224,
+    "neighbor_3_distance": 17.06745403402802,
     "elevation": 54.0,
-    "dist_to_coast": 34.21769714355469
+    "dist_to_coast": 34.21769714355469,
+    "tpi_local": -10.259170282190112,
+    "tpi_regional": -27.329079973267994,
+    "roughness_local": 22.0832321586391,
+    "roughness_regional": 57.18715969608611
   },
   {
     "cell_id": 34,
     "lat": 32.6,
     "lon": 35.35,
     "is_boundary": 0,
-    "neighbor_1_id": 16,
-    "neighbor_1_distance": 6.862329238073017,
-    "neighbor_2_id": 380,
-    "neighbor_2_distance": 7.292148142542239,
-    "neighbor_3_id": 13,
-    "neighbor_3_distance": 12.863673297007745,
+    "neighbor_1_id": 380,
+    "neighbor_1_distance": 7.292148142542239,
+    "neighbor_2_id": 13,
+    "neighbor_2_distance": 12.863673297007745,
+    "neighbor_3_id": 186,
+    "neighbor_3_distance": 20.044301896095448,
     "elevation": 155.0,
-    "dist_to_coast": 37.77820587158203
+    "dist_to_coast": 37.77820587158203,
+    "tpi_local": -31.376851088242688,
+    "tpi_regional": 31.603403876141684,
+    "roughness_local": 125.94612917867728,
+    "roughness_regional": 104.73292396586197
   },
   {
     "cell_id": 35,
@@ -487,7 +623,11 @@
     "neighbor_3_id": 224,
     "neighbor_3_distance": 13.306692846815894,
     "elevation": 48.0,
-    "dist_to_coast": 41.5616455078125
+    "dist_to_coast": 41.5616455078125,
+    "tpi_local": -42.67668256301768,
+    "tpi_regional": -61.55891289819559,
+    "roughness_local": 55.36000124107252,
+    "roughness_regional": 101.01838967399345
   },
   {
     "cell_id": 36,
@@ -501,7 +641,11 @@
     "neighbor_3_id": 224,
     "neighbor_3_distance": 13.632864396533225,
     "elevation": 105.0,
-    "dist_to_coast": 45.5137825012207
+    "dist_to_coast": 45.5137825012207,
+    "tpi_local": 13.803650184660626,
+    "tpi_regional": 25.20668300289597,
+    "roughness_local": 41.79798599887345,
+    "roughness_regional": 70.63812220182544
   },
   {
     "cell_id": 37,
@@ -515,7 +659,11 @@
     "neighbor_3_id": 42,
     "neighbor_3_distance": 12.652264437948826,
     "elevation": 261.0,
-    "dist_to_coast": 11.766205787658691
+    "dist_to_coast": 11.766205787658691,
+    "tpi_local": 8.472551902183653,
+    "tpi_regional": 10.575798618846079,
+    "roughness_local": 58.791154467415424,
+    "roughness_regional": 98.6352526821819
   },
   {
     "cell_id": 38,
@@ -529,7 +677,11 @@
     "neighbor_3_id": 44,
     "neighbor_3_distance": 13.599581732793318,
     "elevation": 125.0,
-    "dist_to_coast": 16.411901473999023
+    "dist_to_coast": 16.411901473999023,
+    "tpi_local": -38.073218831797476,
+    "tpi_regional": -55.850826464691465,
+    "roughness_local": 85.70592444850591,
+    "roughness_regional": 123.42262534916603
   },
   {
     "cell_id": 39,
@@ -540,10 +692,14 @@
     "neighbor_1_distance": 6.955033893503165,
     "neighbor_2_id": 67,
     "neighbor_2_distance": 7.262358744685187,
-    "neighbor_3_id": 16,
-    "neighbor_3_distance": 13.31522860722057,
+    "neighbor_3_id": 13,
+    "neighbor_3_distance": 24.818407796531044,
     "elevation": 33.0,
-    "dist_to_coast": 20.784469604492188
+    "dist_to_coast": 20.784469604492188,
+    "tpi_local": -5.560830434938509,
+    "tpi_regional": -34.09484517709957,
+    "roughness_local": 9.056575045215046,
+    "roughness_regional": 47.648082148121794
   },
   {
     "cell_id": 40,
@@ -552,40 +708,52 @@
     "is_boundary": 0,
     "neighbor_1_id": 186,
     "neighbor_1_distance": 6.737519005404932,
-    "neighbor_2_id": 16,
-    "neighbor_2_distance": 9.37663163458075,
-    "neighbor_3_id": 67,
-    "neighbor_3_distance": 11.030631651522636,
+    "neighbor_2_id": 67,
+    "neighbor_2_distance": 11.030631651522636,
+    "neighbor_3_id": 13,
+    "neighbor_3_distance": 20.317675364609716,
     "elevation": 53.0,
-    "dist_to_coast": 23.692197799682617
+    "dist_to_coast": 23.692197799682617,
+    "tpi_local": -0.5932446484276923,
+    "tpi_regional": -16.67987525061261,
+    "roughness_local": 12.262586758199024,
+    "roughness_regional": 37.339288140442115
   },
   {
     "cell_id": 41,
     "lat": 32.65,
     "lon": 35.25,
     "is_boundary": 0,
-    "neighbor_1_id": 16,
-    "neighbor_1_distance": 6.511600953314268,
-    "neighbor_2_id": 186,
-    "neighbor_2_distance": 9.285195635218505,
-    "neighbor_3_id": 13,
-    "neighbor_3_distance": 15.920511075131865,
+    "neighbor_1_id": 186,
+    "neighbor_1_distance": 9.285195635218505,
+    "neighbor_2_id": 67,
+    "neighbor_2_distance": 15.31203101244644,
+    "neighbor_3_id": 380,
+    "neighbor_3_distance": 17.789212503032402,
     "elevation": 65.0,
-    "dist_to_coast": 27.01654624938965
+    "dist_to_coast": 27.01654624938965,
+    "tpi_local": -26.806124278389333,
+    "tpi_regional": -46.52188906215193,
+    "roughness_local": 46.61171722179787,
+    "roughness_regional": 80.78900022391625
   },
   {
     "cell_id": 42,
     "lat": 32.65,
     "lon": 35.3,
     "is_boundary": 0,
-    "neighbor_1_id": 16,
-    "neighbor_1_distance": 6.382358610377616,
-    "neighbor_2_id": 13,
-    "neighbor_2_distance": 11.74383340071961,
-    "neighbor_3_id": 186,
-    "neighbor_3_distance": 13.070370090608625,
+    "neighbor_1_id": 13,
+    "neighbor_1_distance": 11.74383340071961,
+    "neighbor_2_id": 186,
+    "neighbor_2_distance": 13.070370090608625,
+    "neighbor_3_id": 380,
+    "neighbor_3_distance": 14.546037133109563,
     "elevation": 87.0,
-    "dist_to_coast": 30.69266128540039
+    "dist_to_coast": 30.69266128540039,
+    "tpi_local": -9.576571408082046,
+    "tpi_regional": -58.33671641791045,
+    "roughness_local": 17.243280723225762,
+    "roughness_regional": 92.13448779867777
   },
   {
     "cell_id": 43,
@@ -594,12 +762,16 @@
     "is_boundary": 0,
     "neighbor_1_id": 13,
     "neighbor_1_distance": 8.134667050554897,
-    "neighbor_2_id": 16,
-    "neighbor_2_distance": 9.106145427580463,
-    "neighbor_3_id": 380,
-    "neighbor_3_distance": 12.271776449600692,
+    "neighbor_2_id": 380,
+    "neighbor_2_distance": 12.271776449600692,
+    "neighbor_3_id": 186,
+    "neighbor_3_distance": 17.298939057799114,
     "elevation": 164.0,
-    "dist_to_coast": 34.613834381103516
+    "dist_to_coast": 34.613834381103516,
+    "tpi_local": 11.693821936964383,
+    "tpi_regional": -12.992684339496549,
+    "roughness_local": 47.321168650582514,
+    "roughness_regional": 95.52264715421218
   },
   {
     "cell_id": 44,
@@ -610,10 +782,14 @@
     "neighbor_1_distance": 6.182899324662629,
     "neighbor_2_id": 380,
     "neighbor_2_distance": 11.553527505163856,
-    "neighbor_3_id": 16,
-    "neighbor_3_distance": 12.998580191237803,
+    "neighbor_3_id": 186,
+    "neighbor_3_distance": 21.713382604605542,
     "elevation": 119.0,
-    "dist_to_coast": 38.569984436035156
+    "dist_to_coast": 38.569984436035156,
+    "tpi_local": -22.650399799203996,
+    "tpi_regional": -36.752434840721776,
+    "roughness_local": 58.33871153577058,
+    "roughness_regional": 87.30166609817284
   },
   {
     "cell_id": 45,
@@ -627,7 +803,11 @@
     "neighbor_3_id": 380,
     "neighbor_3_distance": 12.658977123411093,
     "elevation": 102.0,
-    "dist_to_coast": 42.5977897644043
+    "dist_to_coast": 42.5977897644043,
+    "tpi_local": 18.265373444727317,
+    "tpi_regional": -13.144486522610833,
+    "roughness_local": 58.34012994184457,
+    "roughness_regional": 64.80181209640874
   },
   {
     "cell_id": 46,
@@ -641,7 +821,11 @@
     "neighbor_3_id": 67,
     "neighbor_3_distance": 11.64848294733398,
     "elevation": 412.0,
-    "dist_to_coast": 10.302135467529297
+    "dist_to_coast": 10.302135467529297,
+    "tpi_local": -5.082254652371887,
+    "tpi_regional": 74.54456671864557,
+    "roughness_local": 42.596119445285545,
+    "roughness_regional": 120.97850865993206
   },
   {
     "cell_id": 47,
@@ -655,7 +839,11 @@
     "neighbor_3_id": 67,
     "neighbor_3_distance": 10.81340074635314,
     "elevation": 33.0,
-    "dist_to_coast": 13.7501220703125
+    "dist_to_coast": 13.7501220703125,
+    "tpi_local": -155.1088242676324,
+    "tpi_regional": -162.6071374470929,
+    "roughness_local": 166.19800302625785,
+    "roughness_regional": 163.1702036472327
   },
   {
     "cell_id": 48,
@@ -669,7 +857,11 @@
     "neighbor_3_id": 42,
     "neighbor_3_distance": 13.864114197352244,
     "elevation": 53.0,
-    "dist_to_coast": 16.431766510009766
+    "dist_to_coast": 16.431766510009766,
+    "tpi_local": -24.880239520958085,
+    "tpi_regional": -35.62241033637781,
+    "roughness_local": 34.81088991366707,
+    "roughness_regional": 53.67664285617382
   },
   {
     "cell_id": 49,
@@ -678,12 +870,16 @@
     "is_boundary": 0,
     "neighbor_1_id": 186,
     "neighbor_1_distance": 2.1993027079316256,
-    "neighbor_2_id": 16,
-    "neighbor_2_distance": 13.622418367438101,
-    "neighbor_3_id": 78,
-    "neighbor_3_distance": 18.247190582507486,
+    "neighbor_2_id": 67,
+    "neighbor_2_distance": 14.522139306174447,
+    "neighbor_3_id": 13,
+    "neighbor_3_distance": 19.368380979136713,
     "elevation": 88.0,
-    "dist_to_coast": 19.860763549804688
+    "dist_to_coast": 19.860763549804688,
+    "tpi_local": -19.33984725160458,
+    "tpi_regional": -36.020788594341724,
+    "roughness_local": 33.04843362013,
+    "roughness_regional": 61.04525799906214
   },
   {
     "cell_id": 50,
@@ -692,12 +888,16 @@
     "is_boundary": 0,
     "neighbor_1_id": 186,
     "neighbor_1_distance": 6.755351964088374,
-    "neighbor_2_id": 16,
-    "neighbor_2_distance": 11.835347938001883,
-    "neighbor_3_id": 13,
-    "neighbor_3_distance": 14.69279102597958,
+    "neighbor_2_id": 13,
+    "neighbor_2_distance": 14.69279102597958,
+    "neighbor_3_id": 67,
+    "neighbor_3_distance": 17.989244642238727,
     "elevation": 352.0,
-    "dist_to_coast": 23.71854591369629
+    "dist_to_coast": 23.71854591369629,
+    "tpi_local": 86.2643694646635,
+    "tpi_regional": 141.83402094007573,
+    "roughness_local": 67.04705194870974,
+    "roughness_regional": 96.21575106742623
   },
   {
     "cell_id": 51,
@@ -708,10 +908,14 @@
     "neighbor_1_distance": 10.019866707319762,
     "neighbor_2_id": 186,
     "neighbor_2_distance": 11.410834049409349,
-    "neighbor_3_id": 16,
-    "neighbor_3_distance": 11.76477569084155,
+    "neighbor_3_id": 380,
+    "neighbor_3_distance": 19.256057005847055,
     "elevation": 335.0,
-    "dist_to_coast": 27.682891845703125
+    "dist_to_coast": 27.682891845703125,
+    "tpi_local": -14.132991502025902,
+    "tpi_regional": 63.839786143907304,
+    "roughness_local": 78.70653665305925,
+    "roughness_regional": 119.44602975445514
   },
   {
     "cell_id": 52,
@@ -720,12 +924,16 @@
     "is_boundary": 0,
     "neighbor_1_id": 13,
     "neighbor_1_distance": 5.356591222212449,
-    "neighbor_2_id": 16,
-    "neighbor_2_distance": 13.437772928332064,
-    "neighbor_3_id": 186,
-    "neighbor_3_distance": 16.07961362200899,
+    "neighbor_2_id": 186,
+    "neighbor_2_distance": 16.07961362200899,
+    "neighbor_3_id": 380,
+    "neighbor_3_distance": 17.6022475738094,
     "elevation": 420.0,
-    "dist_to_coast": 31.7038516998291
+    "dist_to_coast": 31.7038516998291,
+    "tpi_local": 140.0831510631432,
+    "tpi_regional": 159.99918021831144,
+    "roughness_local": 126.88958324859958,
+    "roughness_regional": 128.77929665966667
   },
   {
     "cell_id": 53,
@@ -734,12 +942,16 @@
     "is_boundary": 0,
     "neighbor_1_id": 13,
     "neighbor_1_distance": 0.8741545292869778,
-    "neighbor_2_id": 16,
-    "neighbor_2_distance": 16.326874597464595,
+    "neighbor_2_id": 380,
+    "neighbor_2_distance": 17.10953489406012,
     "neighbor_3_id": 186,
     "neighbor_3_distance": 20.7527172489655,
     "elevation": 131.0,
-    "dist_to_coast": 35.830997467041016
+    "dist_to_coast": 35.830997467041016,
+    "tpi_local": -65.89874143927713,
+    "tpi_regional": -58.46809534417466,
+    "roughness_local": 92.93944943692148,
+    "roughness_regional": 100.27192567155896
   },
   {
     "cell_id": 54,
@@ -753,7 +965,11 @@
     "neighbor_3_id": 380,
     "neighbor_3_distance": 17.874197300076425,
     "elevation": 125.0,
-    "dist_to_coast": 40.060340881347656
+    "dist_to_coast": 40.060340881347656,
+    "tpi_local": -49.59890996450213,
+    "tpi_regional": -21.791258632212077,
+    "roughness_local": 49.02642506716333,
+    "roughness_regional": 82.94065932762537
   },
   {
     "cell_id": 55,
@@ -767,7 +983,11 @@
     "neighbor_3_id": 186,
     "neighbor_3_distance": 12.894811960870001,
     "elevation": 385.0,
-    "dist_to_coast": 6.810307502746582
+    "dist_to_coast": 6.810307502746582,
+    "tpi_local": 123.68177417619847,
+    "tpi_regional": 165.12204945422144,
+    "roughness_local": 190.68067031101015,
+    "roughness_regional": 186.18390152905835
   },
   {
     "cell_id": 56,
@@ -781,7 +1001,11 @@
     "neighbor_3_id": 78,
     "neighbor_3_distance": 10.802779303890489,
     "elevation": 62.0,
-    "dist_to_coast": 9.17607307434082
+    "dist_to_coast": 9.17607307434082,
+    "tpi_local": 16.22349313349349,
+    "tpi_regional": -48.26911116061484,
+    "roughness_local": 53.52166486674242,
+    "roughness_regional": 137.73704041338559
   },
   {
     "cell_id": 57,
@@ -795,7 +1019,11 @@
     "neighbor_3_id": 42,
     "neighbor_3_distance": 12.144817364060156,
     "elevation": 156.0,
-    "dist_to_coast": 12.828442573547363
+    "dist_to_coast": 12.828442573547363,
+    "tpi_local": 6.147728495105611,
+    "tpi_regional": 35.167253285809764,
+    "roughness_local": 47.734771277553726,
+    "roughness_regional": 57.15444745158405
   },
   {
     "cell_id": 58,
@@ -809,7 +1037,11 @@
     "neighbor_3_id": 205,
     "neighbor_3_distance": 17.713658740143817,
     "elevation": 108.0,
-    "dist_to_coast": 16.810651779174805
+    "dist_to_coast": 16.810651779174805,
+    "tpi_local": -63.33644089067374,
+    "tpi_regional": -60.24376921363333,
+    "roughness_local": 33.81868739353829,
+    "roughness_regional": 47.47493507640638
   },
   {
     "cell_id": 59,
@@ -823,7 +1055,11 @@
     "neighbor_3_id": 205,
     "neighbor_3_distance": 15.723587507022447,
     "elevation": 168.0,
-    "dist_to_coast": 20.814247131347656
+    "dist_to_coast": 20.814247131347656,
+    "tpi_local": -25.062641184696474,
+    "tpi_regional": -42.954003118734676,
+    "roughness_local": 35.74304794227671,
+    "roughness_regional": 66.75005293013614
   },
   {
     "cell_id": 60,
@@ -837,7 +1073,11 @@
     "neighbor_3_id": 205,
     "neighbor_3_distance": 14.97837639544099,
     "elevation": 258.0,
-    "dist_to_coast": 24.978107452392578
+    "dist_to_coast": 24.978107452392578,
+    "tpi_local": 13.815662088995651,
+    "tpi_regional": -6.556310982401442,
+    "roughness_local": 56.36777782265873,
+    "roughness_regional": 100.19416509248904
   },
   {
     "cell_id": 61,
@@ -851,7 +1091,11 @@
     "neighbor_3_id": 186,
     "neighbor_3_distance": 16.723518876864013,
     "elevation": 240.0,
-    "dist_to_coast": 29.242490768432617
+    "dist_to_coast": 29.242490768432617,
+    "tpi_local": -32.061780630356054,
+    "tpi_regional": -58.95178436177321,
+    "roughness_local": 100.11153386967581,
+    "roughness_regional": 99.76988958348079
   },
   {
     "cell_id": 62,
@@ -865,7 +1109,11 @@
     "neighbor_3_id": 205,
     "neighbor_3_distance": 17.594943947743555,
     "elevation": 244.0,
-    "dist_to_coast": 33.569725036621094
+    "dist_to_coast": 33.569725036621094,
+    "tpi_local": 5.3504607551364245,
+    "tpi_regional": -9.167404767208723,
+    "roughness_local": 50.18266557865217,
+    "roughness_regional": 76.94729484334114
   },
   {
     "cell_id": 63,
@@ -879,6 +1127,10 @@
     "neighbor_3_id": 205,
     "neighbor_3_distance": 20.43750892814082,
     "elevation": 178.0,
-    "dist_to_coast": 37.970149993896484
+    "dist_to_coast": 37.970149993896484,
+    "tpi_local": 13.353759546774711,
+    "tpi_regional": 15.788826019157938,
+    "roughness_local": 96.36361603495328,
+    "roughness_regional": 101.95123895698224
   }
 ]
