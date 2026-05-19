@@ -36,9 +36,6 @@ def load_cell_features(
         f"SELECT * FROM station_metadata WHERE station_id IN ({placeholders})",
         engine,
     ).set_index('station_id')
-    for col in ('elevation', 'dist_to_coast') + TERRAIN_COLS:
-        if col in metadata.columns:
-            metadata[col] = pd.to_numeric(metadata[col], errors='coerce')
 
     df_neighbors = [station_frames[nid].add_suffix(f'_n{i + 1}') for i, nid in enumerate(neighbor_ids)]
     X = df_neighbors[0].join(df_neighbors[1:], how='outer')
