@@ -12,7 +12,6 @@ import json
 from weather_engine.utils import get_project_root
 
 # Local Cache
-_cached_rows = None
 _cached_demo_rows = None
 _timestamps = None
 _timestamp_idx = 0
@@ -39,10 +38,8 @@ def get_forecast_rows():
     JOIN cell_neighbors cn ON cf.cell_id = cn.cell_id
     """
 
-    global _cached_rows
-    if _cached_rows is None:
-        with SessionLocal() as db:
-            _cached_rows = [dict(row._mapping) for row in db.execute(text(query)).fetchall()]
+    with SessionLocal() as db:
+        _cached_rows = [dict(row._mapping) for row in db.execute(text(query)).fetchall()]
     return _cached_rows
 
 
