@@ -11,6 +11,10 @@ CREATE TABLE IF NOT EXISTS station_metadata (
     latitude NUMERIC,
     longitude NUMERIC,
     elevation NUMERIC,
+    tpi_local NUMERIC,
+    tpi_regional NUMERIC,
+    roughness_local NUMERIC,
+    roughness_regional NUMERIC,
     dist_to_coast REAL
 );
 
@@ -41,6 +45,10 @@ CREATE TABLE IF NOT EXISTS cell_neighbors (
     neighbor_3_distance REAL NOT NULL,
     elevation REAL,
     dist_to_coast REAL,
+    tpi_local NUMERIC,
+    tpi_regional NUMERIC,
+    roughness_local NUMERIC,
+    roughness_regional NUMERIC,
     CONSTRAINT unique_cell_lat_lon UNIQUE (lat, lon)
 );
 
