@@ -1,6 +1,8 @@
 import pandas as pd
 from weather_engine.database import engine
 
+TERRAIN_COLS = ('tpi_local', 'tpi_regional', 'roughness_local', 'roughness_regional')
+
 def load_cell_features(
     cell_elevation: float,
     cell_dist_to_coast: float,
@@ -11,6 +13,7 @@ def load_cell_features(
     neighbor_2_distance: float,
     neighbor_3_distance: float,
     station_frames: dict,
+    cell_terrain: dict | None = None,
 ) -> pd.DataFrame:
     """
     Builds the RFSI feature matrix for a single grid cell.
@@ -33,6 +36,9 @@ def load_cell_features(
         f"SELECT * FROM station_metadata WHERE station_id IN ({placeholders})",
         engine,
     ).set_index('station_id')
+    for col in ('elevation', 'dist_to_coast') + TERRAIN_COLS:
+        if col in metadata.columns:
+            metadata[col] = pd.to_numeric(metadata[col], errors='coerce')
 
     df_neighbors = [station_frames[nid].add_suffix(f'_n{i + 1}') for i, nid in enumerate(neighbor_ids)]
     X = df_neighbors[0].join(df_neighbors[1:], how='outer')
@@ -47,4 +53,12 @@ def load_cell_features(
     X['dist_n1'] = neighbor_1_distance
     X['dist_n2'] = neighbor_2_distance
     X['dist_n3'] = neighbor_3_distance
+    
+    if cell_terrain is not None:
+        for col in TERRAIN_COLS:
+            X[f'{col}_target'] = cell_terrain[col]
+        for i, nid in enumerate(neighbor_ids):
+            for col in TERRAIN_COLS:
+                X[f'{col}_n{i+1}'] = metadata.loc[nid, col]
+        
     return X
