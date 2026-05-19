@@ -4,6 +4,10 @@
     "latitude": 32.8174,
     "longitude": 35.7622,
     "elevation": 378,
+    "tpi_local": 5.993545842446849,
+    "tpi_regional": 33.3327155268434,
+    "roughness_local": 37.46947738344589,
+    "roughness_regional": 92.01716140338876,
     "dist_to_coast": 65.05509185791016
   },
   {
@@ -11,6 +15,10 @@
     "latitude": 32.88,
     "longitude": 35.6504,
     "elevation": -201,
+    "tpi_local": -36.20990354620102,
+    "tpi_regional": -97.45556694141234,
+    "roughness_local": 60.24636311443141,
+    "roughness_regional": 123.0626557463174,
     "dist_to_coast": 53.436336517333984
   },
   {
@@ -18,6 +26,10 @@
     "latitude": 32.7024,
     "longitude": 35.5839,
     "elevation": -201,
+    "tpi_local": 2.095162967478217,
+    "tpi_regional": -37.42233905101358,
+    "roughness_local": 13.059128540341034,
+    "roughness_regional": 88.9919156720864,
     "dist_to_coast": 51.605167388916016
   },
   {
@@ -25,6 +37,10 @@
     "latitude": 33.1288,
     "longitude": 35.8045,
     "elevation": 942,
+    "tpi_local": -33.98257377460652,
+    "tpi_regional": -20.017901537090665,
+    "roughness_local": 44.43864856172885,
+    "roughness_regional": 42.14191059410312,
     "dist_to_coast": 55.86506271362305
   },
   {
@@ -32,6 +48,10 @@
     "latitude": 32.6978,
     "longitude": 35.5101,
     "elevation": -3,
+    "tpi_local": -71.81404854960738,
+    "tpi_regional": -74.1897705502339,
+    "roughness_local": 140.37792963014707,
+    "roughness_regional": 142.51778894040072,
     "dist_to_coast": 45.789085388183594
   },
   {
@@ -39,6 +59,10 @@
     "latitude": 32.7053,
     "longitude": 35.4069,
     "elevation": 143,
+    "tpi_local": -43.27483954247194,
+    "tpi_regional": -47.01689463132101,
+    "roughness_local": 83.46873766856693,
+    "roughness_regional": 92.94143006618185,
     "dist_to_coast": 35.830997467041016
   },
   {
@@ -46,6 +70,10 @@
     "latitude": 32.596,
     "longitude": 35.2769,
     "elevation": 56,
+    "tpi_local": -2.2309154146796217,
+    "tpi_regional": -9.335878814880815,
+    "roughness_local": 4.768019880399704,
+    "roughness_regional": 19.142215382443194,
     "dist_to_coast": 33.092159271240234
   },
   {
@@ -53,6 +81,10 @@
     "latitude": 32.1752,
     "longitude": 35.0959,
     "elevation": 321,
+    "tpi_local": 17.26157266305711,
+    "tpi_regional": 7.838761416796615,
+    "roughness_local": 49.47248959544321,
+    "roughness_regional": 64.78042762946897,
     "dist_to_coast": 26.836023330688477
   },
   {
@@ -60,6 +92,10 @@
     "latitude": 32.1056,
     "longitude": 35.2114,
     "elevation": 673,
+    "tpi_local": 127.53114131019402,
+    "tpi_regional": 134.24174649142344,
+    "roughness_local": 78.7763241558577,
+    "roughness_regional": 82.21257372983992,
     "dist_to_coast": 39.972782135009766
   },
   {
@@ -67,6 +103,10 @@
     "latitude": 31.7704,
     "longitude": 35.1973,
     "elevation": 767,
+    "tpi_local": 4.176736347663905,
+    "tpi_regional": 35.02897750055695,
+    "roughness_local": 39.605541797021516,
+    "roughness_regional": 65.59761212538966,
     "dist_to_coast": 50.49308395385742
   },
   {
@@ -74,6 +114,10 @@
     "latitude": 31.7806,
     "longitude": 35.2217,
     "elevation": 799,
+    "tpi_local": 41.561153142816124,
+    "tpi_regional": 76.57807975050127,
+    "roughness_local": 46.454998723775766,
+    "roughness_regional": 67.26227106093889,
     "dist_to_coast": 51.226802825927734
   },
   {
@@ -81,6 +125,10 @@
     "latitude": 31.9449,
     "longitude": 35.1499,
     "elevation": 769,
+    "tpi_local": 175.81282943095846,
+    "tpi_regional": 164.26204499888615,
+    "roughness_local": 81.31105223826235,
+    "roughness_regional": 111.0961452272107,
     "dist_to_coast": 38.97586441040039
   },
   {
@@ -88,13 +136,32 @@
     "latitude": 31.6898,
     "longitude": 34.9744,
     "elevation": 273,
+    "tpi_local": -64.30488723152496,
+    "tpi_regional": -51.805097588978185,
+    "roughness_local": 42.642374064160144,
+    "roughness_regional": 51.53211535697898,
     "dist_to_coast": 34.351741790771484
+  },
+  {
+    "station_id": 26,
+    "latitude": 32.8283,
+    "longitude": 34.9977,
+    "elevation": 3,
+    "tpi_local": -49.555063785472534,
+    "tpi_regional": -55.90057666214383,
+    "roughness_local": 81.47173103971076,
+    "roughness_regional": 92.54690229552718,
+    "dist_to_coast": -1.0501588582992554
   },
   {
     "station_id": 28,
     "latitude": 31.3568,
     "longitude": 35.0662,
     "elevation": 702,
+    "tpi_local": 4.334934920578007,
+    "tpi_regional": 16.8181688572065,
+    "roughness_local": 37.704355573779466,
+    "roughness_regional": 78.98608078880471,
     "dist_to_coast": 60.58024597167969
   },
   {
@@ -102,6 +169,10 @@
     "latitude": 31.25,
     "longitude": 35.1855,
     "elevation": 565,
+    "tpi_local": 11.19115063286597,
+    "tpi_regional": 30.044562263310354,
+    "roughness_local": 29.45901237585637,
+    "roughness_regional": 42.02051394598166,
     "dist_to_coast": 76.0205307006836
   },
   {
@@ -109,6 +180,10 @@
     "latitude": 31.9973,
     "longitude": 35.4509,
     "elevation": -253,
+    "tpi_local": -36.64683399159128,
+    "tpi_regional": -81.53843702834143,
+    "roughness_local": 64.07976840267557,
+    "roughness_regional": 125.36375711595406,
     "dist_to_coast": 64.23042297363281
   },
   {
@@ -116,6 +191,10 @@
     "latitude": 31.152,
     "longitude": 35.365,
     "elevation": -376,
+    "tpi_local": -75.03528272795728,
+    "tpi_regional": -136.32559590109156,
+    "roughness_local": 106.9309454221778,
+    "roughness_regional": 178.0899384749659,
     "dist_to_coast": 96.69021606445312
   },
   {
@@ -123,6 +202,10 @@
     "latitude": 30.7787,
     "longitude": 35.2389,
     "elevation": -132,
+    "tpi_local": -2.312596364157912,
+    "tpi_regional": -10.701599465359763,
+    "roughness_local": 15.2405300477618,
+    "roughness_regional": 34.69836970867869,
     "dist_to_coast": 111.27577209472656
   },
   {
@@ -130,6 +213,10 @@
     "latitude": 29.8851,
     "longitude": 35.0771,
     "elevation": 72,
+    "tpi_local": 0.8624188748251953,
+    "tpi_regional": -12.450247271107145,
+    "roughness_local": 9.922145030192246,
+    "roughness_regional": 34.23240092280302,
     "dist_to_coast": 38.90944290161133
   },
   {
@@ -137,6 +224,10 @@
     "latitude": 32.8034,
     "longitude": 35.0548,
     "elevation": 8,
+    "tpi_local": 2.562192979310839,
+    "tpi_regional": -26.98421029182446,
+    "roughness_local": 4.140182187701676,
+    "roughness_regional": 84.3237135173472,
     "dist_to_coast": 1.9555221796035767
   },
   {
@@ -144,6 +235,10 @@
     "latitude": 32.7611,
     "longitude": 35.0208,
     "elevation": 466,
+    "tpi_local": 179.32678040146124,
+    "tpi_regional": 238.49071924328973,
+    "roughness_local": 124.44256265476446,
+    "roughness_regional": 178.96656308173456,
     "dist_to_coast": 4.799002647399902
   },
   {
@@ -151,6 +246,10 @@
     "latitude": 32.774,
     "longitude": 35.0225,
     "elevation": 231,
+    "tpi_local": 26.14839412084922,
+    "tpi_regional": 58.68449319666726,
+    "roughness_local": 134.21717495618304,
+    "roughness_regional": 176.76904430578085,
     "dist_to_coast": 4.799002647399902
   },
   {
@@ -158,6 +257,10 @@
     "latitude": 32.6808,
     "longitude": 34.9594,
     "elevation": 22,
+    "tpi_local": -27.199469324823404,
+    "tpi_regional": -35.88477992204582,
+    "roughness_local": 51.72817053554986,
+    "roughness_regional": 72.07291094566871,
     "dist_to_coast": 3.6642608642578125
   },
   {
@@ -165,6 +268,10 @@
     "latitude": 32.5724,
     "longitude": 34.9546,
     "elevation": 171,
+    "tpi_local": 92.15124242532899,
+    "tpi_regional": 115.68305000676376,
+    "roughness_local": 47.95539556094515,
+    "roughness_regional": 49.450902746154114,
     "dist_to_coast": 3.8180482387542725
   },
   {
@@ -172,6 +279,10 @@
     "latitude": 32.4732,
     "longitude": 34.8815,
     "elevation": 0,
+    "tpi_local": -6.206604754562731,
+    "tpi_regional": -8.11288928491869,
+    "roughness_local": 8.235402168664107,
+    "roughness_regional": 10.166680738740565,
     "dist_to_coast": 0.029268858954310417
   },
   {
@@ -179,6 +290,10 @@
     "latitude": 32.0073,
     "longitude": 34.8138,
     "elevation": 33,
+    "tpi_local": 1.822917800762113,
+    "tpi_regional": 1.5912140329281428,
+    "roughness_local": 8.158010018933478,
+    "roughness_regional": 9.896165632090488,
     "dist_to_coast": 7.762732982635498
   },
   {
@@ -186,6 +301,10 @@
     "latitude": 31.2716,
     "longitude": 34.3894,
     "elevation": 107,
+    "tpi_local": 6.410197568933995,
+    "tpi_regional": 5.616787703274667,
+    "roughness_local": 13.316548541237909,
+    "roughness_regional": 20.46451162092505,
     "dist_to_coast": 15.517744064331055
   },
   {
@@ -193,6 +312,10 @@
     "latitude": 31.2612,
     "longitude": 34.8047,
     "elevation": 297,
+    "tpi_local": -4.715048944028126,
+    "tpi_regional": -1.9991802183114373,
+    "roughness_local": 27.369064120580845,
+    "roughness_regional": 39.25619127693955,
     "dist_to_coast": 45.14264678955078
   },
   {
@@ -200,6 +323,10 @@
     "latitude": 32.98,
     "longitude": 35.507,
     "elevation": 936,
+    "tpi_local": 181.431598341778,
+    "tpi_regional": 358.8876119402985,
+    "roughness_local": 90.08473779833564,
+    "roughness_regional": 167.7884769309698,
     "dist_to_coast": 35.862709045410156
   },
   {
@@ -207,6 +334,10 @@
     "latitude": 29.5526,
     "longitude": 34.952,
     "elevation": 23,
+    "tpi_local": -29.629065222847714,
+    "tpi_regional": -68.09120071285365,
+    "roughness_local": 59.32786111828398,
+    "roughness_regional": 114.14934153343529,
     "dist_to_coast": 0.5957223176956177
   },
   {
@@ -214,6 +345,10 @@
     "latitude": 31.0306,
     "longitude": 35.3919,
     "elevation": -389,
+    "tpi_local": -3.0894259385420924,
+    "tpi_regional": -26.227015999140974,
+    "roughness_local": 11.282859305753297,
+    "roughness_regional": 47.90358377660464,
     "dist_to_coast": 106.50492858886719
   },
   {
@@ -221,6 +356,10 @@
     "latitude": 32.6028,
     "longitude": 35.0964,
     "elevation": 264,
+    "tpi_local": 44.23632973573811,
+    "tpi_regional": 66.74038761416796,
+    "roughness_local": 27.329439292172037,
+    "roughness_regional": 61.67781544232842,
     "dist_to_coast": 17.180683135986328
   },
   {
@@ -228,6 +367,10 @@
     "latitude": 33.0653,
     "longitude": 35.2173,
     "elevation": 300,
+    "tpi_local": -5.991107605149011,
+    "tpi_regional": -40.33945199376251,
+    "roughness_local": 85.24572177506954,
+    "roughness_regional": 114.93245954412374,
     "dist_to_coast": 9.441934585571289
   },
   {
@@ -235,6 +378,10 @@
     "latitude": 31.8166,
     "longitude": 34.7244,
     "elevation": 51,
+    "tpi_local": 1.7419412671662684,
+    "tpi_regional": 7.9442726665181524,
+    "roughness_local": 9.6862497395529,
+    "roughness_regional": 14.359598865688525,
     "dist_to_coast": 6.580493450164795
   },
   {
@@ -242,6 +389,10 @@
     "latitude": 31.7248,
     "longitude": 34.9762,
     "elevation": 359,
+    "tpi_local": 54.86915988382515,
+    "tpi_regional": 80.89941238688448,
+    "roughness_local": 47.335606041155195,
+    "roughness_regional": 59.26540674460797,
     "dist_to_coast": 34.16357421875
   },
   {
@@ -249,6 +400,10 @@
     "latitude": 31.6644,
     "longitude": 35.1233,
     "elevation": 952,
+    "tpi_local": 94.86636308221875,
+    "tpi_regional": 136.57825796391182,
+    "roughness_local": 97.69132032592817,
+    "roughness_regional": 115.49855078026162,
     "dist_to_coast": 47.95930862426758
   },
   {
@@ -256,6 +411,10 @@
     "latitude": 32.8466,
     "longitude": 35.1123,
     "elevation": 13,
+    "tpi_local": 0.4610061314496754,
+    "tpi_regional": -5.6611717531744254,
+    "roughness_local": 6.273711431975409,
+    "roughness_regional": 21.58533925202966,
     "dist_to_coast": 4.844031810760498
   },
   {
@@ -263,6 +422,10 @@
     "latitude": 31.5036,
     "longitude": 34.648,
     "elevation": 119,
+    "tpi_local": 6.739001039836495,
+    "tpi_regional": 1.060084651370019,
+    "roughness_local": 18.22162397693286,
+    "roughness_regional": 31.803179500230247,
     "dist_to_coast": 18.37129020690918
   },
   {
@@ -270,6 +433,10 @@
     "latitude": 31.6585,
     "longitude": 34.6798,
     "elevation": 92,
+    "tpi_local": 7.122485567786583,
+    "tpi_regional": 14.615620405435507,
+    "roughness_local": 12.603004679998012,
+    "roughness_regional": 19.814142442796022,
     "dist_to_coast": 11.000439643859863
   },
   {
@@ -277,6 +444,10 @@
     "latitude": 32.0079,
     "longitude": 34.8147,
     "elevation": 35,
+    "tpi_local": 4.184987168520102,
+    "tpi_regional": 3.396268656716419,
+    "roughness_local": 7.924101119362254,
+    "roughness_regional": 10.046427774277403,
     "dist_to_coast": 7.762732982635498
   },
   {
@@ -284,6 +455,10 @@
     "latitude": 32.1598,
     "longitude": 35.3513,
     "elevation": 819,
+    "tpi_local": 148.45663164688585,
+    "tpi_regional": 252.18766763198926,
+    "roughness_local": 102.77847098786962,
+    "roughness_regional": 135.67783991661105,
     "dist_to_coast": 50.242225646972656
   },
   {
@@ -291,6 +466,10 @@
     "latitude": 30.8702,
     "longitude": 34.795,
     "elevation": 475,
+    "tpi_local": -3.9532432141704703,
+    "tpi_regional": -0.5645979059924002,
+    "roughness_local": 30.53555753987904,
+    "roughness_regional": 64.57592642413375,
     "dist_to_coast": 74.95941162109375
   },
   {
@@ -298,6 +477,10 @@
     "latitude": 32.8627,
     "longitude": 35.3739,
     "elevation": 282,
+    "tpi_local": 42.32156047187064,
+    "tpi_regional": 56.76672755624861,
+    "roughness_local": 105.53679689467381,
+    "roughness_regional": 107.51696382850238,
     "dist_to_coast": 27.199697494506836
   },
   {
@@ -305,6 +488,10 @@
     "latitude": 33.0806,
     "longitude": 35.1079,
     "elevation": 6,
+    "tpi_local": -29.746889454623684,
+    "tpi_regional": -32.364998886166184,
+    "roughness_local": 68.51529879141727,
+    "roughness_regional": 71.56798716571143,
     "dist_to_coast": -0.5674281120300293
   },
   {
@@ -312,6 +499,10 @@
     "latitude": 32.3877,
     "longitude": 34.9376,
     "elevation": 16,
+    "tpi_local": -7.292516762881423,
+    "tpi_regional": -7.699095566941413,
+    "roughness_local": 9.405471487901513,
+    "roughness_regional": 10.171527690997255,
     "dist_to_coast": 6.53150749206543
   },
   {
@@ -319,6 +510,10 @@
     "latitude": 31.0708,
     "longitude": 34.8513,
     "elevation": 363,
+    "tpi_local": -23.61655132848074,
+    "tpi_regional": -40.05207395856536,
+    "roughness_local": 29.67748726530118,
+    "roughness_regional": 41.64776907604101,
     "dist_to_coast": 63.01470947265625
   },
   {
@@ -326,6 +521,10 @@
     "latitude": 32.8214,
     "longitude": 35.6053,
     "elevation": -216,
+    "tpi_local": 0.0,
+    "tpi_regional": -3.7292492760080336,
+    "roughness_local": 0.0,
+    "roughness_regional": 16.592390164000946,
     "dist_to_coast": 49.6627311706543
   },
   {
@@ -333,6 +532,10 @@
     "latitude": 31.791,
     "longitude": 34.805,
     "elevation": 80,
+    "tpi_local": 9.90189680519201,
+    "tpi_regional": 11.380797505012254,
+    "roughness_local": 9.544883112642795,
+    "roughness_regional": 16.873918369136984,
     "dist_to_coast": 15.294644355773926
   },
   {
@@ -340,6 +543,10 @@
     "latitude": 32.915,
     "longitude": 35.5135,
     "elevation": 218,
+    "tpi_local": -4.797267739969158,
+    "tpi_regional": 14.500004455335272,
+    "roughness_local": 126.58168823406069,
+    "roughness_regional": 219.07925106414243,
     "dist_to_coast": 40.90255355834961
   },
   {
@@ -347,6 +554,10 @@
     "latitude": 31.8342,
     "longitude": 34.6377,
     "elevation": 6,
+    "tpi_local": 2.9563627236544874,
+    "tpi_regional": -1.5361104923145463,
+    "roughness_local": 6.081992901220468,
+    "roughness_regional": 11.209057340882655,
     "dist_to_coast": -1.2227842807769775
   },
   {
@@ -354,6 +565,10 @@
     "latitude": 32.058,
     "longitude": 34.7588,
     "elevation": 7,
+    "tpi_local": -5.310301552583455,
+    "tpi_regional": -6.045007796836712,
+    "roughness_local": 11.479881599399485,
+    "roughness_regional": 13.830803213741879,
     "dist_to_coast": 1.24307382106781
   },
   {
@@ -361,6 +576,10 @@
     "latitude": 32.7078,
     "longitude": 35.1784,
     "elevation": 112,
+    "tpi_local": 12.789737889490482,
+    "tpi_regional": 1.6672399198039614,
+    "roughness_local": 27.36525309750947,
+    "roughness_regional": 51.543782712049854,
     "dist_to_coast": 18.659244537353516
   },
   {
@@ -368,6 +587,10 @@
     "latitude": 31.7878,
     "longitude": 35.1258,
     "elevation": 711,
+    "tpi_local": 41.047222919430624,
+    "tpi_regional": 39.00340387614165,
+    "roughness_local": 61.03727512799797,
+    "roughness_regional": 91.9865399656955,
     "dist_to_coast": 43.965087890625
   },
   {
@@ -375,6 +598,10 @@
     "latitude": 33.1716,
     "longitude": 35.6133,
     "elevation": 74,
+    "tpi_local": -0.5967944350819323,
+    "tpi_regional": -11.14976163956338,
+    "roughness_local": 3.5865262009038816,
+    "roughness_regional": 27.117847310151287,
     "dist_to_coast": 38.374916076660156
   },
   {
@@ -382,6 +609,10 @@
     "latitude": 32.8847,
     "longitude": 35.3012,
     "elevation": 372,
+    "tpi_local": 135.36189895657787,
+    "tpi_regional": 107.00016930274,
+    "roughness_local": 55.61867229769566,
+    "roughness_regional": 79.78210038575615,
     "dist_to_coast": 20.768220901489258
   },
   {
@@ -389,6 +620,10 @@
     "latitude": 32.4679,
     "longitude": 35.4888,
     "elevation": -119,
+    "tpi_local": 10.511348560364297,
+    "tpi_regional": 11.620592559590108,
+    "roughness_local": 22.662339922542,
+    "roughness_regional": 72.77837349187547,
     "dist_to_coast": 55.077049255371094
   },
   {
@@ -396,6 +631,10 @@
     "latitude": 30.3655,
     "longitude": 35.1479,
     "elevation": 101,
+    "tpi_local": -18.465201333859227,
+    "tpi_regional": -29.02466473602138,
+    "roughness_local": 32.831906935414025,
+    "roughness_regional": 44.20268286986476,
     "dist_to_coast": 92.44255065917969
   },
   {
@@ -403,6 +642,10 @@
     "latitude": 31.6394,
     "longitude": 34.5215,
     "elevation": 0,
+    "tpi_local": -11.496432285130338,
+    "tpi_regional": -13.727885943417242,
+    "roughness_local": 16.255163424195537,
+    "roughness_regional": 17.7910568418621,
     "dist_to_coast": -0.14082323014736176
   },
   {
@@ -410,6 +653,10 @@
     "latitude": 31.5881,
     "longitude": 35.3916,
     "elevation": 16,
+    "tpi_local": 126.70551113342178,
+    "tpi_regional": 124.25595901091557,
+    "roughness_local": 201.535706826352,
+    "roughness_regional": 258.85186868694115,
     "dist_to_coast": 74.79003143310547
   },
   {
@@ -417,6 +664,10 @@
     "latitude": 31.774,
     "longitude": 35.2961,
     "elevation": 489,
+    "tpi_local": 38.184445480296915,
+    "tpi_regional": 30.304254845177127,
+    "roughness_local": 68.67595444713093,
+    "roughness_regional": 131.2456670565757,
     "dist_to_coast": 59.249412536621094
   },
   {
@@ -424,6 +675,10 @@
     "latitude": 32.481,
     "longitude": 35.415,
     "elevation": 491,
+    "tpi_local": 170.48538850442827,
+    "tpi_regional": 286.208928491869,
+    "roughness_local": 112.09784120550054,
+    "roughness_regional": 183.38006936316842,
     "dist_to_coast": 48.570220947265625
   },
   {
@@ -431,6 +686,10 @@
     "latitude": 32.9052,
     "longitude": 35.7487,
     "elevation": 403,
+    "tpi_local": 12.477679371795318,
+    "tpi_regional": 19.09218979728223,
+    "roughness_local": 79.58863777160853,
+    "roughness_regional": 110.66507480257309,
     "dist_to_coast": 60.56050109863281
   },
   {
@@ -438,6 +697,10 @@
     "latitude": 31.8052,
     "longitude": 35.501,
     "elevation": -333,
+    "tpi_local": 9.221054896195653,
+    "tpi_regional": 5.965667186455789,
+    "roughness_local": 28.07124840736155,
+    "roughness_regional": 46.94066997605141,
     "dist_to_coast": 75.8920669555664
   },
   {
@@ -445,6 +708,10 @@
     "latitude": 30.048,
     "longitude": 35.0233,
     "elevation": 400,
+    "tpi_local": -22.49754383448669,
+    "tpi_regional": -15.25753375977257,
+    "roughness_local": 23.819742168100998,
+    "roughness_regional": 44.17582704732796,
     "dist_to_coast": 55.76289749145508
   },
   {
@@ -452,6 +719,10 @@
     "latitude": 32.8835,
     "longitude": 35.5792,
     "elevation": -199,
+    "tpi_local": -46.020796729893505,
+    "tpi_regional": -91.67287146357764,
+    "roughness_local": 80.87989437603088,
+    "roughness_regional": 144.15038719159406,
     "dist_to_coast": 47.205345153808594
   },
   {
@@ -459,6 +730,10 @@
     "latitude": 31.6303,
     "longitude": 34.7913,
     "elevation": 147,
+    "tpi_local": 17.106959733228166,
+    "tpi_regional": 10.194118957451536,
+    "roughness_local": 14.02154842064306,
+    "roughness_regional": 30.538950674441,
     "dist_to_coast": 21.049436569213867
   },
   {
@@ -466,6 +741,10 @@
     "latitude": 33.2404,
     "longitude": 35.5696,
     "elevation": 359,
+    "tpi_local": -39.551579475778965,
+    "tpi_regional": -66.29991534863001,
+    "roughness_local": 184.15826653264173,
+    "roughness_regional": 234.50681649166972,
     "dist_to_coast": 32.063072204589844
   },
   {
@@ -473,6 +752,10 @@
     "latitude": 31.8341,
     "longitude": 34.9616,
     "elevation": 185,
+    "tpi_local": -2.0323783570583487,
+    "tpi_regional": -7.038064579065463,
+    "roughness_local": 29.89688360935909,
+    "roughness_regional": 52.06263809823561,
     "dist_to_coast": 27.286699295043945
   },
   {
@@ -480,6 +763,10 @@
     "latitude": 32.5564,
     "longitude": 35.0725,
     "elevation": 180,
+    "tpi_local": 13.374663845960782,
+    "tpi_regional": 7.011628425038992,
+    "roughness_local": 28.771670677571006,
+    "roughness_regional": 53.03596595924053,
     "dist_to_coast": 14.922700881958008
   },
   {
@@ -487,6 +774,10 @@
     "latitude": 32.956,
     "longitude": 35.3287,
     "elevation": 826,
+    "tpi_local": 224.414034207035,
+    "tpi_regional": 271.98824283490524,
+    "roughness_local": 178.92097212281698,
+    "roughness_regional": 217.2173284871824,
     "dist_to_coast": 23.80651092529297
   },
   {
@@ -494,6 +785,10 @@
     "latitude": 30.7877,
     "longitude": 34.7712,
     "elevation": 553,
+    "tpi_local": -13.100613144967497,
+    "tpi_regional": -20.175700601470226,
+    "roughness_local": 34.255634815342034,
+    "roughness_regional": 63.40444903273341,
     "dist_to_coast": 79.4897232055664
   },
   {
@@ -501,6 +796,10 @@
     "latitude": 31.7319,
     "longitude": 34.6348,
     "elevation": 27,
+    "tpi_local": -6.227760048764743,
+    "tpi_regional": -4.2595411004678105,
+    "roughness_local": 10.677446425713605,
+    "roughness_regional": 16.915502490807715,
     "dist_to_coast": 3.3820910453796387
   },
   {
@@ -508,6 +807,10 @@
     "latitude": 32.13,
     "longitude": 34.8324,
     "elevation": 66,
+    "tpi_local": 26.39589085302449,
+    "tpi_regional": 33.66760525729561,
+    "roughness_local": 17.567115139823688,
+    "roughness_regional": 19.434403879903034,
     "dist_to_coast": 4.198659896850586
   },
   {
@@ -515,6 +818,10 @@
     "latitude": 30.7911,
     "longitude": 34.4715,
     "elevation": 332,
+    "tpi_local": 7.144142852020536,
+    "tpi_regional": -0.5037023836043772,
+    "roughness_local": 16.22108113719688,
+    "roughness_regional": 32.02297302904134,
     "dist_to_coast": 62.09364700317383
   },
   {
@@ -522,6 +829,10 @@
     "latitude": 32.9836,
     "longitude": 35.0923,
     "elevation": 7,
+    "tpi_local": -4.245048364808843,
+    "tpi_regional": -4.709408902623446,
+    "roughness_local": 9.298451618564805,
+    "roughness_regional": 11.402432693878106,
     "dist_to_coast": 1.9328351020812988
   },
   {
@@ -529,6 +840,10 @@
     "latitude": 31.205,
     "longitude": 34.9227,
     "elevation": 352,
+    "tpi_local": -3.5480296891247463,
+    "tpi_regional": -21.99032301180665,
+    "roughness_local": 19.052764877649675,
+    "roughness_regional": 32.55149512803575,
     "dist_to_coast": 58.46084976196289
   },
   {
@@ -536,6 +851,10 @@
     "latitude": 31.3812,
     "longitude": 34.8729,
     "elevation": 463,
+    "tpi_local": 17.91785291692065,
+    "tpi_regional": 26.380654934283825,
+    "roughness_local": 33.34661712012566,
+    "roughness_regional": 67.28290731904572,
     "dist_to_coast": 42.687347412109375
   },
   {
@@ -543,6 +862,10 @@
     "latitude": 33.0255,
     "longitude": 35.577,
     "elevation": 165,
+    "tpi_local": -7.698196421528195,
+    "tpi_regional": -27.13825487944891,
+    "roughness_local": 46.84971418731889,
+    "roughness_regional": 104.69494197002668,
     "dist_to_coast": 39.97460174560547
   },
   {
@@ -550,6 +873,10 @@
     "latitude": 32.6833,
     "longitude": 35.6008,
     "elevation": -196,
+    "tpi_local": 2.2533615403922624,
+    "tpi_regional": -42.3677166406772,
+    "roughness_local": 16.237003394308235,
+    "roughness_regional": 111.63597592155905,
     "dist_to_coast": 53.7248420715332
   },
   {
@@ -557,6 +884,10 @@
     "latitude": 32.439,
     "longitude": 35.5106,
     "elevation": -186,
+    "tpi_local": -4.902434651654772,
+    "tpi_regional": -7.447574069948757,
+    "roughness_local": 31.130541274545045,
+    "roughness_regional": 59.044581425364576,
     "dist_to_coast": 58.921913146972656
   },
   {
@@ -564,6 +895,10 @@
     "latitude": 30.6125,
     "longitude": 34.7967,
     "elevation": 858,
+    "tpi_local": 108.58341998637457,
+    "tpi_regional": 160.39999108932943,
+    "roughness_local": 108.1424211588268,
+    "roughness_regional": 117.56541385201099,
     "dist_to_coast": 95.70174407958984
   },
   {
@@ -571,6 +906,10 @@
     "latitude": 32.5462,
     "longitude": 35.3945,
     "elevation": -63,
+    "tpi_local": -55.446484276955076,
+    "tpi_regional": -135.3200623746937,
+    "roughness_local": 87.67778369127002,
+    "roughness_regional": 141.3890712666393,
     "dist_to_coast": 44.923282623291016
   },
   {
@@ -578,6 +917,10 @@
     "latitude": 30.983,
     "longitude": 34.708,
     "elevation": 305,
+    "tpi_local": -7.97282676027254,
+    "tpi_regional": -31.64012253144756,
+    "roughness_local": 12.696596255437969,
+    "roughness_regional": 34.97706709565852,
     "dist_to_coast": 59.09580612182617
   },
   {
@@ -585,6 +928,10 @@
     "latitude": 31.2642,
     "longitude": 34.8045,
     "elevation": 303,
+    "tpi_local": -2.6123202696403496,
+    "tpi_regional": 2.5595188237915067,
+    "roughness_local": 28.94454719367632,
+    "roughness_regional": 41.04271568169075,
     "dist_to_coast": 45.14264678955078
   },
   {
@@ -592,6 +939,10 @@
     "latitude": 33.2254,
     "longitude": 35.6337,
     "elevation": 128,
+    "tpi_local": -0.9287891283301519,
+    "tpi_regional": -60.844606816662946,
+    "roughness_local": 36.86183119613826,
+    "roughness_regional": 106.02480856885832,
     "dist_to_coast": 37.95147705078125
   },
   {
@@ -599,6 +950,10 @@
     "latitude": 32.7104,
     "longitude": 35.3034,
     "elevation": 443,
+    "tpi_local": 79.78966617662877,
+    "tpi_regional": 155.92661171753173,
+    "roughness_local": 61.01517102132135,
+    "roughness_regional": 106.37166228619458,
     "dist_to_coast": 26.713403701782227
   },
   {
@@ -606,6 +961,10 @@
     "latitude": 32.7724,
     "longitude": 35.5458,
     "elevation": -198,
+    "tpi_local": -124.49080282548675,
+    "tpi_regional": -113.0192203163288,
+    "roughness_local": 161.84689814956906,
+    "roughness_regional": 148.14275106824488,
     "dist_to_coast": 46.33132553100586
   },
   {
@@ -613,6 +972,10 @@
     "latitude": 31.4429,
     "longitude": 35.2481,
     "elevation": 549,
+    "tpi_local": 96.35060418085982,
+    "tpi_regional": 91.42646469146803,
+    "roughness_local": 45.70154022442623,
+    "roughness_regional": 81.82433789117225,
     "dist_to_coast": 69.6971435546875
   }
 ]
