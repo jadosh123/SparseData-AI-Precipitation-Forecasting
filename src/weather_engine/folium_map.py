@@ -8,7 +8,7 @@ from jinja2 import Template
 def build_forecast_map(rows, horizon: str):
     fol_map = folium.Map(location=[32.65, 35.27], zoom_start=10)
     
-    step = 0.025  # half of 0.05
+    step = 0.005  # half of 0.05
 
     PRECIP_LEVELS = [0.1, 0.2, 0.7, 1.2, 2.0, 4.0, 6.0, 9.0, 13.0, 18.0, 24.0, 30.0, 40.0, 50.0, 100.0, 200.0]
     PRECIP_COLORS = [

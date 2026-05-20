@@ -91,7 +91,7 @@ def _fetch_daily(station_id: int, lat: float, lon: float, date_str: str, headers
 
 
 def fetch_station_range(station_id: int, lat: float, lon: float) -> list[dict]:
-    """Fetches yesterday + today observations using the daily endpoint (IMS date = UTC+2)."""
+    """Fetches yester yesterday + yesterday + today observations using the daily endpoint (IMS date = UTC+2)."""
     headers = {
         "Authorization": f"ApiToken {API_KEY}",
         "User-Agent": "MyWeatherApp/1.0 (Contact: jadosh2000@gmail.com)"
@@ -100,8 +100,10 @@ def fetch_station_range(station_id: int, lat: float, lon: float) -> list[dict]:
     ist_now = datetime.now(timezone.utc) + timedelta(hours=2)
     today = ist_now.strftime("%Y/%m/%d")
     yesterday = (ist_now - timedelta(days=1)).strftime("%Y/%m/%d")
+    yester_yesterday = (ist_now - timedelta(days=2)).strftime("%Y/%m/%d")
 
-    rows = _fetch_daily(station_id, lat, lon, yesterday, headers)
+    rows = _fetch_daily(station_id, lat, lon, yester_yesterday, headers)
+    rows += _fetch_daily(station_id, lat, lon, yesterday, headers)
     rows += _fetch_daily(station_id, lat, lon, today, headers)
     return rows
 
@@ -274,7 +276,7 @@ def interpolate_and_store(cell_neighbors: pd.DataFrame, station_frames: dict, mo
         records.append(pd.DataFrame(record))
 
     if records:
-        pd.concat(records).to_sql('cell_interpolated', engine, if_exists='append', index=False, method=_insert_ignore)  # type: ignore[arg-type]
+        pd.concat(records).to_sql('cell_interpolated', engine, if_exists='append', index=False, chunksize=500, method=_insert_ignore)  # type: ignore[arg-type]
 
     # Trim to rolling window
     with engine.begin() as conn:
