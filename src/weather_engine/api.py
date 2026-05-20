@@ -15,7 +15,10 @@ from weather_engine.utils import get_project_root
 _cached_demo_rows = None
 _timestamps = None
 _timestamp_idx = 0
+_cached_live_maps: dict[str, str] = {}
 ROOT = get_project_root()
+LIVE_MAPS_DIR = ROOT / "data" / "live_maps"
+HORIZONS = ["precipitation_t1", "precipitation_t3", "precipitation_t6", "precipitation_t12"]
 
 
 def _to_israel_time(ts: str) -> str:
@@ -64,8 +67,25 @@ def index(request: Request):
     return templates.TemplateResponse(request=request, name="index.html")
 
 
+def build_and_cache_live_maps() -> None:
+    """Build all horizon maps from current forecasts and save to disk. Called by inference pipeline."""
+    LIVE_MAPS_DIR.mkdir(parents=True, exist_ok=True)
+    rows = get_forecast_rows()
+    if not rows:
+        return
+    ts = rows[0]["timestamp"]
+    for horizon in HORIZONS:
+        fol_map = build_forecast_map(rows, horizon=horizon)
+        html = _map_section_html(fol_map._repr_html_(), horizon, ts, mode="live")
+        (LIVE_MAPS_DIR / f"{horizon}.html").write_text(html)
+
+
 @app.get("/map", response_class=HTMLResponse)
 def get_map(horizon: str = 'precipitation_t1'):
+    path = LIVE_MAPS_DIR / f"{horizon}.html"
+    if path.exists():
+        return HTMLResponse(content=path.read_text())
+    # fallback: build on the fly if cache missing
     rows = get_forecast_rows()
     fol_map = build_forecast_map(rows, horizon=horizon)
     ts = rows[0]["timestamp"]

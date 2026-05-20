@@ -21,6 +21,7 @@ from weather_engine.cell_interpolation import load_cell_features
 from weather_engine.cell_forecasting import make_inference_features
 from weather_engine.utils import encode_time_features, get_project_root
 from weather_engine.fetch_ims_data import process_observation, send_discord_alert
+from weather_engine.api import build_and_cache_live_maps
 
 from dotenv import load_dotenv
 load_dotenv(get_project_root() / '.env')
@@ -348,26 +349,29 @@ def forecast_and_store(cell_neighbors: pd.DataFrame, station_frames: dict, model
 def main() -> None:
     print(f"[{datetime.now(timezone.utc).replace(tzinfo=None).isoformat()}] inference_pipeline starting...")
 
-    bootstrap_static_tables()
+    # bootstrap_static_tables()
 
-    station_ids = get_required_station_ids()
+    # station_ids = get_required_station_ids()
 
-    fetch_and_store_raw(station_ids)
-    clean_and_store(station_ids)
+    # fetch_and_store_raw(station_ids)
+    # clean_and_store(station_ids)
 
-    # Load station frames from clean_station_data for interpolation + upstream forcing
-    all_clean = pd.read_sql("SELECT * FROM clean_station_data", engine)
-    all_clean['timestamp'] = pd.to_datetime(all_clean['timestamp'])
-    all_clean = all_clean.set_index('timestamp').sort_index()
-    station_frames = {sid: grp.drop(columns='station_id')
-                      for sid, grp in all_clean.groupby('station_id')}
+    # # Load station frames from clean_station_data for interpolation + upstream forcing
+    # all_clean = pd.read_sql("SELECT * FROM clean_station_data", engine)
+    # all_clean['timestamp'] = pd.to_datetime(all_clean['timestamp'])
+    # all_clean = all_clean.set_index('timestamp').sort_index()
+    # station_frames = {sid: grp.drop(columns='station_id')
+    #                   for sid, grp in all_clean.groupby('station_id')}
 
-    cell_neighbors = pd.read_sql("SELECT * FROM cell_neighbors", engine)
-    interp_models = load_interpolation_models()
-    forecast_models = load_forecast_models()
+    # cell_neighbors = pd.read_sql("SELECT * FROM cell_neighbors", engine)
+    # interp_models = load_interpolation_models()
+    # forecast_models = load_forecast_models()
 
-    interpolate_and_store(cell_neighbors, station_frames, interp_models)
-    forecast_and_store(cell_neighbors, station_frames, forecast_models)
+    # interpolate_and_store(cell_neighbors, station_frames, interp_models)
+    # forecast_and_store(cell_neighbors, station_frames, forecast_models)
+
+    print("Building live map cache...")
+    build_and_cache_live_maps()
 
     print(f"[{datetime.now(timezone.utc).replace(tzinfo=None).isoformat()}] Pipeline complete.")
 
