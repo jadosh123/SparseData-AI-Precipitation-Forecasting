@@ -10,7 +10,7 @@ LON_MAX = 35.45
 LAT_MIN = 32.45
 LON_MIN = 35.05
 
-GRID_STEP_DEG = 0.05  # ~5km
+GRID_STEP_DEG = 0.01  # ~0.935km
 
 
 def generate_grid_cells() -> list[tuple[float, float]]:
