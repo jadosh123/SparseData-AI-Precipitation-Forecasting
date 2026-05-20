@@ -15,7 +15,6 @@ from weather_engine.utils import get_project_root
 _cached_demo_rows = None
 _timestamps = None
 _timestamp_idx = 0
-_cached_live_maps: dict[str, str] = {}
 ROOT = get_project_root()
 LIVE_MAPS_DIR = ROOT / "data" / "live_maps"
 HORIZONS = ["precipitation_t1", "precipitation_t3", "precipitation_t6", "precipitation_t12"]
