@@ -17,6 +17,7 @@ _timestamps = None
 _timestamp_idx = 0
 ROOT = get_project_root()
 LIVE_MAPS_DIR = ROOT / "data" / "live_maps"
+DEMO_MAPS_DIR = ROOT / "data" / "demo_maps"
 HORIZONS = ["precipitation_t1", "precipitation_t3", "precipitation_t6", "precipitation_t12"]
 
 
@@ -141,7 +142,12 @@ def get_demo_map(direction: str | None = None, horizon: str = 'precipitation_t1'
         _timestamp_idx = min(len(timestamps) - 1, _timestamp_idx + 1)
 
     current_ts = timestamps[_timestamp_idx]
-    rows = [r for r in get_demo_rows() if r["timestamp"] == current_ts]
-    fol_map = build_forecast_map(rows, horizon=horizon)
-    return HTMLResponse(content=_map_section_html(fol_map._repr_html_(), horizon, current_ts, mode="demo"))
+    cached_path = DEMO_MAPS_DIR / f"{_timestamp_idx}_{horizon}.html"
+    if cached_path.exists():
+        map_html = cached_path.read_text()
+    else:
+        rows = [r for r in get_demo_rows() if r["timestamp"] == current_ts]
+        map_html = build_forecast_map(rows, horizon=horizon)._repr_html_()
+
+    return HTMLResponse(content=_map_section_html(map_html, horizon, current_ts, mode="demo"))
     
