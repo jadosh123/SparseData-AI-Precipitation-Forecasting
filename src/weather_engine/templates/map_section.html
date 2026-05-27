@@ -22,12 +22,15 @@
 
     {# Center: horizon buttons #}
     <div class="absolute left-1/2 -translate-x-1/2 flex gap-2">
-      {% for h, label in horizons.items() %}
+      {% for h, info in horizons.items() %}
       <button
-        class="{{ btn_active if h == horizon else btn }}"
+        class="{{ btn_active if h == horizon else btn }} flex flex-col items-center leading-tight"
         hx-get="{{ endpoint }}{{ endpoint_sep }}horizon={{ h }}"
         hx-target="#map-section"
-      >{{ label }}</button>
+      >
+        <span class="text-xs opacity-70">{{ info.label }}</span>
+        <span class="font-semibold">{{ info.time }} <span class="text-xs font-normal">{{ info.day }}</span></span>
+      </button>
       {% endfor %}
     </div>
 

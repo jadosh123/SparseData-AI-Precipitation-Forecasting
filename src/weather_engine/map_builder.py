@@ -1,4 +1,4 @@
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from zoneinfo import ZoneInfo
 
@@ -12,18 +12,33 @@ LIVE_MAPS_DIR = ROOT / "data" / "live_maps"
 DEMO_MAPS_DIR = ROOT / "data" / "demo_maps"
 HORIZONS = ["precipitation_t1", "precipitation_t3", "precipitation_t6", "precipitation_t12"]
 HORIZON_LABELS = {
-    "precipitation_t1": "t+1h",
-    "precipitation_t3": "t+3h",
-    "precipitation_t6": "t+6h",
-    "precipitation_t12": "t+12h",
+    "precipitation_t1":  ("t+1h",  1),
+    "precipitation_t3":  ("t+3h",  3),
+    "precipitation_t6":  ("t+6h",  6),
+    "precipitation_t12": ("t+12h", 12),
 }
 
 templates = Jinja2Templates(directory=Path(__file__).parent / "templates")
 
 
+IL = ZoneInfo("Asia/Jerusalem")
+
+
 def to_israel_time(ts: str) -> str:
     dt = datetime.fromisoformat(ts).replace(tzinfo=timezone.utc)
-    return dt.astimezone(ZoneInfo("Asia/Jerusalem")).strftime("%Y-%m-%d %H:%M")
+    return dt.astimezone(IL).strftime("%Y-%m-%d %H:%M")
+
+
+def _horizon_times(base_ts: str) -> dict[str, dict]:
+    """For each horizon return its label and formatted target time (with day abbr if crossing midnight)."""
+    base = datetime.fromisoformat(base_ts).replace(tzinfo=timezone.utc).astimezone(IL)
+    result = {}
+    for key, (label, hours) in HORIZON_LABELS.items():
+        target = base + timedelta(hours=hours)
+        time_str = target.strftime("%H:%M")
+        day_str = target.strftime("%a")
+        result[key] = {"label": label, "time": time_str, "day": day_str}
+    return result
 
 
 def render_map_section(map_html: str, horizon: str, timestamp: str, mode: str = "live", idx: int = 0) -> str:
@@ -32,7 +47,7 @@ def render_map_section(map_html: str, horizon: str, timestamp: str, mode: str = 
         horizon=horizon,
         timestamp=to_israel_time(timestamp),
         mode=mode,
-        horizons=HORIZON_LABELS,
+        horizons=_horizon_times(timestamp),
         idx=idx,
     )
 
