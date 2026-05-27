@@ -1,0 +1,43 @@
+{% set btn = "px-4 py-2 bg-sky-200 text-black rounded shadow hover:bg-gray-600" %}
+{% set btn_sm = "px-3 py-2 bg-sky-200 text-black rounded shadow hover:bg-gray-600 text-sm" %}
+{% set btn_active = "px-4 py-2 bg-sky-400 text-black rounded shadow" %}
+{% set endpoint = "/demo?idx=" ~ idx if mode == "demo" else "/map" %}
+{% set endpoint_sep = "&" if mode == "demo" else "?" %}
+
+<div id="map-section" class="mx-auto max-w-5xl">
+  <div class="flex items-center justify-between mb-1 px-1">
+
+    {# Left: arrows (demo) or timestamp (live) #}
+    {% if mode == "demo" %}
+    <div class="flex gap-1 items-center">
+      <button class="{{ btn }}" hx-get="/demo?direction=left&horizon={{ horizon }}&idx={{ idx }}" hx-target="#map-section">←</button>
+      <div class="text-sm text-black font-mono">{{ timestamp }}</div>
+      <button class="{{ btn }}" hx-get="/demo?direction=right&horizon={{ horizon }}&idx={{ idx }}" hx-target="#map-section">→</button>
+    </div>
+    {% else %}
+    <div class="flex">
+      <div class="text-sm text-black font-mono">{{ timestamp }}</div>
+    </div>
+    {% endif %}
+
+    {# Center: horizon buttons #}
+    <div class="absolute left-1/2 -translate-x-1/2 flex gap-2">
+      {% for h, label in horizons.items() %}
+      <button
+        class="{{ btn_active if h == horizon else btn }}"
+        hx-get="{{ endpoint }}{{ endpoint_sep }}horizon={{ h }}"
+        hx-target="#map-section"
+      >{{ label }}</button>
+      {% endfor %}
+    </div>
+
+    {# Right: mode toggle #}
+    {% if mode == "demo" %}
+    <button class="{{ btn_sm }}" hx-get="/map?horizon={{ horizon }}" hx-target="#map-section">→ Live</button>
+    {% else %}
+    <button class="{{ btn_sm }}" hx-get="/demo" hx-target="#map-section">→ Demo</button>
+    {% endif %}
+
+  </div>
+  {{ map_html | safe }}
+</div>
