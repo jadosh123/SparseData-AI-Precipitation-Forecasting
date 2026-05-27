@@ -21,7 +21,7 @@ from weather_engine.cell_interpolation import load_cell_features
 from weather_engine.cell_forecasting import make_inference_features
 from weather_engine.utils import encode_time_features, get_project_root
 from weather_engine.fetch_ims_data import process_observation, send_discord_alert
-from weather_engine.api import build_and_cache_live_maps
+from weather_engine.map_builder import build_and_cache_live_maps
 
 from dotenv import load_dotenv
 load_dotenv(get_project_root() / '.env')
