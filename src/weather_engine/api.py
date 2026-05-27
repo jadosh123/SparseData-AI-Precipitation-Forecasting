@@ -9,7 +9,6 @@ from weather_engine.cache import get_demo_rows, get_forecast_rows, get_timestamp
 from weather_engine.map_builder import (
     DEMO_MAPS_DIR,
     LIVE_MAPS_DIR,
-    build_and_cache_live_maps,
     render_map_section,
 )
 from weather_engine.folium_map import build_forecast_map
