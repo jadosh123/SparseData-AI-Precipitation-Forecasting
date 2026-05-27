@@ -564,3 +564,36 @@ Comparing against May 3 LLOCV run, then RFSI vs IDW:
 | v_vec | **0.7532** | 0.7656 | **0.9757** | 1.0043 |
 
 **Assessment:** Adding neighbor distances is the strongest single improvement to date — ws dropped 25.9%, u_vec 9%, with broad gains across temperature and humidity. RFSI beats IDW on precipitation and wind, consistent with the original paper. IDW wins on temperature and humidity (td, rh, tdmax, tdmin) — these are spatially smooth fields where simple distance weighting suffices and the learned model adds complexity without benefit. IDW is the appropriate baseline given hardware constraints precluding kriging.
+
+---
+
+### Date: May 27, 2026
+
+Subject: RFSI LLOCV Results After Adding Terrain Features (Elevation, TPI, Roughness)
+
+Added 5 terrain features derived from SRTM 1 arc-second (~30m) tiles via `get_elevation_from_hgt()`: `elevation`, `tpi_local`, `tpi_regional`, `roughness_local`, `roughness_regional`. Window sizes: local = 83 px (~5 km), regional = 167 px (~10 km). Features describe the topographic position and surface roughness of each interpolation target.
+
+Terrain features were only applied to `rain`, `ws`, and `rh` — the features with a clear physical mechanism linking terrain to the measured variable. Temperature and wind vector models (`td`, `tdmax`, `tdmin`, `u_vec`, `v_vec`) were left unchanged. Comparing the terrain-affected models against May 5 (Afula held-out):
+
+| Feature | RMSE (May 5) | RMSE (after terrain) | Δ |
+| :--- | :--- | :--- | :--- |
+| rain (global) | 0.3328 | **0.3255** | −2.2% ✓ |
+| rain (events ≥ 0.1mm) | 1.4913 | **1.4819** | −0.6% ~ |
+| ws | 1.1567 | **1.0042** | −13.2% ✓ |
+| rh | 6.1911 | **5.6431** | −8.9% ✓ |
+
+**Final model state after all feature additions (Afula held-out, RFSI vs IDW):**
+
+| Feature | RFSI MAE | IDW MAE | RFSI RMSE | IDW RMSE |
+| :--- | :--- | :--- | :--- | :--- |
+| rain (global) | **0.0432** | 0.0479 | **0.3255** | 0.3596 |
+| rain (events ≥ 0.1mm) | — | — | **1.4819** | 1.5624 |
+| ws | **0.7924** | 1.1119 | **1.0042** | 1.2957 |
+| td | 1.2967 | **1.0182** | 1.6628 | **1.4104** |
+| rh | **4.2538** | 4.2575 | **5.6431** | 5.8825 |
+| tdmax | 1.1890 | **0.9822** | 1.6070 | **1.3671** |
+| tdmin | 1.3368 | **1.0904** | 1.8160 | **1.5004** |
+| u_vec | **0.8624** | 0.9760 | **1.1308** | 1.2184 |
+| v_vec | **0.7278** | 0.7655 | **0.9352** | 1.0043 |
+
+**Assessment:** `ws` is the headline gain from terrain (−13.2%) — TPI and roughness directly encode the orographic channeling that causes Afula's systematic wind offset against surrounding stations. `rh` improved −8.9%, consistent with terrain-driven moisture trapping in the valley. Rain improvement is modest (−2.2% global, −0.6% storm-only) — storm extremes remain the hard problem. Temperature features (td/tdmax/tdmin) still lose to IDW, confirming these are spatially smooth fields where distance weighting is sufficient and learned models add complexity without benefit. RFSI beats IDW on wind (ws, u_vec, v_vec) and precipitation — the features where spatial non-linearity and terrain interaction matter most.
