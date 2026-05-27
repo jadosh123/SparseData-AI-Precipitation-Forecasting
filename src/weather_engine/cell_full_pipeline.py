@@ -20,7 +20,7 @@ def load_model_paths() -> tuple[list[Path], list[Path]]:
     return models_forecast, models_interpolate
 
 
-def load_station_frames() -> dict[int, pd.DataFrame]:
+def load_station_frames() -> dict:
     all_data = pd.read_sql("SELECT * FROM clean_station_data", engine)
     all_data['timestamp'] = pd.to_datetime(all_data['timestamp'])
 
@@ -47,12 +47,16 @@ def load_models(model_paths: list[Path], model_type: str) -> dict[str, xgb.Boost
     return models
 
 
+WRITE_CHUNK = 5000
+
+
 def interpolate_cells(
     cell_neighbors: pd.DataFrame,
     station_frames: dict[int, pd.DataFrame],
     models: dict[str, xgb.Booster]
 ) -> None:
-    records = []
+    buffer: list[pd.DataFrame] = []
+    buffered_rows = 0
 
     for _, row in cell_neighbors.iterrows():
         cell_terrain = {col: row[col] for col in ('tpi_local', 'tpi_regional', 'roughness_local', 'roughness_regional')}
@@ -79,10 +83,17 @@ def interpolate_cells(
                 preds = preds.clip(0, 100)
             record[feature] = preds
 
-        records.append(pd.DataFrame(record))
+        df = pd.DataFrame(record)
+        buffer.append(df)
+        buffered_rows += len(df)
 
-    interpolated = pd.concat(records)
-    interpolated.to_sql("cell_interpolated", engine, if_exists="append", index=False)
+        if buffered_rows >= WRITE_CHUNK:
+            pd.concat(buffer).to_sql("cell_interpolated", engine, if_exists="append", index=False)
+            buffer = []
+            buffered_rows = 0
+
+    if buffer:
+        pd.concat(buffer).to_sql("cell_interpolated", engine, if_exists="append", index=False)
 
 
 def forecast_cells(
@@ -94,7 +105,8 @@ def forecast_cells(
         "tel_aviv": station_frames[178],
         "haifa": station_frames[43],
     }
-    records = []
+    buffer: list[pd.DataFrame] = []
+    buffered_rows = 0
 
     for _, row in cell_neighbors.iterrows():
         cell_id = int(row['cell_id'])
@@ -111,10 +123,17 @@ def forecast_cells(
         for key, model in models.items():
             record[key] = model.predict(xgb.DMatrix(X[model.feature_names])).clip(0)
 
-        records.append(pd.DataFrame(record))
+        df = pd.DataFrame(record)
+        buffer.append(df)
+        buffered_rows += len(df)
 
-    forecasts = pd.concat(records)
-    forecasts.to_sql("cell_forecasts", engine, if_exists="append", index=False)
+        if buffered_rows >= WRITE_CHUNK:
+            pd.concat(buffer).to_sql("cell_forecasts", engine, if_exists="append", index=False)
+            buffer = []
+            buffered_rows = 0
+
+    if buffer:
+        pd.concat(buffer).to_sql("cell_forecasts", engine, if_exists="append", index=False)
 
 
 def main() -> None:

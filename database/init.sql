@@ -1,6 +1,6 @@
--- DROP TABLE IF EXISTS cell_forecasts;
--- DROP TABLE IF EXISTS cell_interpolated;
-DROP TABLE IF EXISTS cell_neighbors;
+DROP TABLE IF EXISTS cell_forecasts;
+DROP TABLE IF EXISTS cell_interpolated;
+-- DROP TABLE IF EXISTS cell_neighbors;
 -- DROP TABLE IF EXISTS station_neighbors;
 -- DROP TABLE IF EXISTS clean_station_data;
 -- DROP TABLE IF EXISTS raw_station_data;
