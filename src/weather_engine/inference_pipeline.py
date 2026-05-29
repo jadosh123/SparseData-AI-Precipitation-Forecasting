@@ -68,45 +68,38 @@ def get_required_station_ids() -> set[int]:
     return neighbor_ids | UPSTREAM_STATION_IDS
 
 
-def _fetch_daily(station_id: int, lat: float, lon: float, date_str: str, headers: dict) -> list[dict]:
-    """Fetches one day of observations from /data/daily/YYYY/MM/DD."""
-    url = f"{BASE_URL}/{station_id}/data/daily/{date_str}"
-    for attempt in range(5):
-        try:
-            resp = requests.get(url, headers=headers, timeout=60)
-            if resp.status_code == 200:
-                return [process_observation(obs, station_id, lat, lon) for obs in resp.json().get('data', [])]
-            elif resp.status_code == 204:
-                return []
-            elif resp.status_code in [429, 500, 502, 503, 504]:
-                wait = 30 + attempt * 30
-                print(f"  Station {station_id} ({date_str}): status {resp.status_code}, retrying in {wait}s (attempt {attempt+1}/5)")
-                time.sleep(wait)
-        except requests.exceptions.RequestException as e:
-            wait = 30 + attempt * 30
-            print(f"  Station {station_id} ({date_str}): network error {e}, retrying in {wait}s (attempt {attempt+1}/5)")
-            time.sleep(wait)
-
-    send_discord_alert(f"[inference_pipeline] Failed to fetch station {station_id} ({date_str}) after 5 attempts.")
-    return []
-
-
 def fetch_station_range(station_id: int, lat: float, lon: float) -> list[dict]:
-    """Fetches yester yesterday + yesterday + today observations using the daily endpoint (IMS date = UTC+2)."""
+    """Fetches 2 days back through today using the range endpoint (IMS date = UTC+2, `to` is exclusive)."""
     headers = {
         "Authorization": f"ApiToken {API_KEY}",
         "User-Agent": "MyWeatherApp/1.0 (Contact: jadosh2000@gmail.com)"
     }
     # IMS dates are always in UTC+2 regardless of season
     ist_now = datetime.now(timezone.utc) + timedelta(hours=2)
-    today = ist_now.strftime("%Y/%m/%d")
-    yesterday = (ist_now - timedelta(days=1)).strftime("%Y/%m/%d")
-    yester_yesterday = (ist_now - timedelta(days=2)).strftime("%Y/%m/%d")
+    from_date = (ist_now - timedelta(days=2)).strftime("%Y/%m/%d")
+    to_date = (ist_now + timedelta(days=1)).strftime("%Y/%m/%d")  # exclusive upper bound
 
-    rows = _fetch_daily(station_id, lat, lon, yester_yesterday, headers)
-    rows += _fetch_daily(station_id, lat, lon, yesterday, headers)
-    rows += _fetch_daily(station_id, lat, lon, today, headers)
-    return rows
+    url = f"{BASE_URL}/{station_id}/data?from={from_date}&to={to_date}"
+    for attempt in range(5):
+        try:
+            resp = requests.get(url, headers=headers, timeout=60)
+            if resp.status_code == 200:
+                if not resp.content:
+                    return []
+                return [process_observation(obs, station_id, lat, lon) for obs in resp.json().get('data', [])]
+            elif resp.status_code == 204:
+                return []
+            elif resp.status_code in [429, 500, 502, 503, 504]:
+                wait = 30 + attempt * 30
+                print(f"  Station {station_id}: status {resp.status_code}, retrying in {wait}s (attempt {attempt+1}/5)")
+                time.sleep(wait)
+        except requests.exceptions.RequestException as e:
+            wait = 30 + attempt * 30
+            print(f"  Station {station_id}: network error {e}, retrying in {wait}s (attempt {attempt+1}/5)")
+            time.sleep(wait)
+
+    send_discord_alert(f"[inference_pipeline] Failed to fetch station {station_id} after 5 attempts.")
+    return []
 
 
 COLD_START_DIR = get_project_root() / "src" / "weather_engine" / "cold_start"
