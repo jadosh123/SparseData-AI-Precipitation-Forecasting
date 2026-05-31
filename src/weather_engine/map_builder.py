@@ -32,12 +32,10 @@ def to_israel_time(ts: str) -> str:
 def _horizon_times(base_ts: str) -> dict[str, dict]:
     """For each horizon return its label and formatted target time (with day abbr if crossing midnight)."""
     base = datetime.fromisoformat(base_ts).replace(tzinfo=timezone.utc).astimezone(IL)
-    result = {}
+    result = {"now": {"label": "Now", "time": base.strftime("%H:%M"), "day": base.strftime("%a")}}
     for key, (label, hours) in HORIZON_LABELS.items():
         target = base + timedelta(hours=hours)
-        time_str = target.strftime("%H:%M")
-        day_str = target.strftime("%a")
-        result[key] = {"label": label, "time": time_str, "day": day_str}
+        result[key] = {"label": label, "time": target.strftime("%H:%M"), "day": target.strftime("%a")}
     return result
 
 

@@ -7,7 +7,7 @@
 <div id="map-section" class="mx-auto max-w-5xl">
   <div class="flex items-center justify-between mb-1 px-1">
 
-    {# Left: arrows (demo) or timestamp (live) #}
+    {# Left: arrows (demo only) #}
     {% if mode == "demo" %}
     <div class="flex gap-1 items-center">
       <button class="{{ btn }}" hx-get="/demo?direction=left&horizon={{ horizon }}&idx={{ idx }}" hx-target="#map-section">←</button>
@@ -15,14 +15,13 @@
       <button class="{{ btn }}" hx-get="/demo?direction=right&horizon={{ horizon }}&idx={{ idx }}" hx-target="#map-section">→</button>
     </div>
     {% else %}
-    <div class="flex">
-      <div class="text-sm text-black font-mono">{{ timestamp }}</div>
-    </div>
+    <div></div>
     {% endif %}
 
     {# Center: horizon buttons #}
     <div class="absolute left-1/2 -translate-x-1/2 flex gap-2">
       {% for h, info in horizons.items() %}
+      {% if not (mode == "demo" and h == "now") %}
       <button
         class="{{ btn_active if h == horizon else btn }} flex flex-col items-center leading-tight"
         hx-get="{{ endpoint }}{{ endpoint_sep }}horizon={{ h }}"
@@ -31,6 +30,7 @@
         <span class="text-xs opacity-70">{{ info.label }}</span>
         <span class="font-semibold">{{ info.time }} <span class="text-xs font-normal">{{ info.day }}</span></span>
       </button>
+      {% endif %}
       {% endfor %}
     </div>
 
