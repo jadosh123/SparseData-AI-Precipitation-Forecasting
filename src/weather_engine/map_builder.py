@@ -4,7 +4,7 @@ from zoneinfo import ZoneInfo
 
 from fastapi.templating import Jinja2Templates
 from weather_engine.folium_map import build_forecast_map
-from weather_engine.cache import get_forecast_rows
+from weather_engine.cache import get_forecast_rows, get_now_rows
 from weather_engine.utils import get_project_root
 
 ROOT = get_project_root()
@@ -63,3 +63,10 @@ def build_and_cache_live_maps() -> None:
         fol_map = build_forecast_map(rows, horizon=horizon)
         html = render_map_section(fol_map._repr_html_(), horizon, ts, mode="live")
         (LIVE_MAPS_DIR / f"{horizon}.html").write_text(html)
+
+    now_rows = get_now_rows()
+    if now_rows:
+        now_ts = now_rows[0]["timestamp"]
+        fol_map = build_forecast_map(now_rows, horizon="rain")
+        html = render_map_section(fol_map._repr_html_(), "now", now_ts, mode="live")
+        (LIVE_MAPS_DIR / "now.html").write_text(html)

@@ -9,6 +9,17 @@ _cached_demo_rows = None
 _timestamps = None
 
 
+def get_now_rows() -> list[dict]:
+    query = """
+    SELECT ci.cell_id, ci.timestamp, ci.rain, cn.lat, cn.lon
+    FROM cell_interpolated ci
+    JOIN cell_neighbors cn ON ci.cell_id = cn.cell_id
+    WHERE ci.timestamp = (SELECT MAX(timestamp) FROM cell_interpolated)
+    """
+    with SessionLocal() as db:
+        return [dict(row._mapping) for row in db.execute(text(query)).fetchall()]
+
+
 def get_forecast_rows() -> list[dict]:
     query = """
     SELECT cf.*, cn.lat, cn.lon
