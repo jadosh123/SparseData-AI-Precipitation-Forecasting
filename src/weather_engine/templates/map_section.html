@@ -1,46 +1,51 @@
-{% set btn = "px-4 py-2 bg-sky-200 text-black rounded shadow hover:bg-gray-600" %}
-{% set btn_sm = "px-3 py-2 bg-sky-200 text-black rounded shadow hover:bg-gray-600 text-sm" %}
-{% set btn_active = "px-4 py-2 bg-sky-400 text-black rounded shadow" %}
 {% set endpoint = "/demo?idx=" ~ idx if mode == "demo" else "/map" %}
 {% set endpoint_sep = "&" if mode == "demo" else "?" %}
 
 <div id="map-section" class="mx-auto max-w-5xl">
-  <div class="flex items-center justify-between mb-1 px-1">
 
-    {# Left: arrows (demo only) #}
-    {% if mode == "demo" %}
-    <div class="flex gap-1 items-center">
-      <button class="{{ btn }}" hx-get="/demo?direction=left&horizon={{ horizon }}&idx={{ idx }}" hx-target="#map-section">←</button>
-      <div class="text-sm text-black font-mono">{{ timestamp }}</div>
-      <button class="{{ btn }}" hx-get="/demo?direction=right&horizon={{ horizon }}&idx={{ idx }}" hx-target="#map-section">→</button>
+  {# Toolbar row: left | segmented bar | right #}
+  <div class="flex items-end">
+
+    {# Left: arrows + timestamp (demo) or empty spacer (live) #}
+    <div class="flex gap-1 items-center pb-1 pr-2 shrink-0">
+      {% if mode == "demo" %}
+      <button class="px-3 py-1.5 bg-white border border-gray-300 rounded text-sm hover:bg-gray-100"
+        hx-get="/demo?direction=left&horizon={{ horizon }}&idx={{ idx }}" hx-target="#map-section">←</button>
+      <span class="text-xs text-gray-500 font-mono whitespace-nowrap">{{ timestamp }}</span>
+      <button class="px-3 py-1.5 bg-white border border-gray-300 rounded text-sm hover:bg-gray-100"
+        hx-get="/demo?direction=right&horizon={{ horizon }}&idx={{ idx }}" hx-target="#map-section">→</button>
+      {% endif %}
     </div>
-    {% else %}
-    <div></div>
-    {% endif %}
 
-    {# Center: horizon buttons #}
-    <div class="absolute left-1/2 -translate-x-1/2 flex gap-2">
+    {# Center: segmented bar #}
+    <div class="flex flex-1 rounded-t-lg overflow-hidden divide-x divide-sky-300 shadow-sm">
       {% for h, info in horizons.items() %}
       {% if not (mode == "demo" and h == "now") %}
       <button
-        class="{{ btn_active if h == horizon else btn }} flex flex-col items-center leading-tight"
+        class="flex-1 flex flex-col items-center py-2 leading-tight transition-colors
+               {% if h == horizon %}bg-sky-500 text-white{% else %}bg-sky-100 text-gray-700 hover:bg-sky-200{% endif %}"
         hx-get="{{ endpoint }}{{ endpoint_sep }}horizon={{ h }}"
         hx-target="#map-section"
       >
         <span class="text-xs opacity-70">{{ info.label }}</span>
-        <span class="font-semibold">{{ info.time }} <span class="text-xs font-normal">{{ info.day }}</span></span>
+        <span class="font-semibold text-sm">{{ info.time }} <span class="text-xs font-normal">{{ info.day }}</span></span>
       </button>
       {% endif %}
       {% endfor %}
     </div>
 
     {# Right: mode toggle #}
-    {% if mode == "demo" %}
-    <button class="{{ btn_sm }}" hx-get="/map?horizon={{ horizon }}" hx-target="#map-section">→ Live</button>
-    {% else %}
-    <button class="{{ btn_sm }}" hx-get="/demo" hx-target="#map-section">→ Demo</button>
-    {% endif %}
+    <div class="flex items-center pb-1 pl-2 shrink-0">
+      {% if mode == "demo" %}
+      <button class="px-3 py-1.5 bg-white border border-gray-300 rounded text-sm hover:bg-gray-100"
+        hx-get="/map?horizon={{ horizon }}" hx-target="#map-section">→ Live</button>
+      {% else %}
+      <button class="px-3 py-1.5 bg-white border border-gray-300 rounded text-sm hover:bg-gray-100"
+        hx-get="/demo" hx-target="#map-section">→ Demo</button>
+      {% endif %}
+    </div>
 
   </div>
+
   {{ map_html | safe }}
 </div>
