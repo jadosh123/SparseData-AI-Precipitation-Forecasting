@@ -56,15 +56,11 @@ def build_and_cache_live_maps() -> None:
     rows = get_forecast_rows()
     if not rows:
         return
-    ts = rows[0]["timestamp"]
     for horizon in HORIZONS:
         fol_map = build_forecast_map(rows, horizon=horizon)
-        html = render_map_section(fol_map._repr_html_(), horizon, ts, mode="live")
-        (LIVE_MAPS_DIR / f"{horizon}.html").write_text(html)
+        (LIVE_MAPS_DIR / f"{horizon}.html").write_text(fol_map._repr_html_())
 
     now_rows = get_now_rows()
     if now_rows:
-        now_ts = now_rows[0]["timestamp"]
         fol_map = build_forecast_map(now_rows, horizon="rain")
-        html = render_map_section(fol_map._repr_html_(), "now", now_ts, mode="live")
-        (LIVE_MAPS_DIR / "now.html").write_text(html)
+        (LIVE_MAPS_DIR / "now.html").write_text(fol_map._repr_html_())

@@ -5,7 +5,7 @@ from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 
-from weather_engine.cache import get_demo_rows, get_forecast_rows, get_now_rows, get_timestamps
+from weather_engine.cache import get_demo_rows, get_forecast_rows, get_forecast_timestamp, get_now_rows, get_now_timestamp, get_timestamps
 from weather_engine.map_builder import (
     DEMO_MAPS_DIR,
     LIVE_MAPS_DIR,
@@ -30,14 +30,17 @@ def index(request: Request):
 def get_map(horizon: str = "precipitation_t1"):
     path = LIVE_MAPS_DIR / f"{horizon}.html"
     if path.exists():
-        return HTMLResponse(content=path.read_text())
+        ts = get_now_timestamp() if horizon == "now" else get_forecast_timestamp()
+        if ts:
+            return HTMLResponse(content=render_map_section(path.read_text(), horizon, ts, mode="live"))
     if horizon == "now":
         rows = get_now_rows()
         fol_map = build_forecast_map(rows, horizon="rain")
+        ts = rows[0]["timestamp"]
     else:
         rows = get_forecast_rows()
         fol_map = build_forecast_map(rows, horizon=horizon)
-    ts = rows[0]["timestamp"]
+        ts = rows[0]["timestamp"]
     return HTMLResponse(content=render_map_section(fol_map._repr_html_(), horizon, ts, mode="live"))
 
 

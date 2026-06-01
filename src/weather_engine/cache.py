@@ -9,6 +9,20 @@ _cached_demo_rows = None
 _timestamps = None
 
 
+def get_forecast_timestamp() -> str | None:
+    query = "SELECT timestamp FROM cell_forecasts LIMIT 1"
+    with SessionLocal() as db:
+        row = db.execute(text(query)).fetchone()
+        return row[0] if row else None
+
+
+def get_now_timestamp() -> str | None:
+    query = "SELECT MAX(timestamp) FROM cell_interpolated"
+    with SessionLocal() as db:
+        row = db.execute(text(query)).fetchone()
+        return row[0] if row else None
+
+
 def get_now_rows() -> list[dict]:
     query = """
     SELECT ci.cell_id, ci.timestamp, ci.rain, cn.lat, cn.lon
