@@ -3,47 +3,41 @@
 
 <div id="map-section" class="mx-auto max-w-5xl">
 
-  {# Toolbar row: left | segmented bar | right #}
-  <div class="flex items-end">
+  {# Unified toolbar #}
+  <div class="flex rounded-t-lg overflow-hidden border border-b-0 border-gray-200 shadow-sm bg-white">
 
-    {# Left: arrows + timestamp (demo) or empty spacer (live) #}
-    <div class="flex gap-1 items-center pb-1 pr-2 shrink-0">
-      {% if mode == "demo" %}
-      <button class="px-3 py-1.5 bg-white border border-gray-300 rounded text-sm hover:bg-gray-100"
-        hx-get="/demo?direction=left&horizon={{ horizon }}&idx={{ idx }}" hx-target="#map-section">←</button>
-      <span class="text-xs text-gray-500 font-mono whitespace-nowrap">{{ timestamp }}</span>
-      <button class="px-3 py-1.5 bg-white border border-gray-300 rounded text-sm hover:bg-gray-100"
-        hx-get="/demo?direction=right&horizon={{ horizon }}&idx={{ idx }}" hx-target="#map-section">→</button>
-      {% endif %}
-    </div>
+    {# Demo: left arrows + timestamp #}
+    {% if mode == "demo" %}
+    <button class="px-3 py-2 hover:bg-gray-50 transition-colors border-r border-gray-200"
+      hx-get="/demo?direction=left&horizon={{ horizon }}&idx={{ idx }}" hx-target="#map-section">←</button>
+    <span class="px-3 py-2 text-xs text-gray-500 font-mono whitespace-nowrap flex items-center border-r border-gray-200">{{ timestamp }}</span>
+    <button class="px-3 py-2 hover:bg-gray-50 transition-colors border-r border-gray-200"
+      hx-get="/demo?direction=right&horizon={{ horizon }}&idx={{ idx }}" hx-target="#map-section">→</button>
+    {% endif %}
 
-    {# Center: segmented bar #}
-    <div class="flex flex-1 rounded-t-lg overflow-hidden divide-x divide-sky-300 shadow-sm">
-      {% for h, info in horizons.items() %}
-      {% if not (mode == "demo" and h == "now") %}
-      <button
-        class="flex-1 flex flex-col items-center py-2 leading-tight transition-colors
-               {% if h == horizon %}bg-sky-500 text-white{% else %}bg-sky-100 text-gray-700 hover:bg-sky-200{% endif %}"
-        hx-get="{{ endpoint }}{{ endpoint_sep }}horizon={{ h }}"
-        hx-target="#map-section"
-      >
-        <span class="text-xs opacity-70">{{ info.label }}</span>
-        <span class="font-semibold text-sm">{{ info.time }} <span class="text-xs font-normal">{{ info.day }}</span></span>
-      </button>
-      {% endif %}
-      {% endfor %}
-    </div>
+    {# Horizon segments #}
+    {% for h, info in horizons.items() %}
+    {% if not (mode == "demo" and h == "now") %}
+    <button
+      class="flex-1 flex flex-col items-center py-2 leading-tight transition-colors border-r border-gray-200 last:border-r-0
+             {% if h == horizon %}bg-sky-500 text-white{% else %}text-gray-700 hover:bg-gray-50{% endif %}"
+      hx-get="{{ endpoint }}{{ endpoint_sep }}horizon={{ h }}"
+      hx-target="#map-section"
+    >
+      <span class="text-xs opacity-70">{{ info.label }}</span>
+      <span class="font-semibold text-sm">{{ info.time }} <span class="text-xs font-normal">{{ info.day }}</span></span>
+    </button>
+    {% endif %}
+    {% endfor %}
 
-    {# Right: mode toggle #}
-    <div class="flex items-center pb-1 pl-2 shrink-0">
-      {% if mode == "demo" %}
-      <button class="px-3 py-1.5 bg-white border border-gray-300 rounded text-sm hover:bg-gray-100"
-        hx-get="/map?horizon={{ horizon }}" hx-target="#map-section">→ Live</button>
-      {% else %}
-      <button class="px-3 py-1.5 bg-white border border-gray-300 rounded text-sm hover:bg-gray-100"
-        hx-get="/demo" hx-target="#map-section">→ Demo</button>
-      {% endif %}
-    </div>
+    {# Mode toggle #}
+    {% if mode == "demo" %}
+    <button class="px-4 py-2 text-sm text-gray-600 hover:bg-gray-50 transition-colors border-l border-gray-200"
+      hx-get="/map?horizon={{ horizon }}" hx-target="#map-section">→ Live</button>
+    {% else %}
+    <button class="px-4 py-2 text-sm text-gray-600 hover:bg-gray-50 transition-colors border-l border-gray-200"
+      hx-get="/demo" hx-target="#map-section">→ Demo</button>
+    {% endif %}
 
   </div>
 
