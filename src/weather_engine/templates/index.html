@@ -3,6 +3,7 @@
   <head>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/htmx.org"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   </head>
   <body>
     <div class="flex flex-col items-center">
@@ -11,5 +12,88 @@
     <div>
       <div id="map-section" class="mx-auto max-w-5xl" hx-trigger="load" hx-get="/map">Loading...</div>
     </div>
+
+    {# About section #}
+    <div class="mx-auto max-w-5xl mt-4 mb-8">
+      <div class="flex items-center justify-between">
+        <button
+          onclick="document.getElementById('about').classList.toggle('hidden')"
+          class="text-sm text-black hover:text-gray-700 transition-colors"
+        >About this system ▾</button>
+        <div class="flex gap-2 text-sm">
+          <button onclick="showLang('en')" id="btn-en" class="font-semibold text-white">EN</button>
+          <span class="text-black">|</span>
+          <button onclick="showLang('he')" id="btn-he" class="text-black">עב</button>
+          <span class="text-black">|</span>
+          <button onclick="showLang('ar')" id="btn-ar" class="text-black">عر</button>
+        </div>
+      </div>
+
+      <div id="about" class="hidden mt-3 p-4 bg-white rounded-lg border border-gray-200 text-sm text-gray-700 leading-relaxed">
+        <div id="lang-en">
+          This system constructs a virtual forecasting radar for the Jezreel Valley by combining readings
+          from multiple weather stations operated by the Israel Meteorological Service (IMS).
+          Station data is fetched from the IMS public API every hour, processed, and fed into a spatial
+          interpolation model that estimates current weather conditions — rain, wind speed and direction,
+          relative humidity, and dew point — for each of the 1,271 grid cells rendered on the map.
+          That interpolated data, together with readings from coastal reference stations in Haifa and Tel Aviv,
+          is then passed to a second model that forecasts rainfall at each cell across four time horizons:
+          1, 3, 6, and 12 hours ahead.
+        </div>
+        <div id="lang-he" class="hidden" dir="rtl">
+          מערכת זו בונה מכ"ם תחזית וירטואלי לעמק יזרעאל על ידי שילוב קריאות ממספר תחנות מזג אוויר
+          המופעלות על ידי השירות המטאורולוגי הישראלי (שמ"י).
+          נתוני התחנות נאספים מה-API הציבורי של השמ"י מדי שעה, עוברים עיבוד, ומוזנים למודל אינטרפולציה
+          מרחבי המעריך את תנאי מזג האוויר הנוכחיים — גשם, מהירות וכיוון הרוח, לחות יחסית ונקודת הטל —
+          עבור כל אחת מ-1,271 תאי הרשת המוצגים על המפה.
+          הנתונים המאוינטרפולים, יחד עם קריאות מתחנות ייחוס חופיות בחיפה ובתל אביב,
+          מועברים לאחר מכן למודל שני המתחזית משקעים בכל תא לפני ארבעה אופקי זמן:
+          שעה, 3, 6 ו-12 שעות קדימה.
+        </div>
+        <div id="lang-ar" class="hidden" dir="rtl">
+          يقوم هذا النظام ببناء رادار تنبؤي افتراضي لوادي يزرعيل من خلال دمج قراءات من عدة محطات
+          أرصاد جوية تشغّلها دائرة الأرصاد الجوية الإسرائيلية.
+          يتم جلب بيانات المحطات من الواجهة البرمجية العامة للدائرة كل ساعة، ومعالجتها، ثم تغذيتها
+          في نموذج استيفاء مكاني يقدّر الأحوال الجوية الحالية — الأمطار، سرعة الرياح واتجاهها،
+          الرطوبة النسبية، ونقطة الندى — لكل خلية من خلايا الشبكة البالغ عددها 1,271 والمعروضة على الخريطة.
+          تُمرَّر هذه البيانات المُستوفاة، إلى جانب قراءات من محطات مرجعية ساحلية في حيفا وتل أبيب،
+          إلى نموذج ثانٍ يتنبأ بهطول الأمطار في كل خلية عبر أربعة آفاق زمنية:
+          ساعة واحدة، و3، و6، و12 ساعة مقبلة.
+        </div>
+      </div>
+    </div>
+
+    {# Footer #}
+    <div class="mx-auto max-w-3xl px-4 mb-8">
+      <hr class="border-black mb-4">
+      <div class="flex justify-between text-xs text-black">
+        <a href="https://ims.gov.il/he" target="_blank" class="flex items-center gap-1 hover:underline">
+          <img src="/static/ims_logo.png" class="w-4 h-4 inline">Israel Meteorological Service
+        </a>
+        <div class="flex items-center gap-4">
+          <a href="https://github.com/jadosh123/SparseData-AI-Precipitation-Forecasting" target="_blank" class="flex items-center gap-1 hover:underline">
+            <i class="fa-brands fa-github"></i> Source
+          </a>
+          <span class="flex items-center gap-1">Title by
+            <a href="https://www.instagram.com/3arabrew/" target="_blank" class="flex items-center gap-1 hover:underline">
+              <i class="fa-brands fa-instagram"></i> 3arabrew
+            </a>
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      function showLang(lang) {
+        ['en', 'he', 'ar'].forEach(l => {
+          document.getElementById('lang-' + l).classList.add('hidden');
+          document.getElementById('btn-' + l).classList.remove('font-semibold', 'text-white');
+          document.getElementById('btn-' + l).classList.add('text-black');
+        });
+        document.getElementById('lang-' + lang).classList.remove('hidden');
+        document.getElementById('btn-' + lang).classList.add('font-semibold', 'text-white');
+        document.getElementById('btn-' + lang).classList.remove('text-black');
+      }
+    </script>
   </body>
 </html>
