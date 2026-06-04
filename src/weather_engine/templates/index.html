@@ -1,13 +1,14 @@
 <!DOCTYPE html>
 <html class="bg-fixed bg-gradient-to-b from-white from-30% to-sky-500">
   <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/htmx.org"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   </head>
   <body>
     <div class="flex flex-col items-center">
-      <img src="/static/title.gif" class="mb-8 w-64 h-auto">
+      <img src="/static/title.gif" class="mb-8 w-72 sm:w-64 h-auto">
     </div>
     <div>
       <div id="map-section" class="mx-auto max-w-5xl" hx-trigger="load" hx-get="/map">Loading...</div>

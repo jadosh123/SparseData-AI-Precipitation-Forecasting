@@ -37,7 +37,15 @@ def build_forecast_map(rows, horizon: str):
     legend = MacroElement()
     legend._template = Template(f"""
         {{% macro html(this, kwargs) %}}
-        <div style="position:fixed;bottom:30px;right:10px;z-index:1000;background:white;
+        <style>
+            @media (max-width: 639px) {{
+                #precip-legend {{ bottom: 5px !important; }}
+                #precip-legend td {{ font-size: 8px !important; padding: 0 2px !important; }}
+                #precip-legend td:first-child {{ width: 12px !important; }}
+                #precip-legend b {{ font-size: 8px !important; }}
+            }}
+        </style>
+        <div id="precip-legend" style="position:fixed;bottom:30px;right:10px;z-index:1000;background:white;
                     padding:6px;border:1px solid #ccc;font-family:sans-serif;">
             <b style="font-size:11px;">mm/h</b>
             <table style="border-collapse:collapse;margin-top:2px;">{rows_html}</table>
