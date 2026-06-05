@@ -3,8 +3,6 @@ import csv
 import os
 import json
 import time
-import math
-import rasterio
 import weather_engine.utils as ut
 from datetime import datetime
 from pathlib import Path

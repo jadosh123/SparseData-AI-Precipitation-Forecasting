@@ -6,7 +6,7 @@
 /data
 cloud_data
 logs
-models
+HANDOVER.md
 
 # Python distribution metadata
 *.egg-info

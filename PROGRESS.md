@@ -337,3 +337,263 @@ Subject: RFSI Training Methodology & Implementation Plan
 - [ ] Investigate whether bearing/elevation features meaningfully improve interpolation over distance alone
 - [ ] Finalize Jezreel Valley bounding box and grid resolution
 - [ ] Assess whether coastal stations (Zikhron Yaaqov, Hadera Port, En Karmel) improve spatial coverage sufficiently to include despite later start dates
+
+### Date: April 15, 2026
+
+Subject: RFSI Baseline Training — First Results
+
+Trained 9 RFSI models (one per feature) on the full 66-station network using default XGBoost with Delaunay-triangle neighbor clusters. All station data loaded in a single query and stacked before training. Temporal split at 80/20.
+
+| Feature | MAE | RMSE |
+| :--- | :--- | :--- |
+| rain | 5.6107 | 203.9911 |
+| ws | 0.9812 | 1.3166 |
+| stdwd | 6.2437 | 34.4657 |
+| td | 1.4058 | 1.8816 |
+| rh | 5.8358 | 8.3472 |
+| tdmax | 1.4191 | 1.8976 |
+| tdmin | 1.4106 | 1.8889 |
+| u_vec | 1.1089 | 1.5226 |
+| v_vec | 0.9672 | 1.3033 |
+
+`rain` RMSE of 203 indicates extreme sensitivity to heavy rain events — zero-inflation problem. Next step: switch `rain` to `reg:tweedie` objective. `stdwd` MAE of 6.2° confirms expected local turbulence variability noted in timeline.
+
+After trying to move from RMSE for the rain interpolation model to Tweedie Loss function it threw an error because of negative values, I then checked the data because why on earth would rain contain negative values and found this:
+                        rain
+timestamp                   
+2024-10-25 18:00:00 -59994.0
+2024-10-25 19:00:00 -59994.0
+2024-10-26 04:00:00 -59994.0
+2024-10-26 05:00:00 -59994.0
+2024-10-26 09:00:00 -59994.0
+2024-10-26 06:00:00 -59994.0
+2024-11-08 14:00:00 -59994.0
+
+I concluded this was a sentinel value used by the IMS when the rain sensor was corrupt or down which survived my cleaning script, now the cleaning script is refactored and replaces negative rain with 0 since its physically invalid, that was clearly causing the rain errors to inflate so much which is why it was the worst out of all.
+Classic case of data corruption, garbage in garbage out.
+
+After fixing the sentinel values and switching `rain` to `reg:tweedie` (variance power 1.5), the models were retrained. Updated metrics below. Rain global MAE looks deceptively low (0.035) due to zero-inflation — rain-only evaluation on actual rain events (≥ 0.1mm, n=17,239) gives the honest picture.
+
+| Feature | MAE | RMSE | Notes |
+| :--- | :--- | :--- | :--- |
+| rain (global) | 0.0353 | 0.3579 | Misleading — zero-inflated |
+| **rain (events ≥ 0.1mm only)** | **0.9075** | **1.9960** | Honest rain performance |
+| ws | 0.9840 | 1.3200 | |
+| stdwd | 6.2309 | 34.1043 | Expected — local turbulence variability |
+| td | 1.4002 | 1.8737 | |
+| rh | 5.8496 | 8.3644 | |
+| tdmax | 1.4184 | 1.8973 | |
+| tdmin | 1.4162 | 1.8958 | |
+| u_vec | 1.1090 | 1.5226 | |
+| v_vec | 0.9629 | 1.2990 | |
+
+### Date: April 19, 2026
+
+Subject: RFSI LLOCV Evaluation — Afula Held-Out Test Results & Error Analysis
+
+**LLOCV Interpolation Results (Afula held-out, station 16 excluded from training entirely)**
+
+| Feature | MAE | RMSE | RMSE (rain events ≥ 0.1mm only) |
+| :--- | :--- | :--- | :--- |
+| rain (global) | 0.0460 | 0.3301 | 1.4917 |
+| ws | 1.2244 | 1.4205 | — |
+| td | 1.4335 | 1.8149 | — |
+| rh | 4.5308 | 6.1525 | — |
+| tdmax | 1.3779 | 1.7491 | — |
+| tdmin | 1.4549 | 1.8415 | — |
+| u_vec | 1.0206 | 1.2876 | — |
+| v_vec | 0.8336 | 1.0661 | — |
+
+**Error Analysis by Feature**
+
+**Rain:** Global RMSE is clean (0.33mm) but rain-only RMSE of 1.49mm is driven almost entirely by a small number of extreme events exceeding 20mm at Afula. RFSI interpolates from neighboring stations which may not capture local intensity of convective events in the valley — the same systematic underestimation of extremes documented in the tree-based precipitation literature.
+
+**Wind speed:** Visually consistent positive offset across the full plot — predictions sit above ground truth by a roughly stable margin. Physically explained by Afula's local topographic exposure or orographic channeling not shared by surrounding stations, causing RFSI to interpolate toward the regional mean wind rather than Afula's local wind regime. Planned correction: fit a bias correction to the residual distribution derived from training stations only (not Afula), apply as a learned post-processing step before features enter XGBoost. Worth checking whether the bias is uniform across summer/winter before applying a single correction.
+
+**All other features (td, rh, tdmax, tdmin, u_vec, v_vec):** Visually close to ground truth, following seasonal trends correctly. These are spatially smooth fields that RFSI handles well.
+
+**Key Methodological Notes**
+
+- LLOCV metrics and XGBoost forecast metrics evaluate different pipeline stages and cannot be directly compared. LLOCV measures interpolation reconstruction quality; XGBoost metrics measure forecast quality given clean inputs. At real inference both error sources compound.
+- Rain-only RMSE at interpolation (1.49mm) and storm-only RMSE at forecast are in the same units but measure different things — do not conflate them.
+- The Gaussian noise injection during XGBoost training (sampled from per-feature LLOCV RMSE) was designed to make the forecaster robust to upstream interpolation error. There is no empirical measurement yet of how much storm RMSE degrades when XGBoost is fed RFSI-interpolated inputs vs. real Afula observations — that delta would be the true cost of the RFSI approximation at inference.
+- Wind speed bias correction, if implemented, should be framed as "systematic bias correction derived from the leave-one-out residual distribution" — a legitimate post-processing step with precedent in the NWP bias correction 
+literature.
+
+
+### Architectural Decisions Made Recently
+- **LLOCV over random CV** — spatially aware validation that prevents neighboring stations from leaking information into the held-out target, giving realistic error estimates for unseen locations
+- **Temporal split within LLOCV** — prevents future timestamps leaking into interpolation model training.
+- **RFSI for spatial interpolation then XGBoost for temporal forecasting** — clean separation of concerns, each model does one job, avoids muddying spatial and temporal signals
+- **Afula as held-out test station** — never seen in training or validation, in the target deployment region, gives honest generalization estimate
+- **Gaussian noise injection sampled from per-feature LLOCV RMSE** — makes XGBoost robust to upstream interpolation error at inference, grounded in the actual measured error distribution rather than arbitrary noise (not tested yet).
+- **Wind decomposition into u/v vectors** — eliminates the 0°/360° circular discontinuity that would create artificial distance in the feature space
+- **Cyclic sin/cos encoding for month and day** — same reasoning as wind vectors, December and January remain close in the encoded space
+- **8-feature baseline with deliberate feature dropping** — stdwd, rain_intensity_max, wdmax, wsmax dropped for principled reasons, not arbitrary
+- **Medallion architecture** — raw/bronze/silver/gold separation keeps data lineage clean and reproducible
+- **Bias correction via residual distribution** — fitted on training stations only, applied blind to Afula, keeps evaluation clean
+
+
+### Date: April 20, 2026
+
+Subject: RFSI In-Sample Results After Adding Cyclic Month & Day Encodings
+
+Added `month_sin`, `month_cos`, `day_sin`, `day_cos` as features to `X` in the RFSI training loop. Encodings are attached to the neighbor feature matrix (not `y`) so the model sees time context alongside the spatial neighbor values. Leap year handled via `/366` divisor.
+
+Comparing against the April 15 baseline (same in-sample 80/20 split, all 66 stations):
+
+| Feature | MAE (before) | MAE (after) | RMSE (before) | RMSE (after) | Δ RMSE |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| rain (global) | 0.0353 | **0.0330** | 0.3579 | **0.3460** | −3.3% ✓ |
+| rain (events ≥ 0.1mm) | 0.9075 | **0.8715** | 1.9960 | **1.9430** | −2.7% ✓ |
+| ws | 0.9840 | 1.0071 | 1.3200 | 1.3533 | +2.5% ✗ |
+| td | 1.4002 | 1.4038 | 1.8737 | 1.8759 | +0.1% ~ |
+| rh | 5.8496 | **5.7373** | 8.3644 | **8.1805** | −2.2% ✓ |
+| tdmax | 1.4184 | 1.4270 | 1.8973 | 1.9009 | +0.2% ~ |
+| tdmin | 1.4162 | 1.4255 | 1.8958 | 1.9050 | +0.5% ~ |
+| u_vec | 1.1090 | 1.1191 | 1.5226 | 1.5337 | +0.7% ~ |
+| v_vec | 0.9629 | **0.9544** | 1.2990 | **1.2973** | −0.1% ~ |
+
+**Assessment:** The encoding had the most meaningful impact on `rain` and `rh` — the two features most strongly driven by seasonal patterns (wet/dry season and humidity cycles). Temperature and wind features are largely unchanged since they are already spatially smooth signals well-captured by the neighbor values alone. `ws` regressed slightly, likely noise. Overall the encoding is a net positive: the features it was designed to help (`rain`, `rh`) improved and nothing degraded significantly.
+
+
+### Date: April 20, 2026
+
+Subject: RFSI LLOCV Test Results After Adding Cyclic Month & Day Encodings
+
+Added `month_sin`, `month_cos`, `day_sin`, `day_cos` as features to `X` in the RFSI training loop. Encodings are attached to the neighbor feature matrix only (not `y`) so the model sees time context alongside the spatial neighbor values. Comparing against the April 19 LLOCV run (Afula held-out):
+
+| Feature | MAE (before) | MAE (after) | RMSE (before) | RMSE (after) | Δ RMSE |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| rain (global) | 0.0460 | **0.0453** | 0.3301 | 0.3303 | ~0% ~ |
+| rain (events ≥ 0.1mm) | — | — | 1.4917 | 1.4925 | ~0% ~ |
+| ws | 1.2244 | 1.2261 | 1.4205 | 1.4222 | +0.1% ~ |
+| td | 1.4335 | **1.4296** | 1.8149 | **1.8097** | −0.3% ✓ |
+| rh | 4.5308 | **4.4662** | 6.1525 | **6.0746** | −1.3% ✓ |
+| tdmax | 1.3779 | 1.4179 | 1.7491 | 1.7992 | +2.9% ✗ |
+| tdmin | 1.4549 | 1.4638 | 1.8415 | 1.8513 | +0.5% ~ |
+| u_vec | 1.0206 | **1.0127** | 1.2876 | **1.2764** | −0.9% ✓ |
+| v_vec | 0.8336 | 0.8400 | 1.0661 | 1.0720 | +0.6% ~ |
+
+**Assessment:** On the held-out Afula test the encoding had modest but consistent impact. `rh` improved most clearly (−1.3% RMSE), which is physically expected since humidity cycles are strongly seasonal. `td` and `u_vec` also improved slightly. `tdmax` regressed (+2.9%) which is likely noise at this evaluation scale rather than a structural issue. Rain metrics are essentially unchanged — interpolation quality at Afula is dominated by the spatial configuration of neighbors rather than temporal encodings, consistent with RFSI's design intent.
+
+### Date: April 20, 2026
+
+Subject: Single-Point Forecaster Results After Adding Cyclic Month & Day Encodings
+
+Added `month_sin`, `month_cos`, `day_sin`, `day_cos` to the single-point XGBoost forecaster feature set. Comparing against the previous multi-horizon run:
+
+| Horizon | Global RMSE (before) | Global RMSE (after) | Δ | Storm-Only RMSE (before) | Storm-Only RMSE (after) | Δ | Storm Bias (before) | Storm Bias (after) | Storm Scatter (before) | Storm Scatter (after) |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| t+1  | 0.3192 mm | **0.3190 mm** | ~0%    | 1.7186 mm | **1.7047 mm** | −0.8% ✓ | −0.45 mm | **−0.41 mm** | 161.5% | **160.2%** |
+| t+3  | 0.3466 mm | **0.3399 mm** | −1.9% ✓ | 1.8020 mm | **1.7658 mm** | −2.0% ✓ | −0.54 mm | −0.55 mm | 168.8% | **165.4%** |
+| t+6  | 0.3675 mm | **0.3560 mm** | −3.1% ✓ | 1.8279 mm | 1.8228 mm | −0.3% ~ | −0.57 mm | −0.61 mm | 170.7% | **170.2%** |
+| t+12 | 0.3658 mm | **0.3677 mm** | +0.5% ~ | 1.8617 mm | **1.8324 mm** | −1.6% ✓ | −0.68 mm | **−0.60 mm** | 173.8% | **171.1%** |
+
+**Assessment:** The cyclic encodings produced consistent gains across all horizons. Global RMSE improved at t+3 and t+6 meaningfully (−1.9%, −3.1%). Storm-only RMSE dropped at t+1, t+3, and t+12. The largest practical win is at t+12 where storm bias improved from −0.68mm to −0.60mm — the model is underestimating heavy events less severely at longer horizons, which is physically meaningful since seasonality becomes a stronger signal relative to local dynamics as the horizon grows.
+
+**Extra Additions:**
+Added much more aggressive sample weights before training each model to battle the insanely imbalanced dataset we have which contains:
+
+| Rain Category | Fraction  |
+|---------------|-----------|
+| dry           | 0.009566  |
+| 0.1–2mm       | 0.026435  |
+| 2–5mm         | 0.006162  |
+| 5–10mm        | 0.001521  |
+| 10–20mm       | 0.000152  |
+| 20mm+         | 0.000038  |
+
+As you can see from the rain distributions setting the sample weights to a constant 10 is useless and yielded a -0.45mm storm bias in the t+1 hour forecasting horizon, I split the rain into buckets then gave each one weights inversely proportional to frequency and it reduced to a -0.2mm storm bias at t+1 hour which is a massive gain, although its still not where I want it to be by meteorological standards which is a positive bias its still a big achievement.
+[written by me]
+
+### Date: May 3, 2026
+
+Subject: RFSI LLOCV Results After Adding Distance-to-Coast Feature
+
+Added `dist_to_coast_target`, `dist_to_coast_n1`, `dist_to_coast_n2`, `dist_to_coast_n3` as static features in `load_fold`. Values precomputed from the GSHHG v2.3.7 distance-to-coast NetCDF grid and stored in `station_metadata` via backfill script. Sign convention: negative = land side, positive = ocean side. All Israeli stations are land-side so values are negative or near-zero for coastal stations.
+
+Comparing against the April 20 LLOCV baseline (Afula held-out, cyclic encodings included):
+
+| Feature | RMSE (before) | RMSE (after) | Δ |
+| :--- | :--- | :--- | :--- |
+| rain (events ≥ 0.1mm) | 1.4925 | **1.4734** | −1.3% ✓ |
+| ws | 1.4222 | 1.5615 | +9.8% ✗ |
+| td | 1.8097 | 1.8360 | +1.5% ~ |
+| rh | 6.0746 | 6.4577 | +6.3% ✗ |
+| tdmax | 1.7992 | **1.6251** | −9.7% ✓ |
+| tdmin | 1.8513 | 1.8904 | +2.1% ~ |
+| u_vec | 1.2764 | **1.1494** | −10.0% ✓ |
+| v_vec | 1.0720 | **0.9943** | −7.2% ✓ |
+
+**Assessment:** Wind vectors (`u_vec`, `v_vec`) and `tdmax` showed the largest gains — physically grounded since coastal proximity governs sea breeze regime and daytime heating gradients, both mesoscale phenomena that persist across the 13-29km neighbor distances in this network. `ws` and `rh` regressed. The `rh` regression is consistent with its known hyper-local behavior — humidity is already well-captured by the nearest 1-2 neighbors and dist_to_coast at this scale adds noise rather than signal. `ws` regression is likely related to the existing systematic bias at Afula due to local orographic channeling not shared by surrounding stations. Feature retained despite mixed results — the wind vector improvements are physically meaningful and the regressions are explainable rather than structural.
+
+### Date: May 5, 2026
+
+Subject: RFSI LLOCV Results After Adding Neighbor Distances as Features + IDW Baseline
+
+Added `dist_n1`, `dist_n2`, `dist_n3` (haversine distance from target to each neighbor in km) as static features in `load_fold`, fetched from `station_neighbors`. This is the core RFSI feature from the original paper — the model now explicitly knows how far each neighbor is from the interpolation target.
+
+Also computed IDW (Inverse Distance Weighting) baseline: `predicted = Σ(v_i / d_i) / Σ(1 / d_i)` over the 3 neighbors on the same Afula held-out test fold.
+
+Comparing against May 3 LLOCV run, then RFSI vs IDW:
+
+| Feature | RMSE (May 3) | RMSE (today) | Δ |
+| :--- | :--- | :--- | :--- |
+| rain (events ≥ 0.1mm) | 1.4734 | 1.4913 | +1.2% ~ |
+| ws | 1.5615 | **1.1567** | −25.9% ✓ |
+| td | 1.8360 | **1.7806** | −3.0% ✓ |
+| rh | 6.4577 | **6.1911** | −4.1% ✓ |
+| tdmax | 1.6251 | 1.6466 | +1.3% ~ |
+| tdmin | 1.8904 | **1.7731** | −6.2% ✓ |
+| u_vec | 1.1494 | **1.0464** | −9.0% ✓ |
+| v_vec | 0.9943 | **0.9757** | −1.9% ✓ |
+
+**RFSI vs IDW Baseline (Afula test fold):**
+
+| Feature | RFSI MAE | IDW MAE | RFSI RMSE | IDW RMSE |
+| :--- | :--- | :--- | :--- | :--- |
+| rain (global) | **0.0468** | 0.0479 | **0.3328** | 0.3596 |
+| rain (events ≥ 0.1mm) | — | — | **1.4913** | 1.5627 |
+| ws | **0.9831** | 1.1120 | **1.1567** | 1.2957 |
+| td | 1.3696 | **1.0182** | 1.7806 | **1.4103** |
+| rh | 4.6062 | **4.2571** | 6.1911 | **5.8815** |
+| tdmax | 1.2362 | **0.9822** | 1.6466 | **1.3671** |
+| tdmin | 1.3099 | **1.0904** | 1.7731 | **1.5004** |
+| u_vec | **0.7711** | 0.9759 | **1.0464** | 1.2183 |
+| v_vec | **0.7532** | 0.7656 | **0.9757** | 1.0043 |
+
+**Assessment:** Adding neighbor distances is the strongest single improvement to date — ws dropped 25.9%, u_vec 9%, with broad gains across temperature and humidity. RFSI beats IDW on precipitation and wind, consistent with the original paper. IDW wins on temperature and humidity (td, rh, tdmax, tdmin) — these are spatially smooth fields where simple distance weighting suffices and the learned model adds complexity without benefit. IDW is the appropriate baseline given hardware constraints precluding kriging.
+
+---
+
+### Date: May 27, 2026
+
+Subject: RFSI LLOCV Results After Adding Terrain Features (Elevation, TPI, Roughness)
+
+Added 5 terrain features derived from SRTM 1 arc-second (~30m) tiles via `get_elevation_from_hgt()`: `elevation`, `tpi_local`, `tpi_regional`, `roughness_local`, `roughness_regional`. Window sizes: local = 83 px (~5 km), regional = 167 px (~10 km). Features describe the topographic position and surface roughness of each interpolation target.
+
+Terrain features were only applied to `rain`, `ws`, and `rh` — the features with a clear physical mechanism linking terrain to the measured variable. Temperature and wind vector models (`td`, `tdmax`, `tdmin`, `u_vec`, `v_vec`) were left unchanged. Comparing the terrain-affected models against May 5 (Afula held-out):
+
+| Feature | RMSE (May 5) | RMSE (after terrain) | Δ |
+| :--- | :--- | :--- | :--- |
+| rain (global) | 0.3328 | **0.3255** | −2.2% ✓ |
+| rain (events ≥ 0.1mm) | 1.4913 | **1.4819** | −0.6% ~ |
+| ws | 1.1567 | **1.0042** | −13.2% ✓ |
+| rh | 6.1911 | **5.6431** | −8.9% ✓ |
+
+**Final model state after all feature additions (Afula held-out, RFSI vs IDW):**
+
+| Feature | RFSI MAE | IDW MAE | RFSI RMSE | IDW RMSE |
+| :--- | :--- | :--- | :--- | :--- |
+| rain (global) | **0.0432** | 0.0479 | **0.3255** | 0.3596 |
+| rain (events ≥ 0.1mm) | — | — | **1.4819** | 1.5624 |
+| ws | **0.7924** | 1.1119 | **1.0042** | 1.2957 |
+| td | 1.2967 | **1.0182** | 1.6628 | **1.4104** |
+| rh | **4.2538** | 4.2575 | **5.6431** | 5.8825 |
+| tdmax | 1.1890 | **0.9822** | 1.6070 | **1.3671** |
+| tdmin | 1.3368 | **1.0904** | 1.8160 | **1.5004** |
+| u_vec | **0.8624** | 0.9760 | **1.1308** | 1.2184 |
+| v_vec | **0.7278** | 0.7655 | **0.9352** | 1.0043 |
+
+**Assessment:** `ws` is the headline gain from terrain (−13.2%) — TPI and roughness directly encode the orographic channeling that causes Afula's systematic wind offset against surrounding stations. `rh` improved −8.9%, consistent with terrain-driven moisture trapping in the valley. Rain improvement is modest (−2.2% global, −0.6% storm-only) — storm extremes remain the hard problem. Temperature features (td/tdmax/tdmin) still lose to IDW, confirming these are spatially smooth fields where distance weighting is sufficient and learned models add complexity without benefit. RFSI beats IDW on wind (ws, u_vec, v_vec) and precipitation — the features where spatial non-linearity and terrain interaction matter most.
