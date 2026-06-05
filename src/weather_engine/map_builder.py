@@ -24,9 +24,9 @@ templates = Jinja2Templates(directory=Path(__file__).parent / "templates")
 IL = ZoneInfo("Asia/Jerusalem")
 
 
-def to_israel_time(ts: str) -> str:
-    dt = datetime.fromisoformat(ts).replace(tzinfo=timezone.utc)
-    return dt.astimezone(IL).strftime("%Y-%m-%d %H:%M")
+def to_israel_time(ts: str) -> dict:
+    dt = datetime.fromisoformat(ts).replace(tzinfo=timezone.utc).astimezone(IL)
+    return {"full": dt.strftime("%Y-%m-%d %H:%M"), "short": dt.strftime("%H:%M")}
 
 
 def _horizon_times(base_ts: str) -> dict[str, dict]:

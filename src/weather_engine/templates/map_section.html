@@ -10,7 +10,10 @@
     {% if mode == "demo" %}
     <button class="px-3 py-2 hover:bg-gray-50 transition-colors border-r border-gray-200"
       hx-get="/demo?direction=left&horizon={{ horizon }}&idx={{ idx }}" hx-target="#map-section">←</button>
-    <span class="px-3 py-2 text-xs text-gray-500 font-mono whitespace-nowrap flex items-center border-r border-gray-200">{{ timestamp }}</span>
+    <span class="px-3 py-2 text-xs text-gray-500 font-mono whitespace-nowrap flex items-center border-r border-gray-200">
+      <span class="hidden sm:inline">{{ timestamp.full }}</span>
+      <span class="sm:hidden">{{ timestamp.short }}</span>
+    </span>
     <button class="px-3 py-2 hover:bg-gray-50 transition-colors border-r border-gray-200"
       hx-get="/demo?direction=right&horizon={{ horizon }}&idx={{ idx }}" hx-target="#map-section">→</button>
     {% endif %}
