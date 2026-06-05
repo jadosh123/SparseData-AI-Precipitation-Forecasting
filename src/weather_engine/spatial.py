@@ -4,6 +4,9 @@ from math import radians, sin, cos, sqrt, atan2
 import pandas as pd
 from weather_engine.database import engine
 
+HOLDOUT_STATION = 16
+
+
 def haversine(
     lat1: float, lon1: float,
     lat2: float, lon2: float,
@@ -131,7 +134,7 @@ def compute_and_store_neighbors() -> None:
     print(f"Computing neighbors for {len(all_stations)} stations...")
     records = []
     for station_id in all_stations:
-        result = get_k_neighbors(station_id, all_stations, -1)
+        result = get_k_neighbors(station_id, all_stations, HOLDOUT_STATION)
         result['is_boundary'] = int(result['is_boundary'])
         records.append(result)
 
