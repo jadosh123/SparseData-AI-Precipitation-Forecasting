@@ -7,6 +7,7 @@ import weather_engine.utils as ut
 from datetime import datetime
 from pathlib import Path
 from dotenv import load_dotenv
+from weather_engine.utils import send_discord_alert
 
 # Configuration
 base_dir = ut.get_project_root()
@@ -15,7 +16,6 @@ load_dotenv(env_file)
 
 API_KEY = os.getenv("API_KEY")
 BASE_URL = "https://api.ims.gov.il/v1/envista/stations"
-DISCORD_WEBHOOK = os.getenv("DISCORD_WEBHOOK")
 
 START_YEAR = 2020
 END_YEAR = 2026
@@ -56,16 +56,6 @@ CHANNEL_MAP = {
     'ws1mm': 'ws1mm',
     'ws10mm': 'ws10mm',
 }
-
-def send_discord_alert(message: str) -> None:
-    """
-    Sends discord alerts to configured webhook regarding failed data fetching.
-    """
-    data = {'content': message}
-    try:
-        requests.post(DISCORD_WEBHOOK, json=data)
-    except:
-        pass
 
 def fetch_yearly_data(station_id, year):
     """Fetches weather station data for a full year."""

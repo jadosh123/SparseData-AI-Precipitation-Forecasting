@@ -1,10 +1,3 @@
-"""
-Production inference pipeline — runs hourly via cronjob.
-
-Checks MAX(timestamp) in raw_station_data to determine how far back to fetch,
-then runs the full chain: fetch → clean → interpolate → forecast → replace cell_forecasts.
-"""
-
 import json
 import os
 import time
@@ -19,8 +12,8 @@ from sqlalchemy.dialects.sqlite import insert as sqlite_insert
 from weather_engine.database import engine
 from weather_engine.cell_interpolation import load_cell_features
 from weather_engine.cell_forecasting import make_inference_features
-from weather_engine.utils import encode_time_features, get_project_root
-from weather_engine.fetch_ims_data import process_observation, send_discord_alert
+from weather_engine.utils import encode_time_features, get_project_root, send_discord_alert
+from weather_engine.fetch_ims_data import process_observation
 from weather_engine.map_builder import build_and_cache_live_maps
 
 from dotenv import load_dotenv
@@ -340,16 +333,20 @@ def forecast_and_store(cell_neighbors: pd.DataFrame, station_frames: dict, model
 
 
 def main() -> None:
-    print(f"[{datetime.now(timezone.utc).replace(tzinfo=None).isoformat()}] inference_pipeline starting...")
+    msg = f"[{datetime.now(timezone.utc).replace(tzinfo=None).isoformat()}] inference_pipeline starting..."
+    print(msg)
+    send_discord_alert(msg)
 
     bootstrap_static_tables()
 
     station_ids = get_required_station_ids()
 
     fetch_and_store_raw(station_ids)
+    send_discord_alert(f"Fetched data from {len(station_ids)} stations.")
     clean_and_store(station_ids)
+    send_discord_alert("Cleaned and aggregated data")
 
-    # Load station frames from clean_station_data for interpolation + upstream forcing
+    # Load station frames from clean_station_data for interpolation + upstream
     all_clean = pd.read_sql("SELECT * FROM clean_station_data", engine)
     all_clean['timestamp'] = pd.to_datetime(all_clean['timestamp'])
     all_clean = all_clean.set_index('timestamp').sort_index()
@@ -359,14 +356,19 @@ def main() -> None:
     cell_neighbors = pd.read_sql("SELECT * FROM cell_neighbors", engine)
     interp_models = load_interpolation_models()
     forecast_models = load_forecast_models()
-
+    
+    send_discord_alert("Interpolating cells...")
     interpolate_and_store(cell_neighbors, station_frames, interp_models)
+    send_discord_alert("Forecasting cells...")
     forecast_and_store(cell_neighbors, station_frames, forecast_models)
-
+    send_discord_alert("Finished!")
+    
     print("Building live map cache...")
     build_and_cache_live_maps()
 
-    print(f"[{datetime.now(timezone.utc).replace(tzinfo=None).isoformat()}] Pipeline complete.")
+    msg = f"[{datetime.now(timezone.utc).replace(tzinfo=None).isoformat()}] Pipeline complete."
+    print(msg)
+    send_discord_alert(msg)
 
 
 if __name__ == "__main__":

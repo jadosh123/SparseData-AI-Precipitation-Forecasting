@@ -4,6 +4,10 @@ import math
 import pandas as pd
 import numpy as np
 import h5py
+import os
+import requests
+from dotenv import load_dotenv
+
 
 def get_project_root() -> Path:
     """
@@ -27,6 +31,10 @@ def get_project_root() -> Path:
         current_path = current_path.parent
         
     raise FileNotFoundError("Could not find the project root (no .toml file found in any parent directories).")
+
+
+load_dotenv(get_project_root() / ".env")
+DISCORD_WEBHOOK = os.getenv("DISCORD_WEBHOOK")
 
 
 def get_elevation_from_hgt(lat, lon) -> dict[str, float | None]:
@@ -148,3 +156,15 @@ def encode_time_features(df: pd.DataFrame) -> pd.DataFrame:
     df['day_cos'] = np.cos(2 * np.pi * day / ts.dt.is_leap_year.map({True: 366, False: 365}))
     
     return df
+
+
+def send_discord_alert(message: str) -> None:
+    """
+    Sends discord alerts to configured webhook regarding failed data fetching.
+    """
+    if DISCORD_WEBHOOK:
+        data = {'content': message}
+        try:
+            requests.post(DISCORD_WEBHOOK, json=data)
+        except Exception as e:
+            print(f"Failed to send discord notification: {e}")
