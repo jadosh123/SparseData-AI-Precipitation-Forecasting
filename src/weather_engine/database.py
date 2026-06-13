@@ -1,5 +1,5 @@
 # src/weather_engine/database.py
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, event
 from sqlalchemy.orm import sessionmaker, declarative_base
 from weather_engine.utils import get_project_root
 
@@ -19,6 +19,10 @@ engine = create_engine(
     DATABASE_URL,
     connect_args=connect_args
 )
+
+@event.listens_for(engine, "connect")
+def set_wal_mode(dbapi_connection, connection_record):
+    dbapi_connection.execute("PRAGMA journal_mode=WAL")
 
 # 4. Create Session Factory (for usage in scripts)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
