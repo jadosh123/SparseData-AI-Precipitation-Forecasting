@@ -111,13 +111,17 @@ Wind vector components (`u_vec`, `v_vec`) are derived from `ws` and `wd` during 
 
 ### Setting up environment
 
-Run the following to install and setup all dependencies needed
-```bash 
+Run the following to create a virtual environment, activate it, and install all dependencies:
+```bash
+python -m venv .venv
+source .venv/bin/activate
 pip install -e .[dev]
 ```
 
-If youre on the live deployment stage then run the following to get the core dependencies
-```bash 
+If you're on the live deployment stage then run the following to get the core dependencies:
+```bash
+python -m venv .venv
+source .venv/bin/activate
 pip install -e .
 ```
 
@@ -133,36 +137,38 @@ LAT_MIN = 32.45
 LON_MIN = 35.05
 ```
 
-Once the prerequisites above are in place, run the following steps in order:
+Once the prerequisites above are in place, activate the virtual environment and run the following steps in order:
 
 ```bash
+source .venv/bin/activate
+
 # 1. Ingest raw CSV data into weather.db
-python -m weather_engine.ingest_data.py
+python src/weather_engine/ingest_data.py
 
 # 2. Clean and aggregate ingested data into clean_station_data in weather.db
-python -m weather_engine.clean_data.py
+python src/weather_engine/clean_data.py
 
 # 3. Compute station neighbors (needed for RFSI)
-python -m weather_engine.spatial
+python src/weather_engine/spatial.py
 
 # 4. Train RFSI spatial interpolation models (saves to models/spatial_interpolation/)
-python -m weather_engine.train_rfsi.py
+python src/weather_engine/train_rfsi.py
 
 # 5. Train XGBoost forecast models and evaluate performance
 #    Open and run single_point_forecast.ipynb — saves to models/single_point/
 
 # 6. Generate virtual grid cells for the target region
-python -m weather_engine.cell_generation
+python src/weather_engine/cell_generation.py
 
 # 7. Run the full interpolation + forecast pipeline over historical data
-python -m weather_engine.cell_full_pipeline.py
+python src/weather_engine/cell_full_pipeline.py
 ```
 
 After training, copy the `models/` directory to the deployment branch.
 
 If you want to evaluate the model's performance you can run the data_analysis_full_pipeline.ipynb notebook which will find the closest cell to the target held out station that you defined, it will fetch all the forecasts and interpolations and display error metrics for you against the ground truths of that held out station (Keep in mind any distance can inflate the error numbers a little bit).
 
-To prepare for live deployment run ```python -m weather_engine.export_cold_start.py```
+To prepare for live deployment run ```python src/weather_engine/export_cold_start.py```
 That will take all the cell neighbors data and export it to a json for a cold start in live deployment.
 
 ---
@@ -174,6 +180,8 @@ That will take all the cell neighbors data and export it to a json for a cold st
 **2. Set up environment**
 
 ```bash
+python -m venv .venv
+source .venv/bin/activate
 pip install -e .
 cp .env.example .env  # fill in your IMS API key and discord webhook for alerts
 ```
@@ -188,25 +196,26 @@ mkdir -p logs data
 **4. Build demo maps**
 
 ```bash
-python -m weather_engine.demo_snapshot.build_demo_map
+source .venv/bin/activate
+python src/weather_engine/demo_snapshot/build_demo_map.py
 ```
 
 **5. First inference run** — bootstraps static tables from the cold start JSONs and fetches initial data:
 
 ```bash
-python -m weather_engine.inference_pipeline
+python src/weather_engine/inference_pipeline.py
 ```
 
 **6. Set up the cronjob** — runs at 10 minutes past every hour:
 
 ```
-15 * * * * cd /path/to/repo && .venv/bin/python -m weather_engine.inference_pipeline >> logs/inference.log 2>&1
+15 * * * * /path/to/repo/.venv/bin/python /path/to/repo/src/weather_engine/inference_pipeline.py >> /path/to/repo/logs/inference.log 2>&1
 ```
 
 **7. Start the server**
 
 ```bash
-uvicorn weather_engine.api:app --host 0.0.0.0 --port 8000
+uvicorn src.weather_engine.api:app --host 0.0.0.0 --port 8000
 ```
 
 ---
