@@ -116,6 +116,9 @@ Run the following to create a virtual environment, activate it, and install all 
 python -m venv .venv
 source .venv/bin/activate
 pip install -e .[dev]
+
+# If you have uv
+uv sync --extra dev
 ```
 
 If you're on the live deployment stage then run the following to get the core dependencies:
@@ -123,6 +126,9 @@ If you're on the live deployment stage then run the following to get the core de
 python -m venv .venv
 source .venv/bin/activate
 pip install -e .
+
+# If you have uv
+uv sync
 ```
 
 ### Training Pipeline (`training-and-analysis` branch)
@@ -217,7 +223,7 @@ python src/weather_engine/inference_pipeline.py
 **7. Start the server**
 
 ```bash
-uvicorn src.weather_engine.api:app --host 0.0.0.0 --port 8000
+uvicorn weather_engine.api:app --host 0.0.0.0 --port 8000
 ```
 
 ---
