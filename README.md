@@ -189,7 +189,9 @@ cp .env.example .env  # fill in your IMS API key and discord webhook for alerts
 **3. Initialize the database**
 
 ```bash
-sqlite3 weather_live.db ".read database/init.sql"
+sqlite3 data/weather_live.db
+.read database/init.sql
+.exit
 mkdir -p logs data
 ```
 
