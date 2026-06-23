@@ -19,10 +19,7 @@
     {# About section #}
     <div class="mx-auto max-w-5xl mt-4 mb-8">
       <div class="flex items-center justify-between">
-        <button
-          onclick="document.getElementById('about').classList.toggle('hidden')"
-          class="text-sm text-black hover:text-gray-700 transition-colors"
-        >About this system ▾</button>
+        <span class="text-sm text-black font-medium">About this system</span>
         <div class="flex gap-2 text-sm">
           <button onclick="showLang('en')" id="btn-en" class="font-semibold text-white">EN</button>
           <span class="text-black">|</span>
@@ -32,7 +29,7 @@
         </div>
       </div>
 
-      <div id="about" class="hidden mt-3 p-4 bg-white rounded-lg border border-gray-200 text-sm text-gray-700 leading-relaxed">
+      <div id="about" class="mt-3 p-4 bg-white rounded-lg border border-gray-200 text-sm text-gray-700 leading-relaxed">
         <div id="lang-en">
           This system constructs a virtual forecasting radar for the Jezreel Valley by combining readings
           from multiple weather stations operated by the Israel Meteorological Service (IMS).
@@ -58,6 +55,9 @@
           مطر، سرعة واتجاه الريح، رطوبة ونقطة الندى — لكل واحدة من 1,271 خلية على الخريطة.
           هاي البيانات، مع قراءات من محطات ساحلية بحيفا وتل أبيب،
           بتروح لنموذج ثاني بيتنبأ بالأمطار لكل خلية على أربعة آفاق زمنية: ساعة، 3، 6 و12 ساعة قدام
+        </div>
+        <div class="mt-3 text-right">
+          <a href="/about" class="text-sky-600 hover:text-sky-800 text-xs font-medium transition-colors">Learn more →</a>
         </div>
       </div>
     </div>
