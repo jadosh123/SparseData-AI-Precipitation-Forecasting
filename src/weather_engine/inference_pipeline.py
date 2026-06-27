@@ -117,7 +117,7 @@ def bootstrap_static_tables() -> None:
         print(f"Bootstrapped cell_neighbors with {len(records)} rows.")
 
 
-def fetch_and_store_raw(station_ids: set[int]) -> None:
+def fetch_and_store_raw(station_ids: set[int]) -> pd.DataFrame | None:
     print(f"Fetching {len(station_ids)} stations (yesterday + today)...")
 
     meta_df = pd.read_sql("SELECT station_id, latitude, longitude FROM station_metadata", engine)
@@ -140,8 +140,9 @@ def fetch_and_store_raw(station_ids: set[int]) -> None:
 
     if not all_rows:
         print("No new rows fetched.")
-        return
+        return None
 
+    # Data processing
     df = pd.DataFrame(all_rows)
     df['timestamp'] = pd.DatetimeIndex(pd.to_datetime(df['timestamp'].astype(str).str.replace(r'[+-]\d{2}:\d{2}$', '', regex=True), errors='coerce')) - pd.Timedelta(hours=2)
     df = df.drop(columns=['latitude', 'longitude', 'wsmax', 'wdmax', 'stdwd', 'ws1mm', 'ws10mm'], errors='ignore')
@@ -153,6 +154,7 @@ def fetch_and_store_raw(station_ids: set[int]) -> None:
               dtype=DTYPE_RAW, method=_insert_ignore)  # type: ignore[arg-type]
 
     print(f"Stored {len(df)} raw rows.")
+    return df
 
 
 def get_wind_components(ws, wd):
@@ -160,7 +162,7 @@ def get_wind_components(ws, wd):
     return -ws * np.sin(wd_rad), -ws * np.cos(wd_rad)
 
 
-def clean_and_store(station_ids: set[int]) -> None:
+def clean_and_store(df_raw: pd.DataFrame) -> None:
     print("Cleaning raw data...")
 
     latest_clean = pd.read_sql(
@@ -173,16 +175,12 @@ def clean_and_store(station_ids: set[int]) -> None:
         'u_vec': 'mean', 'v_vec': 'mean'
     }
 
-    for sid in station_ids:
+    for sid, df in df_raw.groupby('station_id'):
         if latest_clean is not None:
-            query = f"SELECT * FROM raw_station_data WHERE station_id = {sid} AND timestamp > '{latest_clean}'"
-        else:
-            query = f"SELECT * FROM raw_station_data WHERE station_id = {sid}"
-
-        df = pd.read_sql(query, engine)
+            df = df[df['timestamp'] > pd.Timestamp(latest_clean)]
         if df.empty:
             continue
-
+        
         df['timestamp'] = pd.to_datetime(df['timestamp'])
         df['rain'] = df['rain'].where(df['rain'] >= 0, other=np.nan)
         df['ws'] = pd.to_numeric(df['ws'], errors='coerce')
@@ -341,13 +339,18 @@ def main() -> None:
 
     station_ids = get_required_station_ids()
 
-    fetch_and_store_raw(station_ids)
+    # Fetching and Cleaning
+    df_raw = fetch_and_store_raw(station_ids)
+    if df_raw is None:
+        send_discord_alert("No new data was fetched.\nExiting inference pipeline...")
+        return
+
     send_discord_alert(f"Fetched data from {len(station_ids)} stations.")
-    clean_and_store(station_ids)
+    clean_and_store(df_raw)
     send_discord_alert("Cleaned and aggregated data")
 
     # Load station frames from clean_station_data for interpolation + upstream
-    all_clean = pd.read_sql("SELECT * FROM clean_station_data", engine)
+    all_clean = pd.read_sql("SELECT * FROM clean_station_data", engine)  # NEeds to get changed to use existing df in memory
     all_clean['timestamp'] = pd.to_datetime(all_clean['timestamp'])
     all_clean = all_clean.set_index('timestamp').sort_index()
     station_frames = {sid: grp.drop(columns='station_id')
