@@ -151,7 +151,7 @@ def fetch_and_store_raw(station_ids: set[int]) -> pd.DataFrame | None:
         df[col] = pd.to_numeric(df[col], errors='coerce')
 
     df.to_sql('raw_station_data', engine, if_exists='append', index=False,
-              dtype=DTYPE_RAW, method=_insert_ignore)  # type: ignore[arg-type]
+              dtype=DTYPE_RAW, method=_insert_ignore, chunksize=500)  # type: ignore[arg-type]
 
     print(f"Stored {len(df)} raw rows.")
     return df
