@@ -1,0 +1,2 @@
+@import "tailwindcss";
+@source "../src/weather_engine/templates/**/*.html";
