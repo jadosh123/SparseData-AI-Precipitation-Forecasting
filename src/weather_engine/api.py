@@ -26,6 +26,11 @@ def index(request: Request):
     return templates.TemplateResponse(request=request, name="index.html")
 
 
+@app.get("/about", response_class=HTMLResponse)
+def about(request: Request):
+    return templates.TemplateResponse(request=request, name="about.html")
+
+
 @app.get("/map", response_class=HTMLResponse)
 def get_map(horizon: str = "precipitation_t1"):
     path = LIVE_MAPS_DIR / f"{horizon}.html"
