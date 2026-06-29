@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html class="bg-fixed bg-gradient-to-b from-white from-30% to-sky-500">
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EklimAI — How It Works</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="icon" type="image/x-icon" href="/static/favicon.ico">
+  </head>
+  <body>
+    <div class="flex flex-col items-center pt-8">
+      <a href="/"><img src="/static/title.gif" class="mb-8 w-72 sm:w-64 h-auto"></a>
+    </div>
+
+    <div class="mx-auto max-w-3xl px-6 pb-16">
+
+      <div class="mb-6">
+        <a href="/" class="text-sky-600 hover:text-sky-800 text-xs font-medium transition-colors">← Back to map</a>
+      </div>
+
+      <h1 class="text-2xl font-bold text-gray-900 mb-8">How It Works</h1>
+
+      {# The Problem #}
+      <section class="mb-10">
+        <h2 class="text-xl font-semibold text-gray-800 mb-4">The Problem</h2>
+        <p class="text-sm text-gray-700 leading-relaxed mb-4">
+          Accurate, localized rain prediction is critical for agriculture, disaster preparedness, and urban planning.
+          The current standard is bifurcated by economic status.
+        </p>
+        <p class="text-sm text-gray-700 leading-relaxed mb-4">
+          Developed nations run networks of Doppler radar installations — each costing between $300,000 and $1,000,000+ —
+          backed by supercomputer clusters solving fluid dynamics equations to simulate the atmosphere at scale (ECMWF,
+          GFS global models). In contrast, large parts of the developing world and many rural regions lack radar coverage
+          entirely. Farmers, local planners, and disaster managers in these areas fall back on coarse global models that
+          fail to capture local microclimates, or on nothing at all.
+        </p>
+        <p class="text-sm text-gray-700 leading-relaxed">
+          The Jezreel Valley sits in one of these blind spots. Flanked by Mount Carmel to the west, the Galilee highlands
+          to the north, and the Gilboa ridge to the southeast, the valley has a distinct precipitation microclimate driven
+          by orographic channeling and Mediterranean sea-breeze dynamics — effects that global models handle poorly at the
+          local scale.
+        </p>
+      </section>
+
+      <div class="my-8">
+        <img src="/static/jezreel_topography.png" alt="Map of northern Israel showing the Jezreel Valley, IMS station locations, and surrounding terrain" class="rounded-lg w-full">
+      </div>
+
+      {# Why This Approach #}
+      <section class="mb-10">
+        <h2 class="text-xl font-semibold text-gray-800 mb-4">Why This Approach</h2>
+        <p class="text-sm text-gray-700 leading-relaxed mb-4">
+          The gap is not a data problem — cheap commercial weather stations cost $2,000–$5,000 each, orders of magnitude
+          cheaper than radar. The gap is an algorithmic one: existing methods for turning sparse point observations into a
+          continuous weather surface either require expensive compute (Numerical Weather Prediction) or make assumptions
+          that break down in complex terrain (Kriging assumes spatial uniformity, which the North District of Israel
+          violates badly due to its varied topography).
+        </p>
+        <p class="text-sm text-gray-700 leading-relaxed mb-4">
+          This system addresses that gap by combining two ML models. Kriging — the standard geostatistical interpolation
+          algorithm — was evaluated and rejected on two grounds: it assumes spatial uniformity (stationarity), which the
+          North District's varied terrain violates, and it requires inverting an n×n covariance matrix at O(n³) cost
+          upfront, and O(n²) per prediction thereafter — compared to tree-based inference which runs in O(M × d) where
+          M and d are fixed after training, making each prediction effectively constant time.
+        </p>
+        <ul class="text-sm text-gray-700 leading-relaxed list-disc list-inside space-y-2 mb-4">
+          <li><strong>RFSI (Random Forest Spatial Interpolation)</strong> for reconstructing a continuous weather surface
+            from sparse station readings, implemented via XGBoost for speed and native missing-value handling.</li>
+          <li><strong>XGBoost multi-horizon forecasting</strong> for predicting future rainfall at each grid cell across
+            four time horizons, operating entirely on consumer hardware with no supercomputer required.</li>
+        </ul>
+        <p class="text-sm text-gray-700 leading-relaxed">
+          The result is a virtual radar — localized hourly nowcasts and short-range forecasts for 1,271 grid cells across
+          the valley at ~0.935 km spacing, with no radar infrastructure required.
+        </p>
+      </section>
+
+      {# How the System Works #}
+      <section class="mb-10">
+        <h2 class="text-xl font-semibold text-gray-800 mb-6">How the System Works</h2>
+
+        <div class="space-y-8">
+          <div>
+            <h3 class="text-base font-semibold text-gray-800 mb-2">1. Automated Data Fetching</h3>
+            <p class="text-sm text-gray-700 leading-relaxed mb-3">
+              Every hour, a cronjob triggers the inference pipeline, which fetches the last 48 hours of observations from
+              19 weather stations operated by the Israel Meteorological Service (IMS) via their public API. Stations cover
+              the Jezreel Valley and include coastal reference stations in Haifa and Tel Aviv. Each fetch retries up to 5
+              times with 30-second backoff on network failure.
+            </p>
+            <p class="text-sm text-gray-700 leading-relaxed mb-3">
+              The IMS delivers data at 10-minute intervals. The pipeline aggregates these into complete 1-hour windows —
+              summing rainfall, averaging wind and humidity, and taking max/min for temperature extremes. Only complete
+              hours are stored.
+            </p>
+            <p class="text-sm text-gray-700 leading-relaxed">
+              Fetching the last 48 hours on every run (rather than just the last hour) provides automatic backfill: if the
+              server goes offline and restarts, it catches up without manual intervention. Inserts are duplicate-safe.
+            </p>
+          </div>
+
+          <div>
+            <h3 class="text-base font-semibold text-gray-800 mb-2">2. Physics-Informed Cleaning</h3>
+            <p class="text-sm text-gray-700 leading-relaxed mb-3">
+              Raw sensor data requires more than a null check. Two categories of problems were discovered and addressed:
+            </p>
+            <p class="text-sm text-gray-700 leading-relaxed mb-3">
+              <strong>Sentinel values:</strong> IMS rain sensors emit <code class="bg-gray-100 px-1 rounded text-xs">-59994.0</code>
+              to signal a hardware outage. This is a valid number that passes standard null checks — during early
+              development it inflated rain RMSE from ~0.36 mm to ~203 mm before being identified. The cleaning pipeline
+              now rejects any rain reading below zero as NaN.
+            </p>
+            <p class="text-sm text-gray-700 leading-relaxed mb-3">
+              <strong>Wind vector decomposition:</strong> Wind direction is circular — averaging 0° and 360° (both north)
+              gives 180° (due west), which is physically wrong. The pipeline decomposes wind speed and direction into
+              Cartesian u/v vector components before aggregation. Vector averaging is mathematically correct for circular
+              quantities.
+            </p>
+            <p class="text-sm text-gray-700 leading-relaxed">
+              Additional guardrails reject temperature logic violations (<code class="bg-gray-100 px-1 rounded text-xs">T_max &lt; T_avg</code>)
+              and fill short gaps of up to 2 consecutive missing hours via linear interpolation.
+            </p>
+          </div>
+
+          <div>
+            <h3 class="text-base font-semibold text-gray-800 mb-2">3. Spatial Interpolation</h3>
+            <p class="text-sm text-gray-700 leading-relaxed mb-3">
+              The cleaned station data feeds into 8 RFSI models — one per meteorological feature (rain, wind speed, wind
+              u/v vectors, dew point, relative humidity, daily max/min dew point). Each model estimates current conditions
+              at all 1,271 virtual grid cells across the valley.
+            </p>
+            <p class="text-sm text-gray-700 leading-relaxed mb-2">The RFSI feature vector for each target cell includes:</p>
+            <ul class="text-sm text-gray-700 leading-relaxed list-disc list-inside space-y-1 mb-3">
+              <li>Observations from the 3 nearest neighbor stations</li>
+              <li>Haversine distances from each neighbor to the target cell (the core RFSI feature)</li>
+              <li>Distance to coastline for the cell and each neighbor</li>
+              <li>Cyclic sin/cos encodings of calendar month and day</li>
+              <li>Terrain features derived from SRTM 30m elevation tiles: elevation, Topographic Position Index (TPI) at local and regional scales, and terrain roughness</li>
+            </ul>
+            <p class="text-sm text-gray-700 leading-relaxed">
+              Terrain features are included for rain, wind, and humidity models — TPI in particular captures orographic
+              channeling effects (whether a cell sits in a valley, on a ridge, or on a slope), which are the dominant
+              local driver of wind speed and precipitation distribution in the North District.
+            </p>
+          </div>
+
+          <div>
+            <h3 class="text-base font-semibold text-gray-800 mb-2">4. Multi-Horizon Forecasting</h3>
+            <p class="text-sm text-gray-700 leading-relaxed mb-3">
+              The interpolated grid state feeds into 4 independent XGBoost forecast models — one per horizon (t+1h, t+3h,
+              t+6h, t+12h). Each model predicts per-cell rainfall intensity using a two-layer feature vector:
+            </p>
+            <ul class="text-sm text-gray-700 leading-relaxed list-disc list-inside space-y-1 mb-3">
+              <li><strong>Local layer:</strong> auto-regressive lags of interpolated cell features at t-1h, t-2h, t-3h,
+                t-6h, t-12h, t-24h — capturing local precipitation momentum.</li>
+              <li><strong>Upstream forcing layer:</strong> wind vectors, rain lags, and derived physics features (wind
+                convergence, moisture flux) from the Haifa and Tel Aviv coastal stations — capturing storm advection
+                arriving from the Mediterranean.</li>
+            </ul>
+            <p class="text-sm text-gray-700 leading-relaxed">
+              Four independent models avoid the error compounding of recursive multi-step prediction, where each forecast
+              is passed back as input for the next step. Each model instead predicts directly from real observed features.
+            </p>
+          </div>
+
+          <div>
+            <h3 class="text-base font-semibold text-gray-800 mb-2">5. Caching and Serving</h3>
+            <p class="text-sm text-gray-700 leading-relaxed">
+              After inference, the pipeline pre-renders all 5 Folium maps (current interpolation + 4 forecast horizons)
+              and caches them to disk as HTML files. The FastAPI server serves these cached files directly — map requests
+              return in under 800ms. If the pipeline itself fails, the server continues serving the last successfully
+              generated maps with their original timestamp rather than returning an error.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <div class="my-8">
+        <img src="/static/system_architecture.png" alt="System architecture diagram — cronjob → inference pipeline → SQLite + map cache → FastAPI → browser" class="rounded-lg w-full">
+      </div>
+
+      {# Evaluation #}
+      <section class="mb-10">
+        <h2 class="text-xl font-semibold text-gray-800 mb-6">Evaluation</h2>
+
+        <div class="mb-8">
+          <h3 class="text-base font-semibold text-gray-800 mb-2">Spatial Interpolation — Leave-Location-Out Cross Validation</h3>
+          <p class="text-sm text-gray-700 leading-relaxed mb-3">
+            The key risk in spatial ML is data leakage through spatial autocorrelation: in standard k-fold
+            cross-validation, training stations are geographically close to the test station, so the model effectively
+            sees correlated data during training and produces overly optimistic error estimates.
+          </p>
+          <p class="text-sm text-gray-700 leading-relaxed mb-3">
+            To prevent this, <strong>Afula (station 16)</strong> was held out entirely from all training stages —
+            neither as a training target nor as a neighbor for any other station during neighbor graph construction.
+            No information from Afula could reach any model through any path during training. This is called
+            <strong>Leave-Location-Out Cross Validation (LLOCV)</strong>.
+          </p>
+          <p class="text-sm text-gray-700 leading-relaxed">
+            All RFSI performance numbers below reflect evaluation on this never-seen location.
+          </p>
+        </div>
+
+        <div>
+          <h3 class="text-base font-semibold text-gray-800 mb-2">Forecasting — Temporal Split + End-to-End Decomposition</h3>
+          <p class="text-sm text-gray-700 leading-relaxed mb-3">
+            The XGBoost forecast models use an 80/20 chronological train/test split — no future timestamps can leak
+            into training. Models are evaluated on <strong>storm hours only</strong> (rain ≥ 0.1 mm/h) using RMSE and
+            F1 score, compared against a persistence baseline (predicting the last observed value forward).
+          </p>
+          <p class="text-sm text-gray-700 leading-relaxed mb-3">
+            The closest grid cell to Afula station is <strong>cell 639, 0.53 km away</strong>. The full end-to-end
+            pipeline — interpolation followed by forecasting — was validated against real Afula ground truth across
+            approximately <strong>47,000 hourly samples spanning 5 years</strong>.
+          </p>
+          <p class="text-sm text-gray-700 leading-relaxed">
+            This evaluation fully decomposes the pipeline error: the spatial interpolation RMSE (1.41 mm/h storm-only
+            at Afula's cell) establishes the reconstruction baseline before any forecasting is applied. The gap between
+            that and the t+1h forecast RMSE (1.637 mm/h) represents the pure cost of predicting one hour ahead on top
+            of spatial reconstruction.
+          </p>
+        </div>
+      </section>
+
+      {# Model Performance #}
+      <section class="mb-10">
+        <h2 class="text-xl font-semibold text-gray-800 mb-6">Model Performance</h2>
+
+        <div class="mb-8">
+          <h3 class="text-base font-semibold text-gray-800 mb-2">Spatial Interpolation vs IDW Baseline</h3>
+          <p class="text-sm text-gray-700 leading-relaxed mb-4">
+            IDW (Inverse Distance Weighting) is the parameter-free baseline that weights observations by the inverse
+            of their distance to the target.
+          </p>
+          <div class="overflow-x-auto">
+            <table class="w-full text-xs text-gray-700 border-collapse">
+              <thead>
+                <tr class="border-b border-gray-300 bg-gray-50">
+                  <th class="text-left py-2 px-3 font-semibold">Feature</th>
+                  <th class="text-center py-2 px-3 font-semibold">RFSI MAE</th>
+                  <th class="text-center py-2 px-3 font-semibold">IDW MAE</th>
+                  <th class="text-center py-2 px-3 font-semibold">RFSI RMSE</th>
+                  <th class="text-center py-2 px-3 font-semibold">IDW RMSE</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-gray-200">
+                <tr><td class="py-2 px-3">rain — mm/h (global)</td><td class="text-center py-2 px-3 font-semibold">0.0432</td><td class="text-center py-2 px-3">0.0479</td><td class="text-center py-2 px-3 font-semibold">0.3255</td><td class="text-center py-2 px-3">0.3596</td></tr>
+                <tr><td class="py-2 px-3">rain — mm/h (events ≥ 0.1mm)</td><td class="text-center py-2 px-3">—</td><td class="text-center py-2 px-3">—</td><td class="text-center py-2 px-3 font-semibold">1.4819</td><td class="text-center py-2 px-3">1.5624</td></tr>
+                <tr><td class="py-2 px-3">ws — m/s</td><td class="text-center py-2 px-3 font-semibold">0.7924</td><td class="text-center py-2 px-3">1.1119</td><td class="text-center py-2 px-3 font-semibold">1.0042</td><td class="text-center py-2 px-3">1.2957</td></tr>
+                <tr><td class="py-2 px-3">td — °C</td><td class="text-center py-2 px-3">1.2967</td><td class="text-center py-2 px-3 font-semibold">1.0182</td><td class="text-center py-2 px-3">1.6628</td><td class="text-center py-2 px-3 font-semibold">1.4104</td></tr>
+                <tr><td class="py-2 px-3">rh — %</td><td class="text-center py-2 px-3 font-semibold">4.2538</td><td class="text-center py-2 px-3">4.2575</td><td class="text-center py-2 px-3 font-semibold">5.6431</td><td class="text-center py-2 px-3">5.8825</td></tr>
+                <tr><td class="py-2 px-3">tdmax — °C</td><td class="text-center py-2 px-3">1.1890</td><td class="text-center py-2 px-3 font-semibold">0.9822</td><td class="text-center py-2 px-3">1.6070</td><td class="text-center py-2 px-3 font-semibold">1.3671</td></tr>
+                <tr><td class="py-2 px-3">tdmin — °C</td><td class="text-center py-2 px-3">1.3368</td><td class="text-center py-2 px-3 font-semibold">1.0904</td><td class="text-center py-2 px-3">1.8160</td><td class="text-center py-2 px-3 font-semibold">1.5004</td></tr>
+                <tr><td class="py-2 px-3">u_vec — m/s</td><td class="text-center py-2 px-3 font-semibold">0.8624</td><td class="text-center py-2 px-3">0.9760</td><td class="text-center py-2 px-3 font-semibold">1.1308</td><td class="text-center py-2 px-3">1.2184</td></tr>
+                <tr><td class="py-2 px-3">v_vec — m/s</td><td class="text-center py-2 px-3 font-semibold">0.7278</td><td class="text-center py-2 px-3">0.7655</td><td class="text-center py-2 px-3 font-semibold">0.9352</td><td class="text-center py-2 px-3">1.0043</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p class="text-xs text-gray-500 mt-3 leading-relaxed">
+            RFSI outperforms IDW on all precipitation and wind features. Temperature features (td, tdmax, tdmin) are
+            spatially smooth fields where distance-weighted averaging suffices — RFSI complexity adds noise rather than
+            signal for smooth gradients.
+          </p>
+        </div>
+
+        <div>
+          <h3 class="text-base font-semibold text-gray-800 mb-2">Rainfall Forecast vs Persistence Baseline</h3>
+          <p class="text-sm text-gray-700 leading-relaxed mb-4">
+            Evaluated on storm hours only (rain ≥ 0.1 mm/h) at cell 639, 0.53 km from Afula.
+          </p>
+          <div class="overflow-x-auto">
+            <table class="w-full text-xs text-gray-700 border-collapse">
+              <thead>
+                <tr class="border-b border-gray-300 bg-gray-50">
+                  <th class="text-center py-2 px-3 font-semibold">Horizon</th>
+                  <th class="text-center py-2 px-3 font-semibold">RMSE</th>
+                  <th class="text-center py-2 px-3 font-semibold">Persistence RMSE</th>
+                  <th class="text-center py-2 px-3 font-semibold">Skill vs Persistence</th>
+                  <th class="text-center py-2 px-3 font-semibold">F1</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-gray-200">
+                <tr><td class="text-center py-2 px-3">t+1h</td><td class="text-center py-2 px-3">1.637 mm</td><td class="text-center py-2 px-3">1.837 mm</td><td class="text-center py-2 px-3 font-semibold text-green-700">+10.9%</td><td class="text-center py-2 px-3">0.66</td></tr>
+                <tr><td class="text-center py-2 px-3">t+3h</td><td class="text-center py-2 px-3">1.748 mm</td><td class="text-center py-2 px-3">2.018 mm</td><td class="text-center py-2 px-3 font-semibold text-green-700">+13.4%</td><td class="text-center py-2 px-3">~0.58</td></tr>
+                <tr><td class="text-center py-2 px-3">t+6h</td><td class="text-center py-2 px-3">1.708 mm</td><td class="text-center py-2 px-3">2.072 mm</td><td class="text-center py-2 px-3 font-semibold text-green-700">+17.6%</td><td class="text-center py-2 px-3">~0.52</td></tr>
+                <tr><td class="text-center py-2 px-3">t+12h</td><td class="text-center py-2 px-3">1.740 mm</td><td class="text-center py-2 px-3">2.134 mm</td><td class="text-center py-2 px-3 font-semibold text-green-700">+18.5%</td><td class="text-center py-2 px-3">0.41</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p class="text-xs text-gray-500 mt-3 leading-relaxed">
+            Skill improves at longer horizons because persistence degrades faster than the model as the forecast window
+            grows — a well-known characteristic of storm forecasting systems consistent with the atmospheric
+            predictability limit.
+          </p>
+        </div>
+      </section>
+
+    </div>
+
+    {# Footer #}
+    <div class="mx-auto max-w-3xl px-4 mb-8">
+      <hr class="border-black mb-4">
+      <div class="flex justify-between text-xs text-black">
+        <a href="https://ims.gov.il/he" target="_blank" class="flex items-center gap-1 hover:underline">
+          <img src="/static/ims_logo.png" class="w-4 h-4 inline">Israel Meteorological Service
+        </a>
+        <div class="flex items-center gap-4">
+          <a href="https://github.com/jadosh123/SparseData-AI-Precipitation-Forecasting" target="_blank" class="flex items-center gap-1 hover:underline">
+            <i class="fa-brands fa-github"></i> Source
+          </a>
+          <span class="flex items-center gap-1">Title by
+            <a href="https://www.instagram.com/3arabrew/" target="_blank" class="flex items-center gap-1 hover:underline">
+              <i class="fa-brands fa-instagram"></i> 3arabrew
+            </a>
+          </span>
+        </div>
+      </div>
+    </div>
+
+  </body>
+</html>

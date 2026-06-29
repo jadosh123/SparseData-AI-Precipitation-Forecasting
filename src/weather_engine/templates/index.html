@@ -18,18 +18,18 @@
 
     {# About section #}
     <div class="mx-auto max-w-5xl mt-4 mb-8">
-      <div class="flex items-center justify-between">
-        <span class="text-sm text-black font-medium">About this system</span>
+      <div class="flex items-center justify-between cursor-pointer" onclick="toggleAbout()">
+        <span class="text-sm text-black font-medium flex items-center gap-1">About this system <i id="about-chevron" class="fa-solid fa-chevron-down text-xs transition-transform duration-200"></i></span>
         <div class="flex gap-2 text-sm">
-          <button onclick="showLang('en')" id="btn-en" class="font-semibold text-white">EN</button>
+          <button onclick="showLang('en'); event.stopPropagation()" id="btn-en" class="font-semibold text-white">EN</button>
           <span class="text-black">|</span>
-          <button onclick="showLang('he')" id="btn-he" class="text-black">עב</button>
+          <button onclick="showLang('he'); event.stopPropagation()" id="btn-he" class="text-black">עב</button>
           <span class="text-black">|</span>
-          <button onclick="showLang('ar')" id="btn-ar" class="text-black">عر</button>
+          <button onclick="showLang('ar'); event.stopPropagation()" id="btn-ar" class="text-black">عر</button>
         </div>
       </div>
 
-      <div id="about" class="mt-3 p-4 bg-white rounded-lg border border-gray-200 text-sm text-gray-700 leading-relaxed">
+      <div id="about" class="hidden mt-3 p-4 bg-white rounded-lg border border-gray-200 text-sm text-gray-700 leading-relaxed">
         <div id="lang-en">
           This system constructs a virtual forecasting radar for the Jezreel Valley by combining readings
           from multiple weather stations operated by the Israel Meteorological Service (IMS).
@@ -83,6 +83,11 @@
     </div>
 
     <script>
+      function toggleAbout() {
+        document.getElementById('about').classList.toggle('hidden');
+        document.getElementById('about-chevron').classList.toggle('rotate-180');
+      }
+
       function showLang(lang) {
         ['en', 'he', 'ar'].forEach(l => {
           document.getElementById('lang-' + l).classList.add('hidden');
