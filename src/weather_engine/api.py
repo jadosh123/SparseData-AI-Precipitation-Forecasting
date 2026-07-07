@@ -45,7 +45,7 @@ def get_map(horizon: str = "precipitation_t1"):
     else:
         rows = get_forecast_rows()
         fol_map = build_forecast_map(rows, horizon=horizon)
-        ts = rows[0]["timestamp"]
+        ts = max(r["timestamp"] for r in rows)
     return HTMLResponse(content=render_map_section(fol_map._repr_html_(), horizon, ts, mode="live"))
 
 

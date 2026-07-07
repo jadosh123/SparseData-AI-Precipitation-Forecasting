@@ -6,7 +6,7 @@ import numpy as np
 import pandas as pd
 import xgboost as xgb
 from datetime import datetime, timedelta, timezone
-from sqlalchemy import text, types
+from sqlalchemy import MetaData, Table, text, types
 from sqlalchemy.dialects.sqlite import insert as sqlite_insert
 
 from weather_engine.database import engine
@@ -322,12 +322,20 @@ def forecast_and_store(cell_neighbors: pd.DataFrame, station_frames: dict, model
         return
 
     forecasts = pd.concat(records)
+    # Match the stored TEXT format so MAX(timestamp) string comparison stays valid
+    forecasts['timestamp'] = forecasts['timestamp'].dt.strftime('%Y-%m-%d %H:%M:%S.%f')
 
-    with engine.begin() as conn:  # type: ignore[reportUnreachable]
-        conn.execute(text("DELETE FROM cell_forecasts"))
+    # Upsert per cell: cells that failed this run keep their last known good forecast
+    table = Table('cell_forecasts', MetaData(), autoload_with=engine)
+    stmt = sqlite_insert(table)
+    stmt = stmt.on_conflict_do_update(
+        index_elements=['cell_id'],
+        set_={c.name: stmt.excluded[c.name] for c in table.columns if c.name != 'cell_id'},
+    )
+    with engine.begin() as conn:
+        conn.execute(stmt, forecasts.to_dict('records'))
 
-    forecasts.to_sql('cell_forecasts', engine, if_exists='append', index=False)
-    print(f"Replaced cell_forecasts with {len(forecasts)} rows.")
+    print(f"Upserted {len(forecasts)}/{len(cell_neighbors)} cells into cell_forecasts.")
 
 
 def main() -> None:

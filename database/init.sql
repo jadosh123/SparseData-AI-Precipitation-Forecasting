@@ -67,14 +67,15 @@ CREATE TABLE IF NOT EXISTS cell_interpolated (
     FOREIGN KEY (cell_id) REFERENCES cell_neighbors (cell_id)
 );
 
+-- One row per cell: holds the latest successful forecast. Cells that fail a run
+-- keep their previous row (upserted via ON CONFLICT(cell_id) DO UPDATE).
 CREATE TABLE IF NOT EXISTS cell_forecasts (
-    cell_id INTEGER NOT NULL,
+    cell_id INTEGER PRIMARY KEY,
     timestamp TEXT NOT NULL,
     precipitation_t1 REAL,
     precipitation_t3 REAL,
     precipitation_t6 REAL,
     precipitation_t12 REAL,
-    CONSTRAINT unique_cell_forecast UNIQUE (cell_id, timestamp),
     FOREIGN KEY (cell_id) REFERENCES cell_neighbors (cell_id)
 );
 
