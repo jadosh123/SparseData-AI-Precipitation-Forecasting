@@ -1,16 +1,21 @@
+import json
+
 import numpy as np
+from sqlalchemy import text
 from weather_engine.spatial import haversine, point_in_triangle
 from itertools import combinations
 from weather_engine.database import engine
-from weather_engine.utils import get_elevation_from_hgt, get_distance_to_coast
+from weather_engine.utils import get_elevation_from_hgt, get_distance_to_coast, get_project_root
 import pandas as pd
+
+COLD_START_DIR = get_project_root() / "src" / "weather_engine" / "cold_start"
 
 LAT_MAX = 32.75
 LON_MAX = 35.45
 LAT_MIN = 32.45
 LON_MIN = 35.05
 
-GRID_STEP_DEG = 0.05  # ~5km
+GRID_STEP_DEG = 0.01  # ~1km, matches the 1271-cell grid deployed in prod (31 lats x 41 lons)
 
 
 def generate_grid_cells() -> list[tuple[float, float]]:
@@ -85,6 +90,8 @@ def populate_cell_neighbors():
     
     # Pop nazareth since its insufficient in data and made all interpolation features regress in accuracy
     all_stations.pop(500, None)
+    # Pop station 20 since it's down
+    all_stations.pop(20, None)
     cells = generate_grid_cells()
     records = []
     for cell in cells:
@@ -100,12 +107,32 @@ def populate_cell_neighbors():
         records.append(res)
         
     df = pd.DataFrame(records)
+
+    # keep cell_forecasts/cell_interpolated FKs valid.
+    with engine.begin() as conn:
+        conn.execute(text("DELETE FROM cell_neighbors"))
+        conn.execute(text("DELETE FROM sqlite_sequence WHERE name = 'cell_neighbors'"))
+
     df.to_sql('cell_neighbors', engine, if_exists='append', index=False)
     print(f"Saved {len(df)} rows to cell_neighbors.")
 
 
+def dump_cell_neighbors_to_json():
+    """
+    Exports the current cell_neighbors table to the cold_start JSON file,
+    so a fresh DB bootstraps with the latest neighbor assignments.
+    """
+    df = pd.read_sql("SELECT * FROM cell_neighbors ORDER BY cell_id", engine)
+    records = df.to_dict(orient='records')
+    out_path = COLD_START_DIR / "cell_neighbors.json"
+    with open(out_path, 'w') as f:
+        json.dump(records, f, indent=2)
+    print(f"Dumped {len(records)} rows to {out_path}.")
+
+
 def main():
     populate_cell_neighbors()
+    dump_cell_neighbors_to_json()
 
 
 if __name__ == "__main__":

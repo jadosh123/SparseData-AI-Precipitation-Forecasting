@@ -3,18 +3,16 @@ from sqlalchemy import create_engine, event
 from sqlalchemy.orm import sessionmaker, declarative_base
 from weather_engine.utils import get_project_root
 
-# 1. Get the URL
+# Get the URL
 db_path = get_project_root() / "data" / "weather_live.db"
 DATABASE_URL = f"sqlite:///{db_path}"
 
-# 2. Configure for SQLite Concurrency
-# SQLite doesn't like multiple threads sharing a connection by default.
-# We must disable this check for FastAPI/Web usage.
+# Configure for SQLite Concurrency
 connect_args = {}
 if "sqlite" in DATABASE_URL:
     connect_args = {"check_same_thread": False}
 
-# 3. Create the Engine
+# Create the Engine
 engine = create_engine(
     DATABASE_URL,
     connect_args=connect_args
@@ -24,8 +22,8 @@ engine = create_engine(
 def set_wal_mode(dbapi_connection, connection_record):
     dbapi_connection.execute("PRAGMA journal_mode=WAL")
 
-# 4. Create Session Factory (for usage in scripts)
+# Create Session Factory (for usage in scripts)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
-# 5. Base class for your ORM Models (Optional, but recommended)
+# Base class for your ORM Models (Optional, but recommended)
 Base = declarative_base()
