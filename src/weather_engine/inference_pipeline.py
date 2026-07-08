@@ -180,7 +180,8 @@ def clean_and_store(df_raw: pd.DataFrame) -> None:
             df = df[df['timestamp'] > pd.Timestamp(latest_clean)]
         if df.empty:
             continue
-        
+
+        df = df.copy()
         df['timestamp'] = pd.to_datetime(df['timestamp'])
         df['rain'] = df['rain'].where(df['rain'] >= 0, other=np.nan)
         df['ws'] = pd.to_numeric(df['ws'], errors='coerce')
