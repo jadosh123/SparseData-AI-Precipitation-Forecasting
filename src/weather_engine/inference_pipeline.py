@@ -185,6 +185,7 @@ def clean_and_store(df_raw: pd.DataFrame) -> None:
         df['timestamp'] = pd.to_datetime(df['timestamp'])
         df['rain'] = df['rain'].where(df['rain'] >= 0, other=np.nan)
         df['rh'] = df['rh'].where((df['rh'] >= 0) & (df['rh'] <= 100), other=np.nan)
+        df['ws'] = df['ws'].where((df['ws'] >= 0), other=np.nan)
         df['ws'] = pd.to_numeric(df['ws'], errors='coerce')
         df['wd'] = pd.to_numeric(df['wd'], errors='coerce')
         df['u_vec'], df['v_vec'] = get_wind_components(df['ws'], df['wd'])
