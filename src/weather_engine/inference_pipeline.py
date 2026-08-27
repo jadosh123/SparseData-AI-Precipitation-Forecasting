@@ -287,12 +287,16 @@ def load_forecast_models() -> dict[str, xgb.Booster]:
 
 
 def forecast_and_store(cell_neighbors: pd.DataFrame, station_frames: dict, models: dict) -> None:
-    print("Forecasting cells...")
+    print("Forecasting cells...") 
 
     upstream_dfs = {
-        "tel_aviv": station_frames[178],
-        "haifa": station_frames[43],
+        "tel_aviv": station_frames.get(178),
+        "haifa": station_frames.get(43),
     }
+
+    if any(v is None for v in upstream_dfs.values()):
+        print('Skipping forecasting due to haifa and telaviv dataframes being non-existent...')
+        return
 
     records = []
     for _, row in cell_neighbors.iterrows():
