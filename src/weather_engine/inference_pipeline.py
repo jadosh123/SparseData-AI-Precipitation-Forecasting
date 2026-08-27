@@ -165,9 +165,10 @@ def get_wind_components(ws, wd):
 def clean_and_store(df_raw: pd.DataFrame) -> None:
     print("Cleaning raw data...")
 
-    latest_clean = pd.read_sql(
-        "SELECT MAX(timestamp) as latest FROM clean_station_data", engine
-    )['latest'].iloc[0]
+    latest_clean_by_station = pd.read_sql(
+        "SELECT station_id, MAX(timestamp) as latest FROM clean_station_data GROUP BY station_id",
+        engine
+    ).set_index('station_id')['latest']
 
     agg_rules = {
         'rain': 'sum', 'ws': 'mean', 'td': 'mean',
@@ -176,8 +177,9 @@ def clean_and_store(df_raw: pd.DataFrame) -> None:
     }
 
     for sid, df in df_raw.groupby('station_id'):
-        if latest_clean is not None:
-            df = df[df['timestamp'] > pd.Timestamp(latest_clean)]
+        station_latest = latest_clean_by_station.get(sid)
+        if station_latest is not None:
+            df = df[df['timestamp'] > pd.Timestamp(station_latest)]
         if df.empty:
             continue
 
