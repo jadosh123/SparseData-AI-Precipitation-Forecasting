@@ -40,6 +40,11 @@ def _horizon_times(base_ts: str) -> dict[str, dict]:
 
 
 def render_map_section(map_html: str, horizon: str, timestamp: str, mode: str = "live", idx: int = 0) -> str:
+    lag_hours = None
+    if mode == "live":
+        ts = datetime.fromisoformat(timestamp).replace(tzinfo=timezone.utc)
+        lag_hours = (datetime.now(timezone.utc) - ts).total_seconds() / 3600
+    
     return templates.get_template("map_section.html").render(
         map_html=map_html,
         horizon=horizon,
@@ -47,6 +52,7 @@ def render_map_section(map_html: str, horizon: str, timestamp: str, mode: str = 
         mode=mode,
         horizons=_horizon_times(timestamp),
         idx=idx,
+        stale=lag_hours is not None and lag_hours > 3,
     )
 
 

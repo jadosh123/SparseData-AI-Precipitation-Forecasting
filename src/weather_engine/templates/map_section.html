@@ -3,6 +3,12 @@
 
 <div id="map-section" class="mx-auto max-w-5xl">
 
+  {% if stale %}
+  <div class="mb-2 px-3 py-2 text-sm text-amber-800 bg-amber-50 border border-amber-200 rounded-lg">
+    ⚠ We are experiencing a data outage/delay — last update was over 3 hours ago.
+  </div>
+  {% endif %}
+
   {# Unified toolbar #}
   <div class="flex rounded-t-lg overflow-hidden border border-b-0 border-gray-200 shadow-sm bg-white">
 
