@@ -65,6 +65,7 @@ src/weather_engine/     # All application logic
 └── templates/               # Jinja2 HTML templates
 static/                 # Images and GIFs served by the frontend
 tests/                  # Deployment smoke tests
+dev_tests/              # Development-time test suite (100 tests), kept for reference
 pyproject.toml          # Dependencies split into core (deployment) and dev
 ```
 
