@@ -22,7 +22,7 @@ load_dotenv(get_project_root() / '.env')
 API_KEY = os.getenv("API_KEY")
 BASE_URL = "https://api.ims.gov.il/v1/envista/stations"
 WINDOW_HOURS = 27
-UPSTREAM_STATION_IDS = {178, 43}  # Tel Aviv, Haifa — hardcoded to match forecasting models
+UPSTREAM_STATION_IDS = {178, 42}  # Tel Aviv, Haifa — hardcoded to match forecasting models
 
 DTYPE_RAW = {
     'timestamp': types.DateTime(),
@@ -293,7 +293,7 @@ def forecast_and_store(cell_neighbors: pd.DataFrame, station_frames: dict, model
 
     upstream_dfs = {
         "tel_aviv": station_frames.get(178),
-        "haifa": station_frames.get(43),
+        "haifa": station_frames.get(42),
     }
 
     if any(v is None for v in upstream_dfs.values()):
